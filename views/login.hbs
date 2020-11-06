@@ -1,0 +1,35 @@
+<div class="login-body-container">
+    <div class="header">
+        <h1>IN Web PORTAL</h1>
+    </div>
+
+    <div class="login-main-container">
+        {{#if error}}
+            <div class="message_error">
+                <span><i class="fas fa-exclamation-triangle"></i>&nbsp;{{error}}</span>
+            </div>
+
+
+        {{/if}}
+        <div class="login-container">
+            <div class="form">
+                <form action="/login" method="post">
+                    <div class="login-form-control textbox">
+                        <i class="fas fa-user"></i>
+                        <input type="text" name="username" placeholder="Username" id="username" required autocomplete="false">
+                    </div>
+                    <div class="login-form-control textbox">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" name="password" placeholder="Password" id="password" required>
+                    </div>
+
+                    <div class="login-form-control">
+                        <input type="submit" class="login-btn" value="Login">
+                    </div>
+                    <a href="/fpass" class="login-forgot-password">Forgot Password</a>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>

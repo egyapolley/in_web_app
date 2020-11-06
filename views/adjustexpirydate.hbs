@@ -1,0 +1,87 @@
+{{#if l3}}
+    {{> sideNav }}
+{{else if l2}}
+    {{> sideNavlevel_two }}
+{{else }}
+    {{> sideNavlevel_one }}
+{{/if}}
+
+<div class="all-container">
+
+    <div class="all-main-content">
+        <div class="all-main-content-wrapper">
+            <div class="main-content-manage-acct">
+
+                {{> topNav }}
+
+
+
+                <main>
+                    <div class="task-container">
+
+                        <h3>Adjust Account Balance Expiry Date</h3>
+
+                        <div class="form-wrapper-task">
+
+                            <div class="manageVoucher-error" id="manage-acct-error">
+                                <button id="times-button-error" class="times-button">&times;</button>
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <small></small>
+                            </div>
+
+                            <div class="manageVoucher-success" id="manage-acct-success">
+                                <button id="times-button-success" class="times-button">&times;</button>
+                                <i class="fas fa-thumbs-up"></i>
+                                <small></small>
+                            </div>
+
+
+
+
+                            <form action="/adjustexpiry" method="post" id="adjust-expiryDate-form">
+
+                                <div class="form-control">
+                                    <label for="msisdn">Subscriber msisdn:</label>
+                                    <input type="text"  id="msisdn" name="msisdn" placeholder="233255..." autofocus autocomplete="true" required>
+                                </div>
+
+                                <div class="form-control">
+                                    <label for="balanceTypes">Balance Type:</label>
+                                    <select name="balanceTypes" id="balanceTypes" required >
+                                        {{#each balanceTypes}}
+                                            <option value="{{this}}">{{this}}</option>
+                                        {{/each}}
+                                    </select>
+                                </div>
+
+                                <div class="form-control">
+                                    <label for="expiry-date">Expiry Date:</label>
+                                    <input type="datetime-local" id="expiry-date" value="2020-02-25T19:24" name="expiry-date" required>
+                                </div>
+                                <div id="progressIndicator-manage-acct" class="progressIndicator">
+                                    <img src="/images/ajax-loader.gif" alt="Loading Bundles...">
+                                </div>
+
+                                <div class="form-control form-control-btn">
+                                    <button class="proceed-btn">Submit</button>
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+                </main>
+
+            </div>
+
+        </div>
+    </div>
+
+
+</div>
+
+
+
+
+

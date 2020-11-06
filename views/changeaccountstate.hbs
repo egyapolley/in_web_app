@@ -1,0 +1,84 @@
+{{#if l3}}
+    {{> sideNav }}
+{{else if l2}}
+    {{> sideNavlevel_two }}
+{{else }}
+    {{> sideNavlevel_one }}
+{{/if}}
+
+<div class="all-container">
+
+    <div class="all-main-content">
+        <div class="all-main-content-wrapper">
+            <div class="main-content-manage-acct">
+
+                {{> topNav }}
+
+
+
+                <main>
+                    <div class="task-container">
+
+                        <h3>Change Account State</h3>
+
+                        <div class="form-wrapper-task">
+                            <div class="manageVoucher-error" id="manage-acct-error">
+                                <button id="times-button-error" class="times-button">&times;</button>
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <small></small>
+                            </div>
+
+                            <div class="manageVoucher-success" id="manage-acct-success">
+                                <button id="times-button-success" class="times-button">&times;</button>
+                                <i class="fas fa-thumbs-up"></i>
+                                <small></small>
+                            </div>
+
+
+
+
+                            <form action="/changeacctstate" method="post" id="change-acct-state-Form">
+
+                                <div class="form-control">
+                                    <label for="msisdn">Subscriber msisdn:</label>
+                                    <input type="text" id="msisdn" name="msisdn" placeholder="233255..." autocomplete="true" autofocus required>
+                                </div>
+
+                                <div class="form-control">
+                                    <label for="acct-states">Account State:</label>
+                                    <select name="acct-states" id="acct-states" required>
+                                        <option value="A">Active</option>
+                                        <option value="F">Frozen</option>
+                                        <option value="S">Suspended</option>
+                                        <option value="T">Terminated</option>
+                                        <option value="P">Pre-Use</option>
+                                    </select>
+                                </div>
+
+                                <div id="progressIndicator-manage-acct" class="progressIndicator">
+                                    <img src="/images/ajax-loader.gif" alt="Loading Bundles...">
+                                </div>
+
+                                <div class="form-control form-control-btn">
+                                    <button class="proceed-btn">Submit</button>
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+                </main>
+
+            </div>
+
+        </div>
+    </div>
+
+
+</div>
+
+
+
+
+

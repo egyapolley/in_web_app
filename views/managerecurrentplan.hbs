@@ -1,0 +1,90 @@
+{{#if l3}}
+    {{> sideNav }}
+{{else if l2}}
+    {{> sideNavlevel_two }}
+{{else }}
+    {{> sideNavlevel_one }}
+{{/if}}
+
+<div class="all-container">
+
+    <div class="all-main-content">
+        <div class="all-main-content-wrapper">
+            <div class="main-content-manage-acct">
+
+                {{> topNav }}
+
+
+
+                <main>
+
+
+                    <div class="task-container">
+
+                        <h3>Disable Recurrent Bundle</h3>
+
+                        <div class="form-wrapper-task-recurrent">
+
+                            <div class="form-wrapper-task">
+                                <div class="manageVoucher-error" id="manage-acct-error">
+                                    <button id="times-button-error" class="times-button">&times;</button>
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    <small></small>
+                                </div>
+
+                                <div class="manageVoucher-success" id="manage-acct-success">
+                                    <button id="times-button-success" class="times-button">&times;</button>
+                                    <i class="fas fa-thumbs-up"></i>
+                                    <small></small>
+                                </div>
+
+                            <form action="/managerecurrent" method="post" id="terminate-recurrent-form">
+                                <div class="form-control">
+                                    <label for="msisdn-recurrent">Subscriber msisdn:</label>
+                                    <input type="text"  id="msisdn-recurrent" name="msisdn" required autofocus autocomplete="true">
+                                </div>
+
+                                <div id="progressIndicator-manage-acct" class="progressIndicator">
+                                    <img src="/images/ajax-loader.gif" alt="Loading Bundles...">
+                                </div>
+
+                                <div class="table-wrapper" id="table-wrapper-recurrent">
+                                    <table id="managerecurrenttable">
+                                        <thead>
+                                        <tr>
+                                            <th>Recurrent Bundle</th>
+                                            <th>State</th>
+                                            <th>Action</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="recurrent-tbody">
+
+
+                                        </tbody>
+                                    </table>
+
+                                </div>
+
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                </main>
+
+            </div>
+
+        </div>
+    </div>
+
+
+</div>
+
+
+
+
+
+
+

@@ -1,0 +1,107 @@
+{{#if l3}}
+    {{> sideNav }}
+{{else if l2}}
+    {{> sideNavlevel_two }}
+{{else }}
+    {{> sideNavlevel_one }}
+{{/if}}
+
+<div class="all-container">
+
+    <div class="all-main-content">
+        <div class="all-main-content-wrapper">
+            <div class="form-wrapper">
+                <form action="/viewhist" method="post" id="view-hist-form">
+                    <div class="form-wrapper-history">
+                        <div class="form-control-wrapper">
+                            <div class="form-control-viewHist">
+
+                                <div class="form-control-viewHist__item">
+                                    <label for="sub-msisdn">Subscriber msisdn:</label>
+                                    <input type="text" id="sub-msisdn" name="msisdn" placeholder="Enter msisdn ..." autofocus autocomplete="true" required>
+                                </div>
+
+                            </div>
+
+                            <div class="form-control-viewHist">
+                                <div class="form-control-viewHist__item">
+
+                                    <label for="usage"> <input type="radio" name="history" id="usage" value="usage" checked required>Usage</label>
+                                </div>
+
+                                <div class="form-control-viewHist__item">
+
+                                    <label for="recharge"><input type="radio" name="history" id="recharge" value="recharge" required>Recharge</label>
+                                </div>
+
+                                <div class="form-control-viewHist__item">
+
+                                    <label for="eventdebit"><input type="radio" name="history" id="eventdebit" value="eventdebit" required>Event Debit</label>
+                                </div>
+
+                                <div class="form-control-viewHist__item">
+
+                                    <label for="all"><input type="radio" name="history" id="all" value="all" required>All</label>
+                                </div>
+
+                            </div>
+
+                            <div class="form-control-viewHist">
+
+                                <div class="form-control-viewHist__item item3">
+                                    <label for="startdate">Start Date:</label>
+                                    <input type="datetime-local" name="startdate" id="startdate" required  >
+                                </div>
+
+                                <div class="form-control-viewHist__item item4">
+                                    <label for="enddate">End Date:</label>
+                                    <input type="datetime-local" name="enddate" id="enddate" required >
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                        <div class="form-control-submit">
+
+                            <div id="progressIndicator-History" class="progressIndicator">
+                                <img src="/images/ajax-loader.gif" alt="Loading Bundles...">
+                            </div>
+                            <button type="submit">Apply</button>
+                        </div>
+
+                    </div>
+
+
+
+
+                </form>
+            </div>
+
+            <div class="history-main-container" id="history-main-container">
+             <div class="history-table-container" id="history-table-container">
+                 <table id="history-table" class="history-table">
+                     <thead>
+                     <tr id="history-tab-header">
+
+                     </tr>
+
+                     </thead>
+
+                     <tbody id="history-tab-body">
+
+                     </tbody>
+                 </table>
+             </div>
+            </div>
+
+
+
+
+
+        </div>
+
+    </div>
+</div>
+
+

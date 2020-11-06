@@ -1,0 +1,52 @@
+{{#if l3}}
+    {{> sideNav }}
+{{else if l2}}
+    {{> sideNavlevel_two }}
+{{else }}
+    {{> sideNavlevel_one }}
+{{/if}}
+
+<div class="all-container">
+
+    <div class="all-main-content">
+        <div class="all-main-content-wrapper">
+            <div class="form-wrapper">
+                <div class="manageVoucher-error" id="manageVoucher-error">
+                    <button id="times-button-error" class="times-button">&times;</button>
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <small></small>
+                </div>
+
+                <div class="manageVoucher-success" id="manageVoucher-success">
+                    <button id="times-button-success" class="times-button">&times;</button>
+                    <i class="fas fa-thumbs-up"></i>
+                    <small></small>
+                </div>
+
+                <form action="/loadcard" method="post" id="load-card-form">
+                    <div class="form-group1">
+                        <label for="msisdn-loadcard">Subscriber msisdn: </label>
+                        <input type="text" id="msisdn-loadcard" name="msisdn_loadcard" placeholder="Enter msisdn ..."
+                               maxlength="12" minlength="12" required autofocus autocomplete="true">
+                    </div>
+                    <div class="form-group1">
+                        <label for="pin-loadcard">Voucher PIN: </label>
+                        <input type="text" id="pin-loadcard" name="pin_loadcard" placeholder="Enter pin number ..." required minlength="14" maxlength="14" autocomplete="true">
+                    </div>
+                    <div id="progressIndicator-loadcard" class="progressIndicator">
+                        <img src="/images/ajax-loader.gif" alt="Loading Bundles...">
+                    </div>
+                    <div class="form-group-button ">
+                        <button type="submit" class="loadcard-btn">Send</button>
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+
+
+</div>
+

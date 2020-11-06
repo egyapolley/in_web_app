@@ -1,0 +1,775 @@
+@import url('https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+*:before, *:after {
+    box-sizing: border-box;
+    width: 100vw;
+    height: 100vh;
+}
+
+body {
+
+    font-family: 'PT Serif', serif;
+    background: #c2c7ca61;
+
+}
+
+ul {
+    list-style: none;
+
+}
+
+
+a {
+    text-decoration: none;
+}
+
+a:focus {
+    outline: none;
+}
+
+.side-nav {
+    background: rgb(16 46 60);
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 275px;
+    box-shadow: 0 16px 38px -12px rgba(0, 0, 0, .56), 0 4px 25px 0 rgba(0, 0, 0, .12), 0 8px 10px -5px rgba(0, 0, 0, .2);
+    color: #fff;
+    z-index: 100;
+    overflow: auto;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+
+}
+
+.side-nav-logo {
+    padding: 10px 20px 30px 0;
+    border-bottom: 1px solid #706d6d;
+    margin: 10px 0 30px;
+    flex: 0;
+}
+
+.side-nav-footer {
+    flex-grow: 0;
+    padding-bottom: 30px;
+    padding-left: 10px;
+}
+
+.side-nav-main {
+    flex-grow: 1;
+    border-bottom: 1px solid #706d6d;;
+    margin-bottom: 20px;
+}
+
+.side-nav-logo h3 {
+    padding-left: 30px;
+    text-shadow: 0 1px 1px rgba(255, 244, 255, 0.9);
+    user-select: none;
+}
+
+
+.side-nav-main-wrapper li {
+    padding: 0 30px;
+    margin: 10px 0;
+    transition: 0.5s;
+
+
+}
+
+
+.side-nav-main-wrapper a {
+    display: block;
+    color: white;
+    line-height: 40px;
+    font-weight: lighter;
+
+}
+
+.side-nav-main-wrapper a i {
+    display: inline-block;
+    padding-right: 8px;
+
+}
+
+.side-nav-main-wrapper li:hover {
+    background: #180c0c;
+    border-radius: 30px;
+    padding-left: 35px;
+}
+
+.side-nav-footer a {
+    display: block;
+    color: white;
+
+}
+
+.side-nav li.active {
+    background: #e91e63;;
+    border-radius: 30px;
+    box-shadow: 0 4px 20px 0 rgba(0, 0, 0, .14), 0 7px 10px -5px rgba(233, 30, 99, .4);
+}
+
+.top-up-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 2000;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 50px 150px;
+    display: none;
+
+}
+
+.top-up-overlay .top-up-dialog-box {
+    width: 550px;
+    height: 350px;
+    margin: 0 auto;
+    background: #404040;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    color: white;
+    user-select: none;
+    box-shadow: 2px 2px 2px #404040;
+}
+
+.top-up-dialog-box h3 {
+    width: 100%;
+    border-bottom: 2px solid #ffffff;
+    text-align: center;
+    line-height: 3;
+
+}
+
+.top-up-dialog-box .diaglog-btns {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.top-up-dialog-box .diaglog-btns button {
+    padding: 10px 30px;
+    margin: 0 30px;
+    border-radius: 20px;
+    outline: none;
+    font-family: inherit;
+    border: 2px solid;
+    cursor: pointer;
+    font-weight: bolder;
+
+}
+
+.diaglog-btns #ok-btn {
+    background: green;
+    color: white;
+    border-color: green;
+}
+
+.diaglog-btns #cancel-btn {
+    background: red;
+    color: white;
+    border-color: red;
+}
+
+.top-up-dialog-box .diaglog-btns button:hover {
+    background: white;
+    color: black;
+    border-color: black;
+}
+
+.top-up-dialog-box .message-box span {
+    display: inline-block;
+    padding: 0 10px;
+    font-size: 20px;
+}
+
+.top-up-dialog-box li {
+    padding: 10px
+}
+
+.error-message {
+    display: none;
+    color: red;
+    background: white;
+    width: 90%;
+    margin-top: 10px;
+    padding: 10px;
+    font-weight: bolder;
+}
+
+.manageVoucher-error {
+    position: relative;
+    /*line-height: 3;*/
+    text-align: center;
+    display: none;
+    color: red;
+    background: white;
+    margin: 10px;
+    font-weight: bolder;
+    padding: 10px 50px;
+    outline: 2px solid red;
+}
+
+.manageVoucher-error i {
+    display: inline-block;
+    padding: 0 10px;
+}
+
+.manageVoucher-error button,
+.manageVoucher-success button {
+    position: absolute;
+    display: inline-block;
+    padding: 2px 10px;
+    top: 0;
+    right: 0;
+    border: none;
+    outline: none;
+    appearance: none;
+    background: inherit;
+    cursor: pointer;
+    font-size: 17px;
+    font-weight: bolder;
+    transition: 0.5s;
+}
+
+.manageVoucher-error button:hover,
+.manageVoucher-success button:hover {
+    transform: rotateX(45deg);
+}
+
+.manageVoucher-success {
+    position: relative;
+    line-height: 3;
+    display: none;
+    color: #12ee12;
+    background: white;
+    margin: 10px;
+    font-weight: bolder;
+    padding: 10px 50px;
+    outline: 2px solid #12ee12;;
+    text-transform: uppercase;
+
+}
+
+.manageVoucher-success i {
+    display: inline-block;
+    padding: 0 10px;
+
+}
+
+#overscratch-serial {
+    display: none;
+    width: 70%;
+    margin-top: 15px;
+    padding: 10px;
+    color: black;
+    background: white;
+    border: none;
+    border-radius: 15px;
+    outline: none;
+    font-family: inherit;
+
+}
+
+.progressIndicator {
+    padding: 5px;
+    display: none;
+
+}
+
+.progressIndicator img {
+    background: #180c0c;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+}
+
+#dashboard-error {
+    width: 400px;
+    margin: 0 auto;
+}
+
+.t_required::after {
+    content: "\2743";
+    vertical-align: super;
+    color: #ae6b6b;
+    font-size: 20%;
+}
+
+/*... Common Task Expire Data*/
+
+.task-container .form-wrapper-task {
+    color: #424242;
+    width: 400px;
+    height: max-content;
+    margin: 10px auto;
+    padding: 10px 0;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 15px;
+}
+
+
+.task-container .form-wrapper-task .form-control {
+    padding: 15px 0;
+    line-height: 1.5;
+}
+
+.task-container .form-wrapper-task .form-control input,
+.task-container .form-wrapper-task .form-control label,
+.task-container .form-wrapper-task .form-control select {
+    display: block;
+}
+
+.task-container h3 {
+    text-align: center;
+    padding: 30px 0 0;
+    color: white;
+}
+
+.task-container .form-wrapper-task .form-control label {
+    font-weight: bolder;
+    padding-bottom: 3px;
+}
+
+.task-container .form-wrapper-task .form-control input {
+    background: #3d3d56;
+    padding: 10px 20px;
+    width: 100%;
+    color: #fff;;
+    outline: none;
+    border: none;
+}
+
+.task-container .form-wrapper-task .form-control input::placeholder {
+    color: #e7dada;
+}
+
+
+
+
+.task-container .form-wrapper-task .form-control select {
+    padding: 10px 20px;
+    outline: none;
+    width: 100%;
+    background: #3d3d56;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+
+
+}
+
+.task-container .form-wrapper-task .form-control-btn {
+    display: flex;
+    justify-content:center ;
+    align-items: center;
+}
+
+.task-container .form-wrapper-task .form-control-btn button {
+    display: inline-block;
+    padding: 10px 30px;
+    margin-top: 20px;
+    cursor: pointer;
+    font-weight: bolder;
+}
+
+
+
+.task-container .form-wrapper-task .form-control-btn .proceed-btn {
+    background: green;
+    color: white;
+    font-family: inherit;
+    border: none;
+    outline: none;
+    border-radius: 10px;
+
+}
+.task-container .form-wrapper-task .form-control-btn .proceed-btn:hover{
+    box-shadow: 0 2px 2px 5px #180c0c;
+    background: #ccc;
+    color: #1b0202;
+
+}
+
+.task-container .form-wrapper-task-recurrent {
+
+    color: #424242;
+    width: 450px;
+    margin: 20px auto;
+    padding: 15px 0;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 15px;
+
+}
+
+.task-container .form-wrapper-task-recurrent .form-control {
+    padding: 30px 0;
+
+}
+
+.task-container .form-wrapper-task-recurrent .form-control {
+    display: flex;
+    flex-direction: column;
+    padding-left: 25px;
+
+
+}
+.task-container .form-wrapper-task-recurrent .form-control #msisdn-recurrent {
+    width: 80%;
+    background: #3d3d56;
+    padding: 10px 20px;
+    color: #fff;;
+    outline: none;
+    border: none;
+
+}
+
+.task-container .form-wrapper-task-recurrent .form-control label {
+    font-weight: bolder;
+    padding-bottom: 3px;
+}
+
+.task-container .form-wrapper-task-recurrent #managerecurrenttable {
+    border-collapse: collapse;
+    margin-bottom: 20px;
+
+}
+
+.task-container .form-wrapper-task-recurrent #managerecurrenttable th,
+.task-container .form-wrapper-task-recurrent #managerecurrenttable td {
+    padding: 5px 25px;
+    text-align: left;
+}
+
+.task-container .form-wrapper-task-recurrent #managerecurrenttable th{
+    border-bottom: 1px solid;
+}
+
+
+.task-container .form-wrapper-task-recurrent #managerecurrenttable tbody tr {
+
+}
+
+.task-container .form-wrapper-task-recurrent #managerecurrenttable button {
+    background: #e91e63;
+    color: white;
+    font-family: inherit;
+    border: none;
+    outline: none;
+    border-radius: 10px;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-weight: bolder;
+
+
+
+}
+
+.task-container .form-wrapper-task-recurrent #managerecurrenttable button:hover{
+    box-shadow: 0 2px 2px 5px #180c0c;
+    background: #ccc;
+    color: #1b0202;
+}
+
+.task-container .form-wrapper-task-recurrent #table-wrapper-recurrent {
+    display: none;
+}
+
+#progressIndicator-manage-acct {
+    text-align: center;
+}
+
+
+
+/*.....login Page.....*/
+
+
+.login-body-container {
+    padding: 10px;
+    width: 100vw;
+    height: 100vh;
+    background: #00BCD4;
+
+}
+.login-body-container .header {
+    font-family: 'PT Serif', serif;
+    padding: 70px 50px 50px;
+    text-align: center;
+    color: white;
+}
+
+.login-body-container .header h1 {
+    text-shadow: 2px 2px 2px #ccc;
+    pointer-events: none;
+    user-select: none;
+}
+
+.login-body-container .login-main-container {
+    width: 300px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+
+}
+
+
+
+
+.login-body-container .textbox {
+    width: 100%;
+    overflow: hidden;
+    font-size: 20px;
+    padding: 8px 0;
+    margin: 8px 0;
+    border-bottom: 2px solid #607D8B;
+
+}
+
+.login-body-container .textbox i {
+    width: 26px;
+    text-align: center;
+    float: left;
+}
+
+.login-body-container .textbox input {
+    border: none;
+    outline: none;
+    background: none;
+    color: #464646;
+    float: left;
+    width: 80%;
+    font-size: 16px;
+    margin: 0 10px;
+}
+
+
+.login-body-container .login-btn {
+    width: 100%;
+    background: #0c2131;
+    border: 2px solid #0c2131;
+    color: white;
+    font-size: 18px;
+    padding: 5px;
+    margin: 10px 0;
+    border-radius: 5px;
+    font-weight: bold;
+    font-family: 'PT Serif', serif;
+    cursor: pointer;
+    outline: none;
+}
+
+.login-body-container .login-btn:hover {
+    color: #0c2131;
+    background: white;
+    box-shadow: 0 2px 2px 2px #0c2131;
+}
+
+.login-body-container .login-btn:active{
+    background: transparent;
+}
+
+.login-body-container .login-forgot-password {
+    float: right;
+    font-size: 12px;
+    font-family: 'PT Serif', serif;
+    text-decoration: none;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.login-body-container .login-forgot-password:hover{
+    text-decoration: underline;
+}
+
+.login-body-container .forget-passwd-main-container {
+    width: 40vw;
+    height: 40vh;
+    margin: 70px auto;
+    background: #aec5b6;
+    padding: 50px;
+    font-family: 'PT Serif', serif;
+    color: #0c2131;
+    border-radius: 10px;
+    box-shadow: 2px 1px 1px #0c2131;
+}
+
+.login-body-container .forget-passwd-main-container .forget-pass-container {
+    padding: 30px 0
+}
+
+.login-body-container  .forget-passwd-main-container input[placeholder] {
+    font-weight: bold;
+    font-family: 'PT Serif', serif;
+}
+.login-body-container .forget-passwd-main-container input {
+    display: block;
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 20px;
+    outline: none;
+    border: none;
+}
+.login-body-container .forget-passwd-main-container .forget-pass-btn-group {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.login-body-container .forget-passwd-main-container button {
+    display: inline-block;
+    margin: 0 10px;
+    padding: 10px 30px;
+    font-family: 'PT Serif', serif;
+    font-weight: bold;
+    color: #0c2131;
+    font-size: 18px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.login-body-container .forget-passwd-main-container button:hover,
+.forget-passwd-main-container button:active {
+    background: #0c2131;
+    color: #ccc;
+}
+
+
+/*.......Create User.....*/
+
+.create-user-container {
+    line-height: 1.5;
+    color: white;
+}
+
+.create-user-container .create-user-flex-container {
+    display: flex;
+    justify-content: center;
+    padding-top: 20px;
+
+}
+
+.create-user-container .create-user-flex-container .flex-item {
+    width: 300px;
+}
+
+.create-user-container .create-user-flex-container .flex-item:nth-child(1) {
+    margin-right: 50px;
+}
+
+.create-user-container h3 {
+    text-align: center;
+    color: #3d3d56;
+    margin-top: 20px;
+
+}
+.create-user-container .block label,
+.create-user-container .block input ,
+.create-user-container .block select{
+    display: block;
+    width: 100%;
+}
+.create-user-container .block label{
+    font-weight: lighter;
+}
+
+.create-user-container .form-control {
+    padding: 10px 0;
+}
+
+.create-user-container .block input {
+    padding: 8px;
+    outline: none;
+    border: none;
+    background: #eeebeb;
+    color:#464646;
+}
+
+.create-user-container .block select{
+    padding: 8px;
+    outline: none;
+    border: none;
+    background: #eeebeb;
+    color:#464646;
+
+}
+
+.create-user-container .form-control-create-btn button {
+    display: inline-block;
+    padding: 5px 25px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+
+}
+
+.create-user-container .form-control-create-btn button:hover{
+    box-shadow: 0 2px 2px 5px #180c0c;
+    background: #ccc;
+    color: #1b0202;
+}
+.create-user-container .form-control-create-btn {
+    display: flex;
+    justify-content: space-between;
+    width: 300px;
+    padding: 30px;
+    margin: 0 auto;
+
+
+}
+
+.create-user-container .create-user-home-btn {
+    background: #e91e63;
+    color: white;
+    font-family: 'PT Serif', serif;
+}
+
+.create-user-container .create-user-submit-btn {
+    background: green;
+    color: white;
+    font-family: 'PT Serif', serif;
+}
+
+.message-box {
+    width: max-content;
+    text-align: center;
+    margin: 0 auto;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-transition: color 9999s ease-out, background-color 9999s ease-out;
+    -webkit-transition-delay: 9999s;
+}
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,81 @@
+{{#if l3}}
+    {{> sideNav }}
+{{else if l2}}
+    {{> sideNavlevel_two }}
+{{else }}
+    {{> sideNavlevel_one }}
+{{/if}}
+
+<div class="all-container">
+
+    <div class="all-main-content">
+        <div class="all-main-content-wrapper">
+            <div class="form-wrapper-activateAcct">
+
+                <div class="manageVoucher-error" id="activate-error">
+                    <button id="times-button-error" class="times-button">&times;</button>
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <small></small>
+                </div>
+
+                <div class="manageVoucher-success" id="activate-success">
+                    <button id="times-button-success" class="times-button">&times;</button>
+                    <i class="fas fa-thumbs-up"></i>
+                    <small></small>
+                </div>
+                <form action="/activate" method="post" id="activate-form">
+                    <div class="form-body-activateAcct">
+                        <div class="form-control">
+                            <label for="msisdn" class="required">Subscriber msisdn:</label>
+                            <input type="text" name="msisdn" id="msisdn" required>
+                        </div>
+
+                        <div class="form-control">
+                            <label for="phonecontact" class="required">Phone Contact:</label>
+                            <input type="text" name="phonecontact" id="phonecontact" required>
+                        </div>
+
+                        <div class="form-control">
+                            <label for="firstname" class="required">First Name:</label>
+                            <input type="text" name="firstname" id="firstname" required>
+                        </div>
+
+
+                        <div class="form-control">
+                            <label for="lastname" class="required">Last Name:</label>
+                            <input type="text" name="lastname" id="lastname" required>
+                        </div>
+
+
+                        <div class="form-control">
+                            <label for="id-type" class="required">ID Type:</label>
+                            <select name="id-type" id="id-type" required>
+                                <option value="passport">Passport</option>
+                                <option value="drivers_licence">Drivers Licence</option>
+                                <option value="national_id">National ID</option>
+                                <option value="nhia">NHIA</option>
+                            </select>
+                        </div>
+
+                        <div class="form-control">
+                            <label for="id" class="required">ID:</label>
+                            <input type="text" id="id" name="id" required>
+                        </div>
+
+                        <div class="form-control-activation-btn">
+
+                            <div id="progressIndicator-activate" class="progressIndicator">
+                                <img src="/images/ajax-loader.gif" alt="Loading Bundles...">
+                            </div>
+                            <button type="submit">Register</button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+

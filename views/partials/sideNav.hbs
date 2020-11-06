@@ -1,0 +1,36 @@
+<div class="side-nav">
+    <div class="side-nav-logo">
+        <h3>IN Web Portal</h3>
+    </div>
+
+    <div class="side-nav-main">
+        <div class="side-nav-main-wrapper">
+            <ul>
+                {{#with status}}
+                    <li class="{{sub}}"><a href="/"><i class="fas fa-search"></i> Subscriber Account</a></li>
+                    <li class="{{maccount}}"><a href="/manageaccount"><i class="fas fa-wallet"></i> Manage Account</a></li>
+                    <li class="{{top}}"><a href="/topup"><i class="fab fa-internet-explorer"></i>Internet Bundle</a></li>
+                    <li class="{{load}}"><a href="/loadcard"><i class="far fa-credit-card"></i> Load Voucher</a></li>
+                    <li class="{{manage}}"><a href="/checkvoucher"><i class="fas fa-cart-plus"></i>Manage Voucher</a></li>
+                    <li class="{{overscratch}}"><a href="/overscratch"><i class="far fa-credit-card"></i>Over-Scratch TopUp</a></li>
+                    <li class="{{hist}}"><a href="/viewhist"><i class="fas fa-history"></i> View Account History</a></li>
+                    <li class="{{act}}"><a href="/activate"><i class="fas fa-traffic-light"></i>New Activation</a></li>
+                    <li class="{{tra}}"><a href="/transfer"><i class="fas fa-exchange-alt"></i>Transfer Data</a></li>
+                {{/with}}
+
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="side-nav-footer">
+        <div class="side-nav-footer-wrapper">
+            <a href="/user">Create New User</a>
+            <a id="change-pass-btn" href="/changepass">Change Password</a>
+            <a id="logout-btn" href="/logout"><i class="fas fa-sign-out-alt"></i>&nbsp;Logout</a>
+
+        </div>
+
+    </div>
+
+</div>

@@ -1,0 +1,80 @@
+{{#if l3}}
+    {{> sideNav }}
+{{else if l2}}
+    {{> sideNavlevel_two }}
+{{else }}
+    {{> sideNavlevel_one }}
+{{/if}}
+<div class="top-up-overlay" id="top-up-overlay">
+    <div class="top-up-dialog-box">
+        <h3><i class="fas fa-exclamation-triangle"></i>&nbsp;&nbsp;Confirm Top-up</h3>
+        <ul class="message-box">
+            <li>Bundle Name: <span id="topup-dialog-bdlname"></span> </li>
+            <li>Subscriber msisdn:<span id="topup-dialog-msisdn"></span></li>
+            <li>Top-up Reason:<span id="topup-dialog-reason"></span></li>
+        </ul>
+        <div id="progessIndicator" class="progessIndicator">
+            <img src="/images/ajax-loader.gif" alt="Processing Request">
+        </div>
+        <div class="diaglog-btns">
+            <button id="ok-btn">Proceed</button>
+            <button id="cancel-btn">Cancel</button>
+        </div>
+
+
+    </div>
+</div>
+<div class="all-container">
+
+    <div class="all-main-content">
+        <div class="all-main-content-wrapper">
+            <div class="form-wrapper">
+                <div class="manageVoucher-error" id="loadbundles-error">
+                    <button id="times-button-error" class="times-button">&times;</button>
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <small></small>
+                </div>
+                <div class="manageVoucher-success" id="loadbundles-success">
+                    <button id="times-button-success" class="times-button">&times;</button>
+                    <i class="fas fa-thumbs-up"></i>
+                    <small></small>
+                </div>
+
+                    <div class="form-group1">
+                        <label for="msisdn-topup">Subscriber msisdn: </label>
+                        <input type="text" id="msisdn-topup" name="msisdn_topup" placeholder="Enter msisdn ..."
+                               maxlength="12" minlength="12" required autofocus autocomplete="true">
+                    </div>
+
+                    <div class="form-group2" id="form-group2">
+                        <div id="progessIndicator" class="progessIndicator">
+                            <span>Loading bundles .....</span>
+                            <img src="/images/ajax-loader.gif" alt="Loading Bundles...">
+                        </div>
+
+                        <fieldset id="bundle-category-fieldset">
+                            <legend>Bundle Categories</legend>
+                            <ul id="bundle-category-list"></ul>
+                        </fieldset>
+                        <fieldset id="reason-fieldset">
+                            <legend>Reason</legend>
+                            <ul class="reason-list">
+                                <li><label><input type="radio" name="reason"  value="Refund">Refund</label></li>
+                                <li><label><input type="radio" name="reason" value="Normal">Normal</label></li>
+                                <li><label><input type="radio" name="reason" value="Siebel Issue">Siebel Issue</label></li>
+                                <li><label><input type="radio" name="reason" value="Customer Request">Customer Request</label></li>
+                            </ul>
+                            <small id="reason-error" class="error-message"><i class="fas fa-exclamation-triangle"></i>&nbsp;&nbsp;Please choose reason for this top-up</small>
+                        </fieldset>
+
+
+                    </div>
+            </div>
+            <div class="bundles-tables-container" id="bundle-tables-container">
+
+            </div>
+        </div>
+    </div>
+
+
+</div>

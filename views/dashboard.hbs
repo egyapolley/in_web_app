@@ -1,0 +1,94 @@
+<div class="dash-container">
+
+    {{#if l3}}
+        {{> sideNav }}
+    {{else if l2}}
+        {{> sideNavlevel_two }}
+    {{else }}
+        {{> sideNavlevel_one }}
+    {{/if}}
+
+
+    <div class="dash-main-content">
+        <div class="dash-main-content-wrapper">
+            <div class="dash-main-content-header">
+
+                <div class="item1">
+                    <span> Welcome, {{firstname}}</span>
+                </div>
+                <div class="item2">
+                    <form action="/balance" id="search-form">
+                        <div class="form-control">
+                            <input type="text" id="msisdn" name="search-msisdn" placeholder="Enter msisdn..." required
+                                   autofocus minlength="12" maxlength="12" aria-autocomplete="both" autocomplete>
+                            <button type="submit">Search</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="item3">
+                    <a id="session-msisdn" href=""></a>
+                    <a id="refresh-btn" href=""><i class="fas fa-sync"></i></a>
+
+                </div>
+
+            </div>
+            <div class="manageVoucher-error" id="dashboard-error">
+                <button id="times-button-error" class="times-button">&times;</button>
+                <i class="fas fa-exclamation-triangle"></i>
+                <small></small>
+            </div>
+
+            <div id="progressIndicator-dashboard" class="progressIndicator-dashboard">
+                <span>Loading .....</span>
+                <img src="/images/ajax-loader.gif" alt="Loading Bundles...">
+            </div>
+            <div class="dash-main-content-body" id="dash-body">
+                <div class="acct-wrapper">
+                    <div class="balance-table-wrapper item1">
+                        <fieldset class="table-fieldset">
+                            <legend>Account Balance</legend>
+                            <table id="balance-table">
+                                <thead>
+                                <tr>
+                                    <th>Balance Type Name</th>
+                                    <th>Total Value</th>
+                                    <th>Expiry Date</th>
+                                </tr>
+
+                                </thead>
+
+                                <tbody id="balance-table-tbody"></tbody>
+                            </table>
+                        </fieldset>
+                    </div>
+                    <div class="general-acct-info item2">
+                        <div class="general-acct-info-table-wrapper">
+                            <fieldset class="table-fieldset">
+                                <legend>Subscriber Information</legend>
+                                <table id="acct-info-table">
+                                    <tbody id="acct-info-table-tbody"></tbody>
+                                </table>
+                            </fieldset>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="acct-tags">
+                    <div class="tags-wrapper">
+                        <fieldset class="table-fieldset">
+                            <legend>Subscriber Tags</legend>
+                            <table id="tags-table">
+                                <tbody id="tags-table-tbody"></tbody>
+                            </table>
+                        </fieldset>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
