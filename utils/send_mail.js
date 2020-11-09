@@ -147,6 +147,8 @@ module.exports = {
  
  <p style="font-size: 16px"><strong>If the button above does not work, copy and paste the address below into a new browser window.</strong></p>
  <p style="font-size: 16px"><span style="background: aqua;">http://inweb.surflinegh.com</span></p>
+ <p style="font-size: 16px"><strong>We advise you change your password once your are logged in successfully</strong></p>
+ 
  <p style="font-size: 16px"><i>Your Surfline IT Team</i> </p>
 `;
 

@@ -2634,6 +2634,7 @@ module.exports = {
          <pi:password>admin</pi:password>
          <pi:MSISDN>${msisdn}</pi:MSISDN>
          <pi:STATUS>${state}</pi:STATUS>
+         <pi:WALLET_EXPIRY_DATE></pi:WALLET_EXPIRY_DATE>
          <pi:EXTRA_EDR>TRANSACTION_ID=${txn_id}|CHANNEL=IN_Web|USER=${user}</pi:EXTRA_EDR>
       </pi:CCSCD1_CHG>
    </soapenv:Body>
@@ -3041,7 +3042,7 @@ module.exports = {
             }
         } catch (e) {
             console.log(e);
-            res.json({error: "System Error, Account creation failed"})
+            res.json({error: "System Error, Account creation failed. Username/Email already exist"})
         }
 
 
