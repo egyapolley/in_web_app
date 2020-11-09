@@ -11,6 +11,12 @@
     <div class="all-main-content">
         <div class="all-main-content-wrapper">
             <div class="form-wrapper">
+                <div class="manageVoucher-error" id="viewHist-error">
+                    <button id="times-button-error" class="times-button">&times;</button>
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <small></small>
+                </div>
+
                 <form action="/viewhist" method="post" id="view-hist-form">
                     <div class="form-wrapper-history">
                         <div class="form-control-wrapper">
@@ -18,7 +24,7 @@
 
                                 <div class="form-control-viewHist__item">
                                     <label for="sub-msisdn">Subscriber msisdn:</label>
-                                    <input type="text" id="sub-msisdn" name="msisdn" placeholder="Enter msisdn ..." autofocus autocomplete="true" required>
+                                    <input type="text" id="sub-msisdn" name="msisdn" placeholder="Enter msisdn 233255..." autofocus autocomplete="true" required minlength="12">
                                 </div>
 
                             </div>
@@ -50,12 +56,12 @@
 
                                 <div class="form-control-viewHist__item item3">
                                     <label for="startdate">Start Date:</label>
-                                    <input type="datetime-local" name="startdate" id="startdate" required  >
+                                    <input type="text" name="startdate" id="startdate" required  class="hist-date">
                                 </div>
 
                                 <div class="form-control-viewHist__item item4">
                                     <label for="enddate">End Date:</label>
-                                    <input type="datetime-local" name="enddate" id="enddate" required >
+                                    <input type="text" name="enddate" id="enddate" required class="hist-date" >
                                 </div>
 
 

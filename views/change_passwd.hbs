@@ -1,0 +1,58 @@
+
+<div class="login-body-container">
+    <h3 class="forgot-password-heading">Change Password</h3>
+
+    <form action="/changepass" id="change-pass-form" method="post">
+
+        <div class="change-password-form-container">
+
+
+            <div id="reset-pass-group-1">
+                <h3><i class="fas fa-check-circle"></i>&nbsp;Password updated</h3>
+                <a href="/login"><i class="fas fa-sign-in-alt"></i>&nbsp;Click to Login</a>
+            </div>
+
+            <div id="reset-pass-group-2">
+                <div class="messageWrapper-reset-passwd" id="messageWrapper-reset-passwd">
+                    <span id="error-message-reset-passwd"></span>
+                </div>
+
+                    <div class="form-controls-wrapper">
+                        <div class="form-control-changePass">
+                            <label for="password">Old Password</label>
+                            <i class="far fa-eye togglePassword"></i>
+                            <input type="password" name="oldpass" id="oldpass" required>
+
+                        </div>
+                        <div class="form-control-changePass">
+                            <label for="password">New Password</label>
+                            <i class="far fa-eye togglePassword"></i>
+                            <input type="password" name="password" id="password" required>
+
+                        </div>
+                        <div class="form-control-changePass">
+                            <label for="password2">Confirm New Password</label>
+                            <i class="far fa-eye togglePassword"></i>
+                            <input type="password" name="password" id="password2" required>
+
+                        </div>
+                        <div class="form-control-changePass">
+                            <div id="progressIndicator-forgetpasswd" class="progressIndicator">
+                                <img src="/images/ajax-loader.gif" alt="Loading Bundles...">
+                            </div>
+                        </div>
+                        <div class="form-control-changePass">
+                            <button id="cancel-forget-pass-btn2" type="button">Exit</button>
+                            <button id="reset-submit-pass-btn" type="submit">Submit</button>
+
+                        </div>
+                    </div>
+
+
+            </div>
+
+        </div>
+    </form>
+
+
+</div>

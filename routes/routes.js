@@ -59,12 +59,19 @@ router.post("/login", passport.authenticate("local", {
     failureFlash: true
 }));
 router.get("/fpass",controller.renderforgetPasswd);
+router.post("/forgetpass",controller.postForgetPasswd);
+router.get("/reset/:uuid",controller.renderResetpasswd);
+router.post("/reset",controller.postResetpasswd);
+
 
 router.get("/logout", middleware.checkAuthenticated,controller.getlogout);
+router.get("/changepass",middleware.checkAuthenticated,controller.renderChangePass )
+router.post("/changepass",middleware.checkAuthenticated,controller.postChangePass )
 
 router.get("/user",middleware.checkAuthenticated,middleware.checkForLevel_Three,controller.rendercreateuser)
 
-router.post("/user", middleware.checkAuthenticated,middleware.checkForLevel_Three,controller.postcreateuser)
+router.post("/user", middleware.checkAuthenticated,middleware.checkForLevel_Three,controller.postcreateuser);
+
 
 
 

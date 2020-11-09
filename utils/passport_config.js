@@ -12,7 +12,7 @@ function initializePassport(passport){
                 if (isValid) return done(null, user);
                 else return done(null, false, {message: "Invalid Password"})
             }
-            done(null, false, {message: "Invalid Username"})
+            done(null, false, {message: `Invalid Username  "${username}"`})
         } catch (e) {
             done(e)
         }

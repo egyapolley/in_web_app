@@ -137,6 +137,7 @@ module.exports = {
         1102:"Bundle ExpiryTrack Status",
         1142:"Lite Boost Ext",
         1143:"Activate_Unlimited Count",
+        1162:"SetPromoExtensionTag  Count",
     },
 
     balanceTypesArrays:[

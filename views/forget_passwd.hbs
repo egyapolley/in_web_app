@@ -1,17 +1,24 @@
 
 <div class="login-body-container">
-    <div class="forget-passwd-main-container">
-        <div class="message_error" id="message_error_email">
-            <span id="error_messsge_email"></span>
-        </div>
-        <div class="forget-pass-container" id="forget-pass-container">
-            <div class="form-control-forget_passwd">
-                <input type="email" name="email" id="email-forget-passwd" required placeholder="Enter your Surfline Email address">
-                <div class="forget-pass-btn-group">
-                    <button id="submit-forget-pass-btn" type="button">Submit</button>
-                    <button id="cancel-forget-pass-btn" type="button">Cancel</button>
+    <h3 class="forgot-password-heading">Forgot Password</h3>
+    <form action="/forgetpass" method="post" id="forgetpasswd-form">
+        <div class="forget-passwd-main-container">
+            <div class="message_wrapper-forgetPass" id="message_wrapper-forgetPass">
+                <span id="message-forgetPass"></span>
+            </div>
+            <div class="forget-pass-container" id="forget-pass-container">
+                <div class="form-control-forget_passwd">
+                    <input type="email" name="email" id="email-forget-passwd" required placeholder="Enter your Surfline Email address" autocomplete="true">
+                    <div id="progressIndicator-forgetpasswd" class="progressIndicator">
+                        <img src="/images/ajax-loader.gif" alt="Loading Bundles...">
+                    </div>
+                    <div class="forget-pass-btn-group">
+                        <button id="cancel-forget-pass-btn" type="button">Exit</button>
+                        <button id="submit-forget-pass-btn" type="submit">Submit</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </form>
+
 </div>

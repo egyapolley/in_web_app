@@ -31,12 +31,10 @@
 
                 <form action="" id="transfer-form">
                     <div class="form-body-transfer">
-
-
                         <div class="form-control">
                             <fieldset>
                                 <legend>Donor</legend>
-                                <label><span class="t_required">From:</span><input type="text" name="from-msisdn" required id="from-msisdn"></label>
+                                <label><span class="t_required">From:</span><input type="text" name="from-msisdn" required id="from-msisdn" placeholder="233255..."></label>
                                 <label><span class="t_required">Amount(GB):</span><input type="text" name="from-amount" required   id="from-amount"></label>
                                 <label><span class="t_required">Bundle:</span><select name="from-bundle" id="from-bundle" required>
                                     {{#each balanceTypes}}
@@ -47,12 +45,9 @@
                             </fieldset>
                         </div>
                         <div class="form-control">
-                            <button type="submit">Send</button>
-                        </div>
-                        <div class="form-control">
                             <fieldset>
                                 <legend>Recipient</legend>
-                                <label><span class="t_required">To:</span><input type="text" name="to-msisdn" required id="to-msisdn"></label>
+                                <label><span class="t_required">To:</span><input type="text" name="to-msisdn" required id="to-msisdn" placeholder="233255..."></label>
                                 <label><span class="t_required">Bundle:</span><select name="to-bundle" id="to-bundle">
                                     {{#each balanceTypes}}
                                         <option value="{{this}}">{{this}}</option>
@@ -62,7 +57,7 @@
                                 <label><span>Validity:</span><input type="number" name="to-validity" min="1" id="to-validity" ></label>
                                 <label>
                                     <div class="validity-type">
-                                        <label ><input name="period-transfer" type="radio" value="days" checked>Days</label>
+                                        <label ><input name="period-transfer" type="radio" value="days">Days</label>
                                         <label ><input name="period-transfer" type="radio" value="month">Months</label>
                                     </div>
                                 </label>
@@ -71,6 +66,9 @@
 
                             </fieldset>
                         </div>
+                    </div>
+                    <div class="form-control-transfer-button">
+                        <button type="submit">Send</button>
                     </div>
 
                 </form>

@@ -1,4 +1,3 @@
-const dataSet = require("../testData");
 const soapRequest = require("easy-soap-request");
 const xml2js = require("xml2js");
 const utils = require("../utils/main_utils");
@@ -10,8 +9,18 @@ const mysql = require('mysql2');
 const appData = require("../utils/appdata");
 const validator = require("../utils/valiators");
 const bcrypt = require("bcrypt");
+const UserUUID = require("../models/userUUID");
+const sendMail = require("../utils/send_mail");
+const path = require("path");
+const UserLog = require("../models/userlogs");
 
 const User = require("../models/users")
+
+require("dotenv").config({
+    path: path.join(__dirname, "../config.env")
+});
+
+
 
 
 const options = {
@@ -34,19 +43,30 @@ const options = {
 };
 
 
+let PI_ENDPOINT ="http://172.25.39.13:3003";
+let OSD_ENDPOINT="http://172.25.39.16:2222";
+
+let HOST = process.env.PROD_HOST;
+if (process.env.NODE_ENV === "development") {
+    HOST = process.env.TEST_HOST;
+    PI_ENDPOINT ="http://172.25.38.42:3003";
+    OSD_ENDPOINT="http://172.25.38.43:2222";
+}
+
+
 module.exports = {
 
-    renderlogin: async (req,res) =>{
-        res.render("login",{error: req.flash("error")})
+    renderlogin: async (req, res) => {
+        res.render("login", {error: req.flash("error")})
 
     },
 
-    renderforgetPasswd: async (req,res) =>{
+    renderforgetPasswd: async (req, res) => {
         res.render("forget_passwd")
 
     },
 
-    rendercreateuser: async (req, res)=>{
+    rendercreateuser: async (req, res) => {
         res.render("createuser")
     },
 
@@ -63,9 +83,9 @@ module.exports = {
             tra: "",
         };
         const role = utils.getUserRole(req.user);
-        let firstname= req.user.firstname;
-        firstname =firstname.charAt(0).toUpperCase()+firstname.substring(1);
-        res.render("dashboard", {status,...role,firstname })
+        let firstname = req.user.firstname;
+        firstname = firstname.charAt(0).toUpperCase() + firstname.substring(1);
+        res.render("dashboard", {status, ...role, firstname})
 
     },
     getbalances: async (req, res) => {
@@ -75,7 +95,7 @@ module.exports = {
         let processSubInfo = false;
         let processAcctTags = false;
 
-        const url = "http://172.25.39.13:3002";
+        const url = PI_ENDPOINT;
         const sampleHeaders = {
             'User-Agent': 'NodeApp',
             'Content-Type': 'text/xml;charset=UTF-8',
@@ -222,99 +242,167 @@ module.exports = {
                                 xml: getTagsInfo,
                                 timeout: 3000
                             });
-                            const {headers, body, statusCode} = response;
+                            const {body} = response;
                             let jsonObj = parser.parse(body, options);
-                            let acct_tags_jsonResult = jsonObj.Envelope.Body.CCSCD9_QRYResponse.TAGS.TAG;
+                            if (jsonObj.Envelope.Body.CCSCD9_QRYResponse && jsonObj.Envelope.Body.CCSCD9_QRYResponse.TAGS && jsonObj.Envelope.Body.CCSCD9_QRYResponse.TAGS.TAG){
+                                let acct_tags_jsonResult = jsonObj.Envelope.Body.CCSCD9_QRYResponse.TAGS.TAG;
 
 
-                            let isImsi, isImei, isDeviceType, isEmailId, isPhoneContact, isGiftTransferCounter,
-                                isTemTag = false;
+                                let isImsi, isImei, isDeviceType, isEmailId, isPhoneContact, isGiftTransferCounter,
+                                    isTemTag = false;
 
-                            acct_tags_jsonResult.forEach(function (tag) {
-                                if (tag.NAME === 'AltSMSNotifNo') {
-                                    general_acct_info.push({
-                                        parameterName: "Phone Contact",
-                                        parameterValue: tag.VALUE ? tag.VALUE : "n/a"
-                                    });
-                                    isPhoneContact = true;
-                                }
-                                if (tag.NAME === 'IMSI') {
-                                    general_acct_info.push({
-                                        parameterName: "IMSI",
-                                        parameterValue: tag.VALUE ? tag.VALUE : "n/a"
-                                    });
-                                    isImsi = true;
-                                }
-                                if (tag.NAME === 'IMEI') {
-                                    general_acct_info.push({
-                                        parameterName: "IMEI",
-                                        parameterValue: tag.VALUE ? tag.VALUE : "n/a"
-                                    });
-                                    isImei = true;
-                                }
-                                if (tag.NAME === 'DeviceType') {
-                                    general_acct_info.push({
-                                        parameterName: "Device Type",
-                                        parameterValue: tag.VALUE ? tag.VALUE : "n/a"
-                                    });
-                                    isDeviceType = true;
-                                }
-                                if (tag.NAME === 'EmailID') {
-                                    general_acct_info.push({
-                                        parameterName: "Email Address",
-                                        parameterValue: tag.VALUE ? tag.VALUE : "n/a"
-                                    });
-                                    isEmailId = true;
+                                if (Array.isArray(acct_tags_jsonResult)){
+                                    acct_tags_jsonResult.forEach(function (tag) {
+                                        if (tag.NAME === 'AltSMSNotifNo') {
+                                            general_acct_info.push({
+                                                parameterName: "Phone Contact",
+                                                parameterValue: tag.VALUE ? tag.VALUE : "n/a"
+                                            });
+                                            isPhoneContact = true;
+                                        }
+                                        if (tag.NAME === 'IMSI') {
+                                            general_acct_info.push({
+                                                parameterName: "IMSI",
+                                                parameterValue: tag.VALUE ? tag.VALUE : "n/a"
+                                            });
+                                            isImsi = true;
+                                        }
+                                        if (tag.NAME === 'IMEI') {
+                                            general_acct_info.push({
+                                                parameterName: "IMEI",
+                                                parameterValue: tag.VALUE ? tag.VALUE : "n/a"
+                                            });
+                                            isImei = true;
+                                        }
+                                        if (tag.NAME === 'DeviceType') {
+                                            general_acct_info.push({
+                                                parameterName: "Device Type",
+                                                parameterValue: tag.VALUE ? tag.VALUE : "n/a"
+                                            });
+                                            isDeviceType = true;
+                                        }
+                                        if (tag.NAME === 'EmailID') {
+                                            general_acct_info.push({
+                                                parameterName: "Email Address",
+                                                parameterValue: tag.VALUE ? tag.VALUE : "n/a"
+                                            });
+                                            isEmailId = true;
+                                        }
+
+                                        if (tag.NAME === 'GiftTransferCount') {
+                                            acct_tags.push({
+                                                parameterName: "Gift Transfer Counter",
+                                                parameterValue: tag.VALUE ? tag.VALUE : "n/a"
+                                            });
+                                            isGiftTransferCounter = true;
+                                        }
+                                        if (tag.NAME === 'TempTag' && /winback/i.test(tag.VALUE.toString())) {
+                                            acct_tags.push({
+                                                parameterName: "Winback Status",
+                                                parameterValue: tag.VALUE ? tag.VALUE : "n/a"
+                                            });
+                                            isTemTag = true;
+                                        }
+
+                                    })
+
+                                }else {
+                                    let tag = acct_tags_jsonResult;
+
+                                    if (tag.NAME === 'AltSMSNotifNo') {
+                                        general_acct_info.push({
+                                            parameterName: "Phone Contact",
+                                            parameterValue: tag.VALUE ? tag.VALUE : "n/a"
+                                        });
+                                        isPhoneContact = true;
+                                    }
+                                    if (tag.NAME === 'IMSI') {
+                                        general_acct_info.push({
+                                            parameterName: "IMSI",
+                                            parameterValue: tag.VALUE ? tag.VALUE : "n/a"
+                                        });
+                                        isImsi = true;
+                                    }
+                                    if (tag.NAME === 'IMEI') {
+                                        general_acct_info.push({
+                                            parameterName: "IMEI",
+                                            parameterValue: tag.VALUE ? tag.VALUE : "n/a"
+                                        });
+                                        isImei = true;
+                                    }
+                                    if (tag.NAME === 'DeviceType') {
+                                        general_acct_info.push({
+                                            parameterName: "Device Type",
+                                            parameterValue: tag.VALUE ? tag.VALUE : "n/a"
+                                        });
+                                        isDeviceType = true;
+                                    }
+                                    if (tag.NAME === 'EmailID') {
+                                        general_acct_info.push({
+                                            parameterName: "Email Address",
+                                            parameterValue: tag.VALUE ? tag.VALUE : "n/a"
+                                        });
+                                        isEmailId = true;
+                                    }
+
+                                    if (tag.NAME === 'GiftTransferCount') {
+                                        acct_tags.push({
+                                            parameterName: "Gift Transfer Counter",
+                                            parameterValue: tag.VALUE ? tag.VALUE : "n/a"
+                                        });
+                                        isGiftTransferCounter = true;
+                                    }
+                                    if (tag.NAME === 'TempTag' && /winback/i.test(tag.VALUE.toString())) {
+                                        acct_tags.push({
+                                            parameterName: "Winback Status",
+                                            parameterValue: tag.VALUE ? tag.VALUE : "n/a"
+                                        });
+                                        isTemTag = true;
+                                    }
+
                                 }
 
-                                if (tag.NAME === 'GiftTransferCount') {
-                                    acct_tags.push({
-                                        parameterName: "Gift Transfer Counter",
-                                        parameterValue: tag.VALUE ? tag.VALUE : "n/a"
-                                    });
-                                    isGiftTransferCounter = true;
-                                }
-                                if (tag.NAME === 'TempTag' && /winback/i.test(tag.VALUE.toString())) {
-                                    acct_tags.push({
-                                        parameterName: "Winback Status",
-                                        parameterValue: tag.VALUE ? tag.VALUE : "n/a"
-                                    });
-                                    isTemTag = true;
-                                }
 
-                            })
-                            processAcctTags = true;
-                            if (!isDeviceType) general_acct_info.push({
-                                parameterName: "Device Type",
-                                parameterValue: ""
-                            });
-                            if (!isPhoneContact) general_acct_info.push({
-                                parameterName: "Phone Contact",
-                                parameterValue: ""
-                            });
-                            if (!isEmailId) general_acct_info.push({
-                                parameterName: "Email Address",
-                                parameterValue: ""
-                            });
-                            if (!isImsi) general_acct_info.push({parameterName: "IMSI", parameterValue: ""});
-                            if (!isImei) general_acct_info.push({parameterName: "IMEI", parameterValue: ""});
-                            if (!isGiftTransferCounter) acct_tags.push({
-                                parameterName: "Gift Transfer Counter",
-                                parameterValue: ""
-                            });
-                            if (!isTemTag) acct_tags.push({parameterName: "Winback Status", parameterValue: ""});
+                                processAcctTags = true;
+                                if (!isDeviceType) general_acct_info.push({
+                                    parameterName: "Device Type",
+                                    parameterValue: ""
+                                });
+                                if (!isPhoneContact) general_acct_info.push({
+                                    parameterName: "Phone Contact",
+                                    parameterValue: ""
+                                });
+                                if (!isEmailId) general_acct_info.push({
+                                    parameterName: "Email Address",
+                                    parameterValue: ""
+                                });
+                                if (!isImsi) general_acct_info.push({parameterName: "IMSI", parameterValue: ""});
+                                if (!isImei) general_acct_info.push({parameterName: "IMEI", parameterValue: ""});
+                                if (!isGiftTransferCounter) acct_tags.push({
+                                    parameterName: "Gift Transfer Counter",
+                                    parameterValue: ""
+                                });
+                                if (!isTemTag) acct_tags.push({parameterName: "Winback Status", parameterValue: ""});
+
+                            }
+
 
                         }
 
 
                     }
-                    if (processBalance && processSubInfo && processAcctTags) {
-                        finalResult.balances = balanceResult;
-                        finalResult.general_acct = general_acct_info;
-                        finalResult.acct_tags = acct_tags;
-                        res.json(finalResult);
+                    finalResult.balances = balanceResult;
+                    finalResult.general_acct = general_acct_info;
+                    finalResult.acct_tags = acct_tags;
+                    res.json(finalResult);
 
-                    }
+                    // if (processBalance && processSubInfo && processAcctTags) {
+                    //     finalResult.balances = balanceResult;
+                    //     finalResult.general_acct = general_acct_info;
+                    //     finalResult.acct_tags = acct_tags;
+                    //     res.json(finalResult);
+                    //
+                    // }
 
                 }
 
@@ -329,11 +417,6 @@ module.exports = {
 
         }
 
-
-        /*      await setTimeout(() => {
-                  res.json(dataSet.acct_info)
-
-              }, 1000)*/
 
     },
 
@@ -350,14 +433,14 @@ module.exports = {
             tra: "",
         }
         const role = utils.getUserRole(req.user)
-        res.render("topUp", {status,...role})
+        res.render("topUp", {status, ...role})
 
     },
 
     getbundles: async (req, res) => {
         const msisdn = req.query.msisdn
 
-        const url = "http://172.25.39.16:2222";
+        const url = OSD_ENDPOINT;
         const sampleHeaders = {
             'User-Agent': 'NodeApp',
             'Content-Type': 'text/xml;charset=UTF-8',
@@ -431,9 +514,10 @@ module.exports = {
                                 let dataValue = bundleDetailtemp[0];
                                 let price = bundleDetailtemp[1];
                                 price = price.substring(3)
+                                let period = bundleDetailtemp[2];
                                 let validity = parseInt(bundleDetailtemp[2]);
                                 let validity_period;
-                                if (/hrs/ig.test(validity.toString())) {
+                                if (/hrs/ig.test(period.toString())) {
                                     validity_period = "hrs";
                                 } else {
                                     validity_period = "days";
@@ -479,10 +563,11 @@ module.exports = {
     },
 
     postbundle: async (req, res) => {
+        console.log(req.body)
         const {msisdn, bdlid, subtype, reason} = req.body;
         const txn_id = uuid.v4();
-        const user = "EGH00047";
-        const url = "http://172.25.38.43:2222";
+        const user = req.user.username;
+        const url = OSD_ENDPOINT;
 
         const sampleHeaders = {
             'User-Agent': 'NodeApp',
@@ -511,23 +596,53 @@ module.exports = {
             const {response} = await soapRequest({url: url, headers: sampleHeaders, xml: xmlRequest, timeout: 3000}); // Optional timeout parameter(milliseconds)
 
             const {body} = response;
-            if (body.toString().includes("DATA_RechargesResult")) {
-                return res.json({success: "success"})
-            }
+            let jsonObj = parser.parse(body, options);
+            if (!jsonObj.Envelope.Body.DATA_RechargesResult) {
+                res.json({success: "success"});
+                let transaction_details = `msisdn=${msisdn}|bundleid=${bdlid}|subType=${subtype}|reason=${reason}`;
+                let username = user;
+                let transaction_id = txn_id;
+                let status = "completed";
+                let transaction_type = "bundle purchase";
+                let userlog = new UserLog({username, transaction_id, transaction_type, transaction_details, status});
+                userlog = await userlog.save();
+                if (userlog) {
+                } else {
+                    console.log("Transaction logging failed")
 
-        } catch (e) {
-            let body = e.toString();
-            if (body.includes("faultcode")) {
-                let regex = /errorCode>(.+)<\//
-                let match = regex.exec(body);
-                switch (match[1]) {
-                    case "55":
-                        return res.json({error: "Subscriber has insufficient cash balance in account"});
-                    default:
-                        return res.json({error: "General Failure,Please contact SysAdmin"})
                 }
 
             }
+
+
+        } catch (error) {
+            let jsonObj = parser.parse(error.toString(), options);
+            const soapResponseBody = jsonObj.Envelope.Body;
+            const errorCode = soapResponseBody.Fault.detail.DATA_RechargesFault.errorCode;
+            let faultMessage = "Network Failure, IN not reachable";
+            switch (errorCode) {
+                case 50:
+                    faultMessage = "Account is not active";
+                    break;
+                case 51:
+                    faultMessage = "Invalid Bundle";
+                    break;
+                case 53:
+                    faultMessage = "Transient Error";
+                    break;
+                case 55:
+                    faultMessage = "Account has insufficient credit/General Failure";
+                    break;
+
+                case 102:
+                    faultMessage = "Purchase not allowed.Account has active unlimited bundle";
+                    break;
+                case 105:
+                    faultMessage = "Purchase of this bundle  is not allowed at this time";
+                    break;
+            }
+
+            res.json({error: faultMessage});
 
 
         }
@@ -548,16 +663,17 @@ module.exports = {
             tra: "",
         }
         const role = utils.getUserRole(req.user);
-        res.render("load_card", {status,...role})
+        res.render("load_card", {status, ...role})
 
     },
     postloadcard: async (req, res) => {
         let msisdn = req.body.msisdn;
         let voucher_pin = req.body.pin;
-        let transactionId = uuid.v4();
+        let txn_id = uuid.v4();
+        let user = req.user.username;
 
 
-        const url = "http://172.25.38.43:2222";
+        const url = OSD_ENDPOINT;
         const sampleHeaders = {
             'User-Agent': 'NodeApp',
             'Content-Type': 'text/xml;charset=UTF-8',
@@ -571,8 +687,9 @@ module.exports = {
       <vouc:VoucherRechargeRequest>
          <CC_Calling_Party_Id>${msisdn}</CC_Calling_Party_Id>
          <CHANNEL>IN_Web_Portal</CHANNEL>
-         <TRANSACTION_ID>${transactionId}</TRANSACTION_ID>
+         <TRANSACTION_ID>${txn_id}</TRANSACTION_ID>
          <WALLET_TYPE>Primary</WALLET_TYPE>
+         <POS_USER>${user}</POS_USER>
          <VoucherNumber>${voucher_pin}</VoucherNumber>
          <ScenarioID>1</ScenarioID>
       </vouc:VoucherRechargeRequest>
@@ -584,40 +701,49 @@ module.exports = {
 
             const {body} = response;
 
-            if (body.includes("VoucherRechargeResult")) {
-                res.json({success: "success"})
-            } else {
-                res.json({error: {message: "Error occurred"}})
-            }
+            let jsonObj = parser.parse(body, options);
+            if (!jsonObj.Envelope.Body.VoucherRechargeResult) {
+                res.json({success: "success"});
+                let transaction_details = `msisdn=${msisdn}|voucher_pin=${voucher_pin}`;
+                let username = user;
+                let transaction_id = txn_id;
+                let status = "completed";
+                let transaction_type = "voucher top-up";
+                let userlog = new UserLog({username, transaction_id, transaction_type, transaction_details, status});
+                userlog = await userlog.save();
+                if (userlog) {
+                } else {
+                    console.log("Transaction logging failed")
 
-
-        } catch (e) {
-            console.log(e)
-            let body = e.toString();
-            if (body.includes("faultcode")) {
-                let regex = /errorCode>(.+)<\//
-                let match = regex.exec(body);
-                let errorCode = match[1];
-                let message;
-                switch (errorCode) {
-                    case "60":
-                        message = "Account is not ACTIVE";
-                        break;
-                    case "63":
-                        message = "Missing input parameters";
-                        break;
-                    case "67":
-                        message = "Voucher already USED";
-                        break;
-                    case "68":
-                        message = "Voucher is INVALID";
-                        break;
                 }
-                res.json({error: {message: message}})
-            } else {
-                res.json({error: {message: "Network timeout,IN unreachable"}})
 
             }
+
+
+        } catch (error) {
+            console.log(error.toString())
+            let jsonObj = parser.parse(error.toString(), options);
+            const soapResponseBody = jsonObj.Envelope.Body;
+            console.log(soapResponseBody)
+            const errorCode = soapResponseBody.Fault.detail.VoucherRechargeFault.errorCode;
+            let faultMessage = "Network Failure, IN not reachable";
+            switch (errorCode) {
+                case 60:
+                    faultMessage = "Account is not ACTIVE";
+                    break;
+                case 63:
+                    faultMessage = "Missing input parameters";
+                    break;
+                case 67:
+                    faultMessage = "Voucher already USED";
+                    break;
+                case 68:
+                    faultMessage = "Voucher is INVALID";
+                    break;
+            }
+            console.log(faultMessage)
+
+            res.json({error: faultMessage});
 
         }
 
@@ -635,7 +761,7 @@ module.exports = {
             tra: "",
         }
         const role = utils.getUserRole(req.user)
-        res.render("checkvoucher", {status,...role})
+        res.render("checkvoucher", {status, ...role})
 
     },
     rendermanageAccount: async (req, res) => {
@@ -669,7 +795,7 @@ module.exports = {
 
         try {
 
-            const url = "http://172.25.38.42:3005";
+            const url = PI_ENDPOINT;
             const sampleHeaders = {
                 'User-Agent': 'NodeApp',
                 'Content-Type': 'text/xml;charset=UTF-8',
@@ -691,7 +817,7 @@ module.exports = {
             const {response} = await soapRequest({url: url, headers: sampleHeaders, xml: xmlvoucher, timeout: 4000}); // Optional timeout parameter(milliseconds)
 
 
-            const {body, statusCode} = response;
+            const {body} = response;
 
             if (body.includes("faultcode")) {
 
@@ -747,11 +873,6 @@ module.exports = {
 
         }
 
-
-        /*      await setTimeout(() =>{
-                  res.json({success:dataSet.voucher_info});
-
-              },1000)*/
     },
 
     renderviewhistory: (req, res) => {
@@ -767,7 +888,7 @@ module.exports = {
             tra: "",
         }
         const role = utils.getUserRole(req.user);
-        res.render("viewHist", {status,...role});
+        res.render("viewHist", {status, ...role});
 
     },
 
@@ -785,7 +906,7 @@ module.exports = {
             tra: "",
         }
         const role = utils.getUserRole(req.user);
-        res.render("activateAccount", {status,...role});
+        res.render("activateAccount", {status, ...role});
 
     },
 
@@ -821,7 +942,7 @@ module.exports = {
             "Ten4Ten Data"
         ]
         const role = utils.getUserRole(req.user)
-        res.render("transfer", {status, balanceTypes: balanceTypes,...role})
+        res.render("transfer", {status, balanceTypes: balanceTypes, ...role})
 
     },
 
@@ -838,7 +959,7 @@ module.exports = {
             tra: "",
         }
         const role = utils.getUserRole(req.user)
-        res.render("overscratchtopup", {status,...role})
+        res.render("overscratchtopup", {status, ...role})
 
 
     },
@@ -847,12 +968,12 @@ module.exports = {
 
         serial = parseInt(serial).toString();
         let txn_id = uuid.v4();
-        let user = "EGH00047";
+        let user = req.user.username
 
 
         try {
 
-            const url_vQuery = "http://172.25.38.42:3005";
+            const url_vQuery = PI_ENDPOINT;
             const v_QueryHeaders = {
                 'User-Agent': 'NodeApp',
                 'Content-Type': 'text/xml;charset=UTF-8',
@@ -876,7 +997,7 @@ module.exports = {
 </soapenv:Envelope>`;
 
 
-            const url_cashTop = "http://172.25.38.43:2222";
+            const url_cashTop = OSD_ENDPOINT;
             const cashTopupHeaders = {
 
                 'User-Agent': 'NodeApp',
@@ -905,13 +1026,22 @@ module.exports = {
 
 
                 if (v_status === 'A' && !v_redeemed_date) {
-                    balances.forEach(function (balance) {
+                    if (Array.isArray(balances)) {
+                        balances.forEach(function (balance) {
 
-                        if (balance.BALANCE_TYPE === "General Cash") {
-                            AMOUNT = balance.AMOUNT;
+                            if (balance.BALANCE_TYPE === "General Cash") {
+                                AMOUNT = balance.AMOUNT;
+                            }
+
+                        });
+
+                    } else {
+
+                        if (balances.BALANCE_TYPE === "General Cash") {
+                            AMOUNT = balances.AMOUNT;
                         }
+                    }
 
-                    });
 
                 } else {
                     return res.json({error: "Voucher already USED"});
@@ -998,13 +1128,33 @@ module.exports = {
                 let jsonObj = parser.parse(body, options);
                 const soapResponseBody = jsonObj.Envelope.Body.CCSVR1_FRZResponse.AUTH;
                 if (soapResponseBody && soapResponseBody.length > 0) {
-                    return res.json({success: "success"})
+                    res.json({success: "success"})
+
+                    let transaction_details = `msisdn=${msisdn}|voucher_serial=${serial}|amount=${AMOUNT}`;
+                    let username = user;
+                    let transaction_id = txn_id;
+                    let status = "completed";
+                    let transaction_type = "over-scratch top-up";
+                    let userlog = new UserLog({
+                        username,
+                        transaction_id,
+                        transaction_type,
+                        transaction_details,
+                        status
+                    });
+                    userlog = await userlog.save();
+                    if (userlog) {
+                    } else {
+                        console.log("Transaction logging failed")
+
+                    }
+
 
                 } else {
 
                     let soapFault = jsonObj.Envelope.Body.Fault;
                     let faultString = soapFault.faultstring;
-                    return res.json({error: faultString});
+                    res.json({error: faultString});
 
                 }
 
@@ -1043,46 +1193,52 @@ module.exports = {
     },
 
     posttransfer: async (req, res) => {
-        console.log(req.body);
-
-        let period = 0;
-        let validity_default = "";
-
-        let {from_msisdn, to_msisdn, amount, to_bundle, from_bundle, validity, validity_type} = req.body;
-        amount = Math.round(amount * 1048576);
-
-        if (validity && parseInt(validity)) {
-            validity_default = validity;
-            switch (validity_type) {
-                case "days":
-                    period = 0;
-                    break;
-                case "months":
-                    period = 1;
-                    break
-            }
-        }
 
 
         try {
 
+            let period = 0;
+            let validity_default = "";
 
-            let isDebitSuccess = false;
+            let {from_msisdn, to_msisdn, amount, to_bundle, from_bundle, validity, validity_type} = req.body;
+
+            const {error} = validator.validateDataTransfer({from_msisdn, to_msisdn, amount, to_bundle, from_bundle});
+            if (error) {
+                res.json({error: error.message})
+
+            } else {
+
+                amount = Math.round(amount * 1048576);
+
+                if (validity && parseInt(validity)) {
+                    validity_default = validity;
+                    switch (validity_type) {
+                        case "days":
+                            period = 0;
+                            break;
+                        case "months":
+                            period = 1;
+                            break
+                    }
+                }
 
 
-            let txn_id = uuid.v4();
-            let user = "EGH00047";
-
-            const debiturl = "http://172.25.38.42:3002";
-
-            const debitheaders = {
-                'User-Agent': 'NodeApp',
-                'Content-Type': 'text/xml;charset=UTF-8',
-                'SOAPAction': 'urn:CCSCD1_CHG',
-            };
+                let isDebitSuccess = false;
 
 
-            const debitXML = `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:pi="http://xmlns.oracle.com/communications/ncc/2009/05/15/pi">
+                let txn_id = uuid.v4();
+                let user = req.user.username;
+
+                const debiturl = PI_ENDPOINT;
+
+                const debitheaders = {
+                    'User-Agent': 'NodeApp',
+                    'Content-Type': 'text/xml;charset=UTF-8',
+                    'SOAPAction': 'urn:CCSCD1_CHG',
+                };
+
+
+                const debitXML = `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:pi="http://xmlns.oracle.com/communications/ncc/2009/05/15/pi">
    <soapenv:Header/>
    <soapenv:Body>
       <pi:CCSCD1_CHG>
@@ -1091,44 +1247,43 @@ module.exports = {
          <pi:MSISDN>${from_msisdn}</pi:MSISDN>
          <pi:BALANCE_TYPE>${from_bundle}</pi:BALANCE_TYPE>
          <pi:BALANCE>${amount}</pi:BALANCE>
-         <pi:EXTRA_EDR>TRANSACTION_ID=${txn_id}|CHANNEL=IN_Web</pi:EXTRA_EDR>
+         <pi:EXTRA_EDR>TRANSACTION_ID=${txn_id}|CHANNEL=IN_Web|POS_USER=${user}</pi:EXTRA_EDR>
       </pi:CCSCD1_CHG>
    </soapenv:Body>
 </soapenv:Envelope>`;
 
+                const {response} = await soapRequest({
+                    url: debiturl,
+                    headers: debitheaders,
+                    xml: debitXML,
+                    timeout: 4000
+                });
+                const {body} = response;
+                let jsonObj = parser.parse(body, options);
 
-            const {response} = await soapRequest({
-                url: debiturl,
-                headers: debitheaders,
-                xml: debitXML,
-                timeout: 4000
-            });
-            const {body} = response;
-            let jsonObj = parser.parse(body, options);
+                const soapResponseBody = jsonObj.Envelope.Body;
 
-            const soapResponseBody = jsonObj.Envelope.Body;
+                if (soapResponseBody.CCSCD1_CHGResponse && soapResponseBody.CCSCD1_CHGResponse.AUTH) {
+                    isDebitSuccess = true;
+                } else {
+                    let soapFault = jsonObj.Envelope.Body.Fault;
+                    let faultString = soapFault.faultstring;
+                    return res.json({error: faultString.toString()})
+                }
 
-            if (soapResponseBody.CCSCD1_CHGResponse && soapResponseBody.CCSCD1_CHGResponse.AUTH) {
-                isDebitSuccess = true;
-            } else {
-                let soapFault = jsonObj.Envelope.Body.Fault;
-                let faultString = soapFault.faultstring;
-                return res.json({error: faultString.toString()})
-            }
+                if (isDebitSuccess) {
 
-            if (isDebitSuccess) {
+                    const url = OSD_ENDPOINT;
 
-                const url = "http://172.25.38.43:2222";
-
-                const headers = {
-                    'User-Agent': 'NodeApp',
-                    'Content-Type': 'text/xml;charset=UTF-8',
-                    'SOAPAction': 'http://172.25.39.13/wsdls/Surfline/CustomRecharge/CustomRecharge',
-                    'Authorization': 'Basic YWlhb3NkMDE6YWlhb3NkMDE='
-                };
+                    const headers = {
+                        'User-Agent': 'NodeApp',
+                        'Content-Type': 'text/xml;charset=UTF-8',
+                        'SOAPAction': 'http://172.25.39.13/wsdls/Surfline/CustomRecharge/CustomRecharge',
+                        'Authorization': 'Basic YWlhb3NkMDE6YWlhb3NkMDE='
+                    };
 
 
-                const creditXML = `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:dat="http://SCLINSMSVM01T/wsdls/Surfline/DataTransferManual.wsdl">
+                    const creditXML = `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:dat="http://SCLINSMSVM01T/wsdls/Surfline/DataTransferManual.wsdl">
    <soapenv:Header/>
    <soapenv:Body>
       <dat:DataTransferManualRequest>
@@ -1149,33 +1304,53 @@ module.exports = {
       </dat:DataTransferManualRequest>
    </soapenv:Body>
 </soapenv:Envelope>`;
-                const {response} = await soapRequest({
-                    url: url,
-                    headers: headers,
-                    xml: creditXML,
-                    timeout: 4000
-                });
-                const {body} = response;
-                let jsonObj = parser.parse(body, options);
-                const soapResponseBody = jsonObj.Envelope.Body;
-                if (!soapResponseBody.DataTransferManualResult) {
-                    return res.json({success: "success"})
+                    const {response} = await soapRequest({
+                        url: url,
+                        headers: headers,
+                        xml: creditXML,
+                        timeout: 4000
+                    });
+                    const {body} = response;
+                    let jsonObj = parser.parse(body, options);
+                    const soapResponseBody = jsonObj.Envelope.Body;
+                    if (!soapResponseBody.DataTransferManualResult) {
+                        res.json({success: "success"})
+                        let transaction_details = `to_msisdn=${to_msisdn}|from_msisdn=${from_msisdn}|amount=${amount}|from_bundle=${from_bundle}|to_bundle=${to_bundle}|to_validity=${validity}|to_validity_type=${validity_type}`;
+                        let username = user;
+                        let transaction_id = txn_id;
+                        let status = "completed";
+                        let transaction_type = "data transfer";
+                        let userlog = new UserLog({
+                            username,
+                            transaction_id,
+                            transaction_type,
+                            transaction_details,
+                            status
+                        });
+                        userlog = await userlog.save();
+                        if (userlog) {
+                        } else {
+                            console.log("Transaction logging failed")
+
+                        }
+                    } else {
+                        let soapFault = jsonObj.Envelope.Body.Fault;
+                        let faultString = soapFault.faultstring;
+                        res.json({error: faultString.toString()})
+                    }
                 } else {
-                    let soapFault = jsonObj.Envelope.Body.Fault;
-                    let faultString = soapFault.faultstring;
-                    return res.json({error: faultString.toString()})
+                    res.json({error: "Error occurred during debit"})
                 }
-            } else {
-                return res.json({error: "Error occurred during debit"})
+
             }
+
 
         } catch (error) {
             let errorBody = error.toString();
-            console.log(errorBody)
             let jsonObj = parser.parse(errorBody, options);
             let soapFault = jsonObj.Envelope.Body.Fault;
             let faultString = soapFault.faultstring;
-            return res.json({error: faultString.toString()})
+            res.json({error: faultString.toString()})
 
 
         }
@@ -1185,7 +1360,7 @@ module.exports = {
 
     postActivate: async (req, res) => {
 
-        const url = "http://172.25.38.43:2222";
+        const url = OSD_ENDPOINT;
 
         const headers = {
             'User-Agent': 'NodeApp',
@@ -1198,6 +1373,8 @@ module.exports = {
         try {
 
             const {msisdn, firstname, lastname, idtype, id, phonecontact} = req.body;
+            let user = req.user.username;
+            let txn_id = uuid.v4();
 
             const XML = `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:acc="http://SCLINSMSVM01T/wsdls/Surfline/AcctActivation.wsdl">
    <soapenv:Header/>
@@ -1238,13 +1415,26 @@ module.exports = {
                     console.log(e);
 
                 }
-                return res.json({success: "success"});
+
+                res.json({success: "success"});
+                let transaction_details = `msisdn=${msisdn}|phonecontact=${phonecontact}|firstname=${firstname}|lastname=${lastname}|id=${id}|id_type=${idtype}`;
+                let username = user;
+                let transaction_id = txn_id;
+                let status = "completed";
+                let transaction_type = "new activation";
+                let userlog = new UserLog({username, transaction_id, transaction_type, transaction_details, status});
+                userlog = await userlog.save();
+                if (userlog) {
+                } else {
+                    console.log("Transaction logging failed")
+
+                }
 
             } else {
                 let soapFault = jsonObj.Envelope.Body.Fault;
                 let faultString = soapFault.faultstring;
                 console.log(soapFault)
-                return res.json({error: faultString})
+                res.json({error: faultString})
             }
 
 
@@ -1259,14 +1449,14 @@ module.exports = {
                     let errorcode = soapFault.detail.AcctActivationFault.errorCode.toString();
                     switch (errorcode) {
                         case "31":
-                            faultString = "Invalid Account provided";
+                            faultString = "Invalid Subscriber provided";
                             break;
 
                         case "32":
                             faultString = "IN System Failure";
                             break;
                     }
-                    return res.json({error: faultString})
+                    res.json({error: faultString})
 
                 } else {
                     console.log(jsonObj)
@@ -1290,11 +1480,11 @@ module.exports = {
 
 
         let {msisdn, begin_date, end_date} = req.body;
-        begin_date = moment(begin_date).format("YYYYMMDDHHmmss");
-        end_date = moment(end_date).format("YYYYMMDDHHmmss");
+        begin_date = moment(begin_date, 'DD-MM-YYYY HH:mm:ss').format("YYYYMMDDHHmmss");
+        end_date = moment(end_date, 'DD-MM-YYYY HH:mm:ss').format("YYYYMMDDHHmmss");
 
 
-        const url = "http://172.25.39.13:3002";
+        const url = PI_ENDPOINT;
         const sampleHeaders = {
             'User-Agent': 'NodeApp',
             'Content-Type': 'text/xml;charset=UTF-8',
@@ -1345,8 +1535,7 @@ module.exports = {
                                         let balance_type = el[1];
                                         let balance_before = el[2];
                                         let cost = el[3];
-                                        // let start_time = el[4];
-                                        // let end_time = el[5];
+
                                         let rating_group = el[4];
                                         if (balance_type.includes(",")) {
                                             let balance_type_items = balance_type.split(",");
@@ -1359,8 +1548,7 @@ module.exports = {
                                                 edr_info.balance_before = balance_before_items[i];
                                                 edr_info.cost = cost_items[i];
                                                 edr_info.balance_after = (parseInt(balance_before_items[i]) - parseInt(cost_items[i])).toString()
-                                                // edr_info.start_time = utils.formateDate(start_time);
-                                                // edr_info.end_time = utils.formateDate(end_time);
+
                                                 edr_info.rating_group = rating_group;
                                                 finalResult.push(edr_info);
 
@@ -1373,8 +1561,7 @@ module.exports = {
                                             edr_info.balance_before = balance_before;
                                             edr_info.cost = cost;
                                             edr_info.balance_after = (parseInt(balance_before) - parseInt(cost)).toString()
-                                            // edr_info.start_time = utils.formateDate(start_time);
-                                            // edr_info.end_time = utils.formateDate(end_time);
+
                                             edr_info.rating_group = rating_group;
                                             finalResult.push(edr_info)
 
@@ -1475,11 +1662,11 @@ module.exports = {
 
 
         let {msisdn, begin_date, end_date} = req.body;
-        begin_date = moment(begin_date).format("YYYYMMDDHHmmss");
-        end_date = moment(end_date).format("YYYYMMDDHHmmss");
+        begin_date = moment(begin_date, 'DD-MM-YYYY HH:mm:ss').format("YYYYMMDDHHmmss");
+        end_date = moment(end_date, 'DD-MM-YYYY HH:mm:ss').format("YYYYMMDDHHmmss");
 
 
-        const url = "http://172.25.39.13:3002";
+        const url = PI_ENDPOINT;
         const sampleHeaders = {
             'User-Agent': 'NodeApp',
             'Content-Type': 'text/xml;charset=UTF-8',
@@ -1540,11 +1727,11 @@ module.exports = {
                                             let edr_info = {};
                                             edr_info.edrType = edrType;
 
-                                            if (i === 0){
+                                            if (i === 0) {
                                                 edr_info.record_date = record_date;
 
-                                            }else {
-                                                edr_info.record_date="";
+                                            } else {
+                                                edr_info.record_date = "";
 
                                             }
                                             edr_info.balance_type = appData.balanceTypes[balance_type_items[i]];
@@ -1611,11 +1798,11 @@ module.exports = {
                                     for (let i = 0; i < balance_before_items.length; i++) {
                                         let edr_info = {};
                                         edr_info.edrType = edrType;
-                                        if (i === 0){
+                                        if (i === 0) {
                                             edr_info.record_date = record_date;
 
-                                        }else {
-                                            edr_info.record_date="";
+                                        } else {
+                                            edr_info.record_date = "";
 
                                         }
                                         edr_info.balance_type = appData.balanceTypes[balance_type_items[i]];
@@ -1692,11 +1879,11 @@ module.exports = {
     postviewHistEventCharge: async (req, res) => {
 
         let {msisdn, begin_date, end_date} = req.body;
-        begin_date = moment(begin_date).format("YYYYMMDDHHmmss");
-        end_date = moment(end_date).format("YYYYMMDDHHmmss");
+        begin_date = moment(begin_date, 'DD-MM-YYYY HH:mm:ss').format("YYYYMMDDHHmmss");
+        end_date = moment(end_date, 'DD-MM-YYYY HH:mm:ss').format("YYYYMMDDHHmmss");
 
 
-        const url = "http://172.25.39.13:3002";
+        const url = PI_ENDPOINT;
         const sampleHeaders = {
             'User-Agent': 'NodeApp',
             'Content-Type': 'text/xml;charset=UTF-8',
@@ -1757,11 +1944,11 @@ module.exports = {
                                         for (let i = 0; i < balance_before_items.length; i++) {
                                             let edr_info = {};
                                             edr_info.edrType = edrType;
-                                            if (i === 0){
+                                            if (i === 0) {
                                                 edr_info.record_date = record_date;
 
-                                            }else {
-                                                edr_info.record_date="";
+                                            } else {
+                                                edr_info.record_date = "";
 
                                             }
 
@@ -1830,11 +2017,11 @@ module.exports = {
                                     for (let i = 0; i < balance_before_items.length; i++) {
                                         let edr_info = {};
                                         edr_info.edrType = edrType;
-                                        if (i === 0){
+                                        if (i === 0) {
                                             edr_info.record_date = record_date;
 
-                                        }else {
-                                            edr_info.record_date="";
+                                        } else {
+                                            edr_info.record_date = "";
 
                                         }
                                         edr_info.balance_type = appData.balanceTypes[balance_type_items[i]];
@@ -1911,11 +2098,12 @@ module.exports = {
 
     postviewHistAll: async (req, res) => {
         let {msisdn, begin_date, end_date} = req.body;
-        begin_date = moment(begin_date).format("YYYYMMDDHHmmss");
-        end_date = moment(end_date).format("YYYYMMDDHHmmss");
+        console.log(req.body)
+        begin_date = moment(begin_date, 'DD-MM-YYYY HH:mm:ss').format("YYYYMMDDHHmmss");
+        end_date = moment(end_date, 'DD-MM-YYYY HH:mm:ss').format("YYYYMMDDHHmmss");
 
 
-        const url = "http://172.25.39.13:3002";
+        const url = PI_ENDPOINT;
         const sampleHeaders = {
             'User-Agent': 'NodeApp',
             'Content-Type': 'text/xml;charset=UTF-8',
@@ -1970,11 +2158,11 @@ module.exports = {
                         for (let i = 0; i < balance_before_items.length; i++) {
                             let edr_info = {};
                             edr_info.edrType = edrType;
-                            if (i === 0){
+                            if (i === 0) {
                                 edr_info.record_date = record_date;
 
-                            }else {
-                                edr_info.record_date="";
+                            } else {
+                                edr_info.record_date = "";
 
                             }
                             edr_info.balance_type = appData.balanceTypes[balance_type_items[i]];
@@ -2065,11 +2253,11 @@ module.exports = {
                             for (let i = 0; i < balance_before_items.length; i++) {
                                 let edr_info = {};
                                 edr_info.edrType = edrType;
-                                if (i === 0){
+                                if (i === 0) {
                                     edr_info.record_date = record_date;
 
-                                }else {
-                                    edr_info.record_date="";
+                                } else {
+                                    edr_info.record_date = "";
 
                                 }
                                 edr_info.balance_type = appData.balanceTypes[balance_type_items[i]];
@@ -2209,7 +2397,7 @@ module.exports = {
 
         const role = utils.getUserRole(req.user)
 
-        res.render("expiredata", {balanceTypes: appData.balanceTypesArrays, status,topNav,...role});
+        res.render("expiredata", {balanceTypes: appData.balanceTypesArrays, status, topNav, ...role});
     },
 
     renderaccountstate: async (req, res) => {
@@ -2234,7 +2422,7 @@ module.exports = {
         };
         const role = utils.getUserRole(req.user)
 
-        res.render("changeaccountstate",{status,topNav,...role});
+        res.render("changeaccountstate", {status, topNav, ...role});
     },
     renderchangephonecontact: async (req, res) => {
         const status = {
@@ -2257,7 +2445,7 @@ module.exports = {
             adjustexpiry: ""
         };
         const role = utils.getUserRole(req.user)
-        res.render("changecontact", {status, topNav,...role});
+        res.render("changecontact", {status, topNav, ...role});
 
     },
     renderchangeproduct: async (req, res) => {
@@ -2282,7 +2470,7 @@ module.exports = {
             adjustexpiry: ""
         };
         const role = utils.getUserRole(req.user)
-        res.render("changeproduct", {products: appData.productTypes,status,topNav,...role});
+        res.render("changeproduct", {products: appData.productTypes, status, topNav, ...role});
     },
     renderadjustexpirydate: async (req, res) => {
         const status = {
@@ -2305,10 +2493,10 @@ module.exports = {
             adjustexpiry: "active"
         };
         const role = utils.getUserRole(req.user)
-        res.render("adjustexpirydate", {balanceTypes: appData.balanceTypesArrays, status, topNav,...role});
+        res.render("adjustexpirydate", {balanceTypes: appData.balanceTypesArrays, status, topNav, ...role});
     },
 
-    rendermanagerecurrent: async (req, res) =>{
+    rendermanagerecurrent: async (req, res) => {
         const status = {
             sub: "",
             maccount: "active",
@@ -2329,16 +2517,15 @@ module.exports = {
             adjustexpiry: ""
         };
         const role = utils.getUserRole(req.user)
-        res.render("managerecurrentplan",{status, topNav,...role})
+        res.render("managerecurrentplan", {status, topNav, ...role})
 
 
-
-},
+    },
 
     getmanagerecurrent: async (req, res) => {
         let msisdn = req.query.msisdn;
 
-        const url = "http://172.25.39.13:3002";
+        const url = PI_ENDPOINT;
         const sampleHeaders = {
             'User-Agent': 'NodeApp',
             'Content-Type': 'text/xml;charset=UTF-8',
@@ -2399,12 +2586,12 @@ module.exports = {
 
                     }
 
-                    return res.json({success:finalResult})
+                    return res.json({success: finalResult})
 
 
                 } else {
                     let errormessage = jsonObj.Envelope.Body.Fault.faultstring;
-                    return res.json({error:errormessage})
+                    return res.json({error: errormessage})
                 }
 
 
@@ -2413,23 +2600,21 @@ module.exports = {
 
         } catch (e) {
             console.log(e);
-            return res.json({error:"IN system error"})
+            return res.json({error: "IN system error"})
 
 
         }
 
 
-
-
     },
 
 
-    postchangestate: async (req, res)=>{
+    postchangestate: async (req, res) => {
 
         const {msisdn, state} = req.body;
 
 
-        const url = "http://172.25.38.42:3002";
+        const url = PI_ENDPOINT;
         const sampleHeaders = {
             'User-Agent': 'NodeApp',
             'Content-Type': 'text/xml;charset=UTF-8',
@@ -2438,7 +2623,7 @@ module.exports = {
 
 
         let txn_id = uuid.v1();
-        let user = "EGH00047";
+        let user = req.user.username;
 
 
         let xmlRequest = `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:pi="http://xmlns.oracle.com/communications/ncc/2009/05/15/pi">
@@ -2466,28 +2651,46 @@ module.exports = {
 
             let jsonObj = parser.parse(body, options);
 
-            if (jsonObj.Envelope.Body.CCSCD1_CHGResponse &&jsonObj.Envelope.Body.CCSCD1_CHGResponse.AUTH ){
-                res.json({success:"success"})
-            }else {
-                let errorMessage =jsonObj.Envelope.Body.Fault.faultstring;
-                res.json({error:errorMessage})
+            if (jsonObj.Envelope.Body.CCSCD1_CHGResponse && jsonObj.Envelope.Body.CCSCD1_CHGResponse.AUTH) {
+                res.json({success: "success"});
+                let transaction_details = `msisdn=${msisdn}|new_state=${state}`;
+                let transaction_id = txn_id;
+                let status = "completed";
+                let username = user;
+                let transaction_type = "change account state";
+                let userlog = new UserLog({
+                    username,
+                    transaction_id,
+                    transaction_type,
+                    transaction_details,
+                    status
+                });
+                userlog = await userlog.save();
+                if (userlog) {
+
+                } else {
+                    console.log("Transaction logging failed")
+                }
+            } else {
+                let errorMessage = jsonObj.Envelope.Body.Fault.faultstring;
+                res.json({error: errorMessage})
 
             }
 
 
         } catch (error) {
             console.log(error.toString());
-            res.json({error:"IN System Failure"})
+            res.json({error: "IN System Failure"})
 
         }
 
     },
 
-    postchangeproduct: async (req, res)=>{
+    postchangeproduct: async (req, res) => {
 
         const {msisdn, product} = req.body;
 
-        const url = "http://172.25.38.42:3002";
+        const url = PI_ENDPOINT;
         const sampleHeaders = {
             'User-Agent': 'NodeApp',
             'Content-Type': 'text/xml;charset=UTF-8',
@@ -2496,7 +2699,7 @@ module.exports = {
 
 
         let txn_id = uuid.v1();
-        let user = "EGH00047";
+        let user = req.user.username;
 
 
         let xmlRequest = `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:pi="http://xmlns.oracle.com/communications/ncc/2009/05/15/pi">
@@ -2524,31 +2727,48 @@ module.exports = {
 
             let jsonObj = parser.parse(body, options);
 
-            if (jsonObj.Envelope.Body.CCSCD1_CHGResponse &&jsonObj.Envelope.Body.CCSCD1_CHGResponse.AUTH ){
-                res.json({success:"success"})
-            }else {
-                let errorMessage =jsonObj.Envelope.Body.Fault.faultstring;
-                res.json({error:errorMessage})
+            if (jsonObj.Envelope.Body.CCSCD1_CHGResponse && jsonObj.Envelope.Body.CCSCD1_CHGResponse.AUTH) {
+                res.json({success: "success"});
+                let transaction_details = `msisdn=${msisdn}|service_class=${product}`;
+                let transaction_id = txn_id;
+                let status = "completed";
+                let username = user;
+                let transaction_type = "change service class";
+                let userlog = new UserLog({
+                    username,
+                    transaction_id,
+                    transaction_type,
+                    transaction_details,
+                    status
+                });
+                userlog = await userlog.save();
+                if (userlog) {
+
+                } else {
+                    console.log("Transaction logging failed")
+                }
+
+            } else {
+                let errorMessage = jsonObj.Envelope.Body.Fault.faultstring;
+                res.json({error: errorMessage})
 
             }
 
 
         } catch (error) {
             console.log(error.toString());
-            res.json({error:"IN System Failure"})
+            res.json({error: "IN System Failure"})
 
         }
 
 
-
-
     },
 
-    postchangecontact: async (req, res)=>{
+    postchangecontact: async (req, res) => {
 
-        const {msisdn, contact } = req.body;
+        const {msisdn, contact} = req.body;
 
-        const url = "http://172.25.38.42:3002";
+        const url = PI_ENDPOINT;
         const sampleHeaders = {
             'User-Agent': 'NodeApp',
             'Content-Type': 'text/xml;charset=UTF-8',
@@ -2557,7 +2777,7 @@ module.exports = {
 
 
         let txn_id = uuid.v1();
-        let user = "EGH00047";
+        let user = req.user.username;
 
 
         let xmlRequest = `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:pi="http://xmlns.oracle.com/communications/ncc/2009/05/15/pi">
@@ -2585,29 +2805,47 @@ module.exports = {
 
             let jsonObj = parser.parse(body, options);
 
-            if (jsonObj.Envelope.Body.CCSCD9_CHGResponse &&jsonObj.Envelope.Body.CCSCD9_CHGResponse.AUTH ){
-                res.json({success:"success"})
-            }else {
-                let errorMessage =jsonObj.Envelope.Body.Fault.faultstring;
-                res.json({error:errorMessage})
+            if (jsonObj.Envelope.Body.CCSCD9_CHGResponse && jsonObj.Envelope.Body.CCSCD9_CHGResponse.AUTH) {
+                res.json({success: "success"})
+                let transaction_details = `msisdn=${msisdn}|new_contact=${contact}`;
+                let transaction_id = txn_id;
+                let status = "completed";
+                let username = user;
+                let transaction_type = "change sms contact";
+                let userlog = new UserLog({
+                    username,
+                    transaction_id,
+                    transaction_type,
+                    transaction_details,
+                    status
+                });
+                userlog = await userlog.save();
+                if (userlog) {
+
+                } else {
+                    console.log("Transaction logging failed")
+                }
+            } else {
+                let errorMessage = jsonObj.Envelope.Body.Fault.faultstring;
+                res.json({error: errorMessage})
 
             }
 
 
         } catch (error) {
             console.log(error.toString());
-            res.json({error:"IN System Failure"})
+            res.json({error: "IN System Failure"})
 
         }
 
     },
 
-    postexpiredata: async (req, res)=>{
+    postexpiredata: async (req, res) => {
 
-        const {msisdn, balancetype } = req.body;
+        const {msisdn, balancetype} = req.body;
 
 
-        const url = "http://172.25.38.42:3002";
+        const url = PI_ENDPOINT;
         const sampleHeaders = {
             'User-Agent': 'NodeApp',
             'Content-Type': 'text/xml;charset=UTF-8',
@@ -2616,7 +2854,7 @@ module.exports = {
 
 
         let txn_id = uuid.v1();
-        let user = "EGH00047";
+        let user = req.user.username;
 
 
         let xmlRequest = `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:pi="http://xmlns.oracle.com/communications/ncc/2009/05/15/pi">
@@ -2647,36 +2885,56 @@ module.exports = {
             let jsonObj = parser.parse(body, options);
             console.log(jsonObj.Envelope.Body)
 
-            if (jsonObj.Envelope.Body.CCSCD1_CHGResponse &&jsonObj.Envelope.Body.CCSCD1_CHGResponse.AUTH ){
-                res.json({success:"success"})
-            }else {
-                let errorMessage =jsonObj.Envelope.Body.Fault.faultstring;
-                res.json({error:errorMessage})
+            if (jsonObj.Envelope.Body.CCSCD1_CHGResponse && jsonObj.Envelope.Body.CCSCD1_CHGResponse.AUTH) {
+                res.json({success: "success"})
+                let transaction_details = `msisdn=${msisdn}|balance_type=${balancetype}`;
+                let transaction_id = txn_id;
+                let status = "completed";
+                let username = user;
+                let transaction_type = "expire data";
+                let userlog = new UserLog({
+                    username,
+                    transaction_id,
+                    transaction_type,
+                    transaction_details,
+                    status
+                });
+                userlog = await userlog.save();
+                if (userlog) {
+
+                } else {
+                    console.log("Transaction logging failed")
+                }
+            } else {
+                let errorMessage = jsonObj.Envelope.Body.Fault.faultstring;
+                res.json({error: errorMessage})
 
             }
 
 
         } catch (error) {
             console.log(error.toString());
-            res.json({error:"IN System Failure"})
+            res.json({error: "IN System Failure"})
 
         }
 
     },
 
-    postadjustexpiry: async (req, res)=>{
+    postadjustexpiry: async (req, res) => {
 
-        let {msisdn, balancetype,expirydate } = req.body;
+        let {msisdn, balancetype, expirydate} = req.body;
 
-        if (moment(expirydate).isSameOrBefore(moment())){
-            return res.json({error:"Expiry Date should be in the future"})
+        expirydate = moment(expirydate, 'DD-MM-YYYY HH:mm:ss', "en-GB");
+
+        if (moment(expirydate).isSameOrBefore(moment())) {
+            return res.json({error: "Expiry Date should be in the future"})
 
         }
 
         expirydate = moment(expirydate).format("YYYYMMDDHHmmss");
+        console.log(expirydate)
 
-
-        const url = "http://172.25.38.42:3002";
+        const url = PI_ENDPOINT;
         const sampleHeaders = {
             'User-Agent': 'NodeApp',
             'Content-Type': 'text/xml;charset=UTF-8',
@@ -2685,7 +2943,7 @@ module.exports = {
 
 
         let txn_id = uuid.v1();
-        let user = "EGH00047";
+        let user = req.user.username;
 
 
         let xmlRequest = `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:pi="http://xmlns.oracle.com/communications/ncc/2009/05/15/pi">
@@ -2714,32 +2972,50 @@ module.exports = {
 
             let jsonObj = parser.parse(body, options);
 
-            if (jsonObj.Envelope.Body.CCSCD1_CHGResponse &&jsonObj.Envelope.Body.CCSCD1_CHGResponse.AUTH ){
-                res.json({success:"success"})
-            }else {
-                let errorMessage =jsonObj.Envelope.Body.Fault.faultstring;
-                res.json({error:errorMessage})
+            if (jsonObj.Envelope.Body.CCSCD1_CHGResponse && jsonObj.Envelope.Body.CCSCD1_CHGResponse.AUTH) {
+                res.json({success: "success"})
+                let transaction_details = `msisdn=${msisdn}|balance_type=${balancetype}|expiry_date=${expirydate}`;
+                let transaction_id = txn_id;
+                let status = "completed";
+                let username = user;
+                let transaction_type = "adjust expiry date";
+                let userlog = new UserLog({
+                    username,
+                    transaction_id,
+                    transaction_type,
+                    transaction_details,
+                    status
+                });
+                userlog = await userlog.save();
+                if (userlog) {
+
+                } else {
+                    console.log("Transaction logging failed")
+                }
+            } else {
+                let errorMessage = jsonObj.Envelope.Body.Fault.faultstring;
+                res.json({error: errorMessage})
 
             }
 
 
         } catch (error) {
             console.log(error.toString());
-            res.json({error:"IN System Failure"})
+            res.json({error: "IN System Failure"})
 
         }
 
     },
 
-    postterminaterecurrent: async (req, res)=>{
+    postterminaterecurrent: async (req, res) => {
         console.log(req.body)
         const {msisdn, recurrentplan} = req.body;
-        await setTimeout(()=>{
-            res.json({success:"success"})
-        },1000)
+        await setTimeout(() => {
+            res.json({error: "Work in Progress, you would be updated when completed. Thank you"})
+        }, 1000)
     },
 
-    postcreateuser: async (req, res)=>{
+    postcreateuser: async (req, res) => {
 
         try {
             const {error} = validator.validateCreateUser(req.body);
@@ -2749,39 +3025,205 @@ module.exports = {
 
             } else {
                 let {username, email, password, firstname, lastname, role} = req.body;
+                console.log(req.body)
+                let originalpass = password;
                 let salt = await bcrypt.genSalt(10);
                 password = await bcrypt.hash(password, salt);
                 let user = new User({
                     username, email, password, firstname, lastname, role
                 });
                 user = await user.save();
-                if (user){
-                    res.json({success: "Account created"})
+                if (user) {
+                    let usercreater = req.user.username;
+                    return sendMail.sendCreateEmail(firstname, email, res, username, originalpass, usercreater, role);
 
                 }
             }
         } catch (e) {
             console.log(e);
-            res.json({error:"System Error, Account creation failed"})
+            res.json({error: "System Error, Account creation failed"})
         }
 
 
+    },
+    getlogout: async (req, res) => {
+        req.logout();
+        req.session.destroy(function (error) {
+            res.redirect("/login");
+
+        })
+
 
     },
-    getlogout: async (req, res) =>{
-            req.logout();
-            req.session.destroy(function (error) {
-                res.redirect("/login");
-                
-            })
-            
-            
+
+    postForgetPasswd: async (req, res) => {
+
+        const {email} = req.body;
+
+        const {error} = validator.validateEmail({email});
+        if (error) {
+            return res.json({error: "Email address is not a valid Surfline email id"})
+        } else {
+            const user = await User.findOne({email: email.toLowerCase()});
+            if (user) {
+                let first_name = user.firstname;
+                let to_email = user.email;
+                let username = user.username;
+                let id = uuid.v4();
+                let useruuid = new UserUUID({
+                    email: to_email,
+                    uuid: id,
+                });
+                useruuid = await useruuid.save();
+                if (useruuid) {
+                    let url_link = `http://${HOST}:${process.env.PORT}/reset/${id}`;
+                    return sendMail.sendResetEmail(first_name, to_email, url_link, res, username);
+                }
+            } else {
+                return res.json({error: "Email address is not registered"});
+
+            }
+
+
+        }
+
+
+    },
+    renderResetpasswd: async (req, res) => {
+        let uuid = req.params.uuid;
+        if (uuid) {
+            let useruid = await UserUUID.findOne({uuid: uuid});
+            if (useruid) {
+                return res.render("reset_passwd", {id: uuid});
+            }
+        }
+        res.render("404_error");
+
+    },
+
+    postResetpasswd: async (req, res) => {
+
+        try {
+
+            let {uuid, password, password2} = req.body;
+            let txn_id = require("uuid").v4();
+            const {error} = validator.validateResetPasswd({password, password2});
+            if (error) {
+
+                res.json({error: error.message})
+
+            } else {
+                if (uuid) {
+                    let userUuid = await UserUUID.findOne({uuid: uuid});
+                    if (userUuid) {
+                        let user = await User.findOne({email: userUuid.email});
+                        if (user) {
+                            user.password = await bcrypt.hash(password2, await bcrypt.genSalt(10));
+                            user = await user.save();
+                            if (user) {
+                                await UserUUID.deleteOne({uuid: uuid});
+                                res.json({success: "success"});
+                                let username = user.username;
+                                let transaction_details = `username=${username}|email=${user.email}|uuid=${uuid}`;
+                                let transaction_id = txn_id;
+                                let status = "completed";
+                                let transaction_type = "password reset";
+                                let userlog = new UserLog({
+                                    username,
+                                    transaction_id,
+                                    transaction_type,
+                                    transaction_details,
+                                    status
+                                });
+                                userlog = await userlog.save();
+                                if (userlog) {
+
+                                } else {
+                                    console.log("Transaction logging failed")
+                                }
+                            }
+
+                        }
+                    } else {
+                        return res.json({error: "Bad Request"});
+
+                    }
+
+
+                }
+            }
+
+        } catch (error) {
+            console.log(error);
+            res.json({error: "System Error,Please Try Again"})
+        }
+    },
+    renderChangePass: async (req, res) => {
+        res.render("change_passwd")
+
+
+    },
+    postChangePass: async (req, res) => {
+        let {oldpassword, password2} = req.body;
+        let txn_id = uuid.v4();
+        try {
+            const {error} = validator.validateChangePasswd(req.body);
+            if (error) {
+                res.json({error: error.message})
+
+            } else {
+                let user = await User.findOne({email: req.user.email});
+                let isValid = await bcrypt.compare(oldpassword, user.password);
+                if (isValid) {
+                    user.password = await bcrypt.hash(password2, (await bcrypt.genSalt(10)));
+                    user = await user.save();
+                    if (user) {
+                        res.json({success: "success"})
+                        let username = user.username;
+                        let transaction_details = `username=${username}|oldpasswod=|newpassword=`;
+                        let transaction_id = txn_id;
+                        let status = "completed";
+                        let transaction_type = "password change";
+                        let userlog = new UserLog({
+                            username,
+                            transaction_id,
+                            transaction_type,
+                            transaction_details,
+                            status
+                        });
+                        userlog = await userlog.save();
+                        if (userlog) {
+
+                        } else {
+                            console.log("Transaction logging failed")
+                        }
+
+                        req.logOut();
+                        req.session.destroy(function (error) {
+                            if (error) {
+                                console.log(error)
+                            }
+                        })
+
+
+                    } else {
+                        res.json({error: "System Failure, Password could not update"})
+                    }
+
+
+                } else {
+                    res.json({error: "Incorrect password provided"})
+                }
+
+
+            }
+
+        } catch (error) {
+            res.json({error: "Incorrect password provided"})
+
+        }
 
     }
-
-
-
-
 
 
 }

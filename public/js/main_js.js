@@ -12,6 +12,8 @@ $(function () {
     const dashboardErrorWrapper = document.getElementById("dashboard-error");
     const dashboardMessage = document.querySelector("#dashboard-error>small");
 
+    const refreshBtn = document.getElementById("refresh-btn");
+
 
     if (search_form) {
         search_form.addEventListener("submit", function (event) {
@@ -99,6 +101,97 @@ $(function () {
         })
     }
 
+    if (refreshBtn) {
+        refreshBtn.addEventListener("click", function (event) {
+            if (sessionMsisdnEl.innerText.toString()) {
+                event.preventDefault();
+
+                dashboardErrorWrapper.style.display = "none";
+                let msisdn = sessionMsisdnEl.innerText.toString()
+                const progressIndicator = document.getElementById("progressIndicator-dashboard");
+                progressIndicator.style.display = "block";
+
+                $.get("/balance", {msisdn})
+                    .done(function (data) {
+
+                        if (data.error) {
+                            dashboardMessage.innerText = data.error;
+                            progressIndicator.style.display = "none";
+                            dashboardErrorWrapper.style.display = "block";
+
+
+                        } else {
+
+
+                            if (data.balances) {
+                                let balances = data.balances;
+
+                                let row = "";
+                                balances.forEach(function (item) {
+                                    console.log(item)
+                                    if (item.balance_type.endsWith("Cash")) {
+                                        row = row + `<tr><td>${item.balance_type}</td><td class="balance_value">&#162;&nbsp;${new Intl.NumberFormat("en-US").format(item.value / 100)}</td><td>${item.expiry_date}</td></tr>`;
+
+                                    } else if (item.balance_type.endsWith("Data")) {
+                                        row = row + `<tr><td>${item.balance_type}</td><td class="balance_value">${new Intl.NumberFormat("en-US").format((item.value / 1024).toFixed(3))} MB</td><td>${item.expiry_date}</td></tr>`;
+                                    } else {
+                                        row = row + `<tr><td>${item.balance_type}</td><td class="balance_value">${item.value}</td><td>${item.expiry_date}</td></tr>`;
+
+                                    }
+
+                                });
+
+                                balanceTbody.innerHTML = row;
+                            }
+
+                            if (data.general_acct) {
+                                let acct_info = data.general_acct;
+                                let row = "";
+                                acct_info.forEach(function (item) {
+                                    row = row + `<tr><td>${item.parameterName}&nbsp; :</td><td>${item.parameterValue}</td></tr>`;
+                                });
+
+                                acctInfoTbody.innerHTML = row;
+
+
+                            }
+
+                            if (data.acct_tags) {
+                                let acct_info = data.acct_tags;
+                                let row = "";
+                                acct_info.forEach(function (item) {
+                                    row = row + `<tr><td>${item.parameterName}&nbsp; :</td><td>${item.parameterValue}</td></tr>`;
+                                });
+
+                                acctTagTbody.innerHTML = row;
+
+
+                            }
+
+                            // $(dashBody).show(200);
+                            //dashBody.style.display = "block";
+                            progressIndicator.style.display = "none";
+                            $(dashBody).show(200);
+                            sessionMsisdnEl.innerText = msisdn;
+                            sessionMsisdnEl.style.display = "block";
+                            msisdn_input.value = "";
+
+                        }
+
+
+                    })
+                    .fail(function (error) {
+                        throw error;
+
+                    })
+
+
+            }
+
+        })
+    }
+
+
     /* ----------- Top-up---------------*/
 
     const msisdnTopup = document.getElementById("msisdn-topup");
@@ -179,7 +272,6 @@ $(function () {
                                     button.addEventListener("click", function (event) {
                                         mainButton = event.target;
                                         event.preventDefault();
-                                        console.log(button)
                                         successBundleTopWrapper.style.display = "none";
                                         loadbundleErrorWrapper.style.display = "none";
                                         let reasonInput = document.querySelector('input[name="reason"]:checked')
@@ -190,6 +282,7 @@ $(function () {
                                         } else {
                                             reasonError.style.display = "none";
                                             let reasonValue = reasonInput.value;
+                                            mainButton.dataset.reasonvalue = reasonValue;
 
                                             if (dialogbox_bundlename && dialogbox_msisdn && dialog_overlay && dialogbox_reason) {
                                                 const {bdlname, bdlid, msisdn} = this.dataset;
@@ -231,7 +324,7 @@ $(function () {
                                         msisdn: mainButton.dataset.msisdn,
                                         bdlid: mainButton.dataset.bdlid,
                                         subtype: mainButton.dataset.subtype,
-                                        reason: mainButton.dataset.reasonValue,
+                                        reason: mainButton.dataset.reasonvalue,
                                     };
 
                                     $.post("/bundle", postbody)
@@ -241,22 +334,25 @@ $(function () {
                                                 loadbundleErrorWrapper.style.display = "none";
                                                 successBundleTopMessage.innerText = "Success";
                                                 dialog_overlay.style.display = "none";
-                                                $(successBundleTopWrapper).show(200);
+                                                $(successBundleTopWrapper).show(100);
                                                 successBundleTopWrapper.scrollIntoView();
 
                                             } else {
                                                 loadbundleErrorMessage.innerText = data.error;
                                                 successBundleTopWrapper.style.display = "none";
                                                 dialog_overlay.style.display = "none";
-                                                $(loadbundleErrorWrapper).show(200);
+                                                $(loadbundleErrorWrapper).show(100);
                                                 loadbundleErrorWrapper.scrollIntoView();
 
 
                                             }
 
                                         }).fail(function (error) {
+                                        progressIndicatorBundles.style.display = "none";
+                                        loadbundleErrorMessage.innerText = error.toString();
                                         dialog_overlay.style.display = "none";
-                                        throw error;
+                                        $(loadbundleErrorWrapper).show(100);
+                                        loadbundleErrorWrapper.scrollIntoView();
 
 
                                     });
@@ -345,6 +441,23 @@ $(function () {
 
     }
 
+    if (msisdnTopup){
+        msisdnTopup.addEventListener("blur", function (event) {
+            const msisdn = msisdnTopup.value;
+            if (msisdn.length < 12 ){
+
+                progressIndicatorBundles.style.display = "none";
+                loadbundleErrorMessage.innerText = `${msisdn} is Invalid. Number should start with 233`;
+                //dialog_overlay.style.display = "none";
+                $(loadbundleErrorWrapper).show(100);
+                loadbundleErrorWrapper.scrollIntoView();
+
+            }
+
+        })
+
+    }
+
     /* ----- Load Card ------ */
     const loadcardForm = document.getElementById("load-card-form");
     const successMessageWrapper = document.getElementById("manageVoucher-success");
@@ -398,7 +511,7 @@ $(function () {
 
                             } else {
                                 successMessageWrapper.style.display = "none";
-                                errorMessageLoadcard.innerText = data.error.message
+                                errorMessageLoadcard.innerText = data.error;
                                 errorMessageWrapperLoad.style.display = "block";
 
                             }
@@ -564,9 +677,10 @@ $(function () {
     if (transferForm) {
         transferForm.addEventListener("submit", function (event) {
             event.preventDefault();
-            if (progressIndicatorTransfer) {
-                progressIndicatorTransfer.style.display = "block";
-            }
+
+            successWrapperTransfer.style.display = "none";
+            errorWrapperTransfer.style.display = "none";
+            progressIndicatorTransfer.style.display = "block";
 
             const from_msisdn = document.getElementById("from-msisdn").value;
             const amount = document.getElementById("from-amount").value;
@@ -587,7 +701,6 @@ $(function () {
                     if (data) {
                         progressIndicatorTransfer.style.display = "none";
                         if (data.success) {
-                            console.log("success");
 
 
                             errorWrapperTransfer.style.display = "none";
@@ -596,7 +709,7 @@ $(function () {
 
 
                         } else {
-                            console.log("error");
+
                             errorMessageTransfer.innerText = data.error;
                             successWrapperTransfer.style.display = "none";
                             errorWrapperTransfer.style.display = "block";
@@ -637,7 +750,10 @@ $(function () {
     if (activateForm) {
         activateForm.addEventListener("submit", function (event) {
             event.preventDefault();
+            successWrapperActivate.style.display = "none";
+            errorWrapperActivate.style.display = "none";
             progressIndicatorActivate.style.display = "block";
+
 
             const msisdnEl = document.getElementById("msisdn");
             const firstnameEl = document.getElementById("firstname");
@@ -710,10 +826,14 @@ $(function () {
 
     const historyTable = document.getElementById("history-table");
 
+    const errorWrapperViewHist = document.getElementById("viewHist-error");
+    const errorMessageViewHist = document.querySelector("#viewHist-error>small");
+
     if (viewHistoryForm) {
         viewHistoryForm.addEventListener("submit", function (event) {
             event.preventDefault();
             progressIndicatorHistory.style.display = "block";
+            errorWrapperViewHist.style.display = "none";
 
             const msisdnEl = document.getElementById("sub-msisdn");
             const edrTypeEl = document.querySelector('input[name="history"]:checked');
@@ -730,8 +850,10 @@ $(function () {
             if (edrType === "usage") {
                 $.post("/viewhist", postbody)
                     .done(function (data) {
+
                         if (data) {
                             progressIndicatorHistory.style.display = "none";
+                            errorWrapperViewHist.style.display = "none";
                             if (data.success) {
 
                                 let theadstring = "<th>Record Date</th><th>Cdr Type</th><th>Rating Group</th><th>Balance Type</th><th>Balance Before</th><th>Cost</th><th>Balance After</th>"
@@ -746,16 +868,12 @@ $(function () {
                                 historyTable.style.display = "table";
 
 
-                                /* errorWrapperTransfer.style.display = "none";
-                                 successMessageTransfer.innerText = "Success";
-                                 successWrapperTransfer.style.display = "block";*/
 
 
                             } else {
-                                console.log("error");
-                                /*  errorMessageTransfer.innerText = data.error;
-                                  successWrapperTransfer.style.display = "none";
-                                  errorWrapperTransfer.style.display = "block";*/
+                                historyTable.style.display = "none";
+                                errorMessageViewHist.innerText = data.error;
+                                errorWrapperViewHist.style.display = "block";
 
 
                             }
@@ -766,11 +884,9 @@ $(function () {
 
                     }).fail(function (error) {
                     progressIndicatorHistory.style.display = "none";
-                    console.log(error);
-                    /*     progressIndicatorTransfer.style.display = "none";
-                         errorMessageTransfer.innerText = error.toString();
-                         successWrapperTransfer.style.display = "none";
-                         errorWrapperTransfer.style.display = "block";*/
+                    historyTable.style.display = "none";
+                    errorMessageViewHist.innerText = error.toString();
+                    errorWrapperViewHist.style.display = "block";
 
 
                 })
@@ -780,6 +896,7 @@ $(function () {
                     .done(function (data) {
                         if (data) {
                             progressIndicatorHistory.style.display = "none";
+                            errorWrapperViewHist.style.display = "none";
                             if (data.success) {
 
                                 let theadstring = "<th>Record Date</th><th>Cdr Type</th><th>Balance Type</th><th>Balance Before</th><th>Cost</th><th>Balance After</th>"
@@ -794,16 +911,12 @@ $(function () {
                                 historyTable.style.display = "table";
 
 
-                                /* errorWrapperTransfer.style.display = "none";
-                                 successMessageTransfer.innerText = "Success";
-                                 successWrapperTransfer.style.display = "block";*/
 
 
                             } else {
-                                console.log("error");
-                                /*  errorMessageTransfer.innerText = data.error;
-                                  successWrapperTransfer.style.display = "none";
-                                  errorWrapperTransfer.style.display = "block";*/
+                                historyTable.style.display = "none";
+                                errorMessageViewHist.innerText = data.error;
+                                errorWrapperViewHist.style.display = "block";
 
 
                             }
@@ -814,11 +927,10 @@ $(function () {
 
                     }).fail(function (error) {
                     progressIndicatorHistory.style.display = "none";
-                    console.log(error);
-                    /*     progressIndicatorTransfer.style.display = "none";
-                         errorMessageTransfer.innerText = error.toString();
-                         successWrapperTransfer.style.display = "none";
-                         errorWrapperTransfer.style.display = "block";*/
+                    historyTable.style.display = "none";
+                    errorMessageViewHist.innerText = error.toString();
+                    errorWrapperViewHist.style.display = "block";
+
 
 
                 })
@@ -827,6 +939,7 @@ $(function () {
                     .done(function (data) {
                         if (data) {
                             progressIndicatorHistory.style.display = "none";
+                            errorWrapperViewHist.style.display = "none";
                             if (data.success) {
 
                                 let theadstring = "<th>Record Date</th><th>Cdr Type</th><th>Balance Type</th><th>Balance Before</th><th>Cost</th><th>Balance After</th>"
@@ -841,16 +954,12 @@ $(function () {
                                 historyTable.style.display = "table";
 
 
-                                /* errorWrapperTransfer.style.display = "none";
-                                 successMessageTransfer.innerText = "Success";
-                                 successWrapperTransfer.style.display = "block";*/
 
 
                             } else {
-                                console.log("error");
-                                /*  errorMessageTransfer.innerText = data.error;
-                                  successWrapperTransfer.style.display = "none";
-                                  errorWrapperTransfer.style.display = "block";*/
+                                historyTable.style.display = "none";
+                                errorMessageViewHist.innerText = data.error;
+                                errorWrapperViewHist.style.display = "block";
 
 
                             }
@@ -861,11 +970,9 @@ $(function () {
 
                     }).fail(function (error) {
                     progressIndicatorHistory.style.display = "none";
-                    console.log(error);
-                    /*     progressIndicatorTransfer.style.display = "none";
-                         errorMessageTransfer.innerText = error.toString();
-                         successWrapperTransfer.style.display = "none";
-                         errorWrapperTransfer.style.display = "block";*/
+                    historyTable.style.display = "none";
+                    errorMessageViewHist.innerText = error.toString();
+                    errorWrapperViewHist.style.display = "block";
 
 
                 })
@@ -874,6 +981,7 @@ $(function () {
                     .done(function (data) {
                         if (data) {
                             progressIndicatorHistory.style.display = "none";
+                            errorWrapperViewHist.style.display = "none";
                             if (data.success) {
 
                                 let theadstring = "<th>Record Date</th><th>Cdr Type</th><th>Balance Type</th><th>Balance Before</th><th>Cost</th><th>Balance After</th>"
@@ -888,17 +996,13 @@ $(function () {
                                 historyTable.style.display = "table";
 
 
-                                /* errorWrapperTransfer.style.display = "none";
-                                 successMessageTransfer.innerText = "Success";
-                                 successWrapperTransfer.style.display = "block";*/
-
 
                             } else {
-                                console.log(data.error);
+
                                 historyTable.style.display = "none";
-                                /*  errorMessageTransfer.innerText = data.error;
-                                  successWrapperTransfer.style.display = "none";
-                                  errorWrapperTransfer.style.display = "block";*/
+                                errorMessageViewHist.innerText = data.error;
+                                errorWrapperViewHist.style.display = "block";
+
 
 
                             }
@@ -909,12 +1013,10 @@ $(function () {
 
                     }).fail(function (error) {
                     progressIndicatorHistory.style.display = "none";
-                    console.log(error);
                     historyTable.style.display = "none";
-                    /*     progressIndicatorTransfer.style.display = "none";
-                         errorMessageTransfer.innerText = error.toString();
-                         successWrapperTransfer.style.display = "none";
-                         errorWrapperTransfer.style.display = "block";*/
+                    errorMessageViewHist.innerText = error.toString();
+                    errorWrapperViewHist.style.display = "block";
+
 
 
                 })
@@ -943,13 +1045,13 @@ $(function () {
             if (msisdn.length !== 12) {
 
             } else {
-                progressIndicatorManageAcct.style.display="block";
+                progressIndicatorManageAcct.style.display = "block";
                 errorWrapperManageAcct.style.display = "none";
                 let url = "/getrecurrent";
                 let querybody = {msisdn}
                 $.get(url, querybody)
                     .done(function (data) {
-                        progressIndicatorManageAcct.style.display="none"
+                        progressIndicatorManageAcct.style.display = "none"
                         if (data.success) {
                             const result = data.success;
                             let rows = "";
@@ -968,7 +1070,7 @@ $(function () {
                             }
                             recurrentTableWrapper.style.display = "block";
 
-                        }else {
+                        } else {
                             recurrentTableWrapper.style.display = "none";
                             errorMessageManageAcct.innerText = data.error;
                             errorWrapperManageAcct.style.display = "block";
@@ -976,7 +1078,7 @@ $(function () {
 
                     }).fail(function (error) {
 
-                    progressIndicatorManageAcct.style.display="none";
+                    progressIndicatorManageAcct.style.display = "none";
                     recurrentTableWrapper.style.display = "none";
                     errorMessageManageAcct.innerText = error.toString();
                     errorWrapperManageAcct.style.display = "block";
@@ -989,27 +1091,23 @@ $(function () {
     }
 
 
-
-
-
-
     function processChangeContactForm(event) {
         event.preventDefault();
 
         successWrapperManageAcct.style.display = "none";
         errorWrapperManageAcct.style.display = "none";
-        progressIndicatorManageAcct.style.display="block";
+        progressIndicatorManageAcct.style.display = "block";
 
         const msisdn = document.getElementById("msisdn").value;
         const contact = document.getElementById("phone-contact").value;
 
-        const postbody ={msisdn,contact};
+        const postbody = {msisdn, contact};
 
 
         $.post("/changecontact", postbody)
             .done(function (data) {
                 if (data) {
-                    progressIndicatorManageAcct.style.display="none";
+                    progressIndicatorManageAcct.style.display = "none";
                     if (data.success) {
 
                         errorWrapperManageAcct.style.display = "none";
@@ -1047,18 +1145,18 @@ $(function () {
 
         successWrapperManageAcct.style.display = "none";
         errorWrapperManageAcct.style.display = "none";
-        progressIndicatorManageAcct.style.display="block";
+        progressIndicatorManageAcct.style.display = "block";
 
         const msisdn = document.getElementById("msisdn").value;
         const product = document.getElementById("products").value;
 
-        const postbody ={msisdn,product};
+        const postbody = {msisdn, product};
 
 
         $.post("/changeproduct", postbody)
             .done(function (data) {
                 if (data) {
-                    progressIndicatorManageAcct.style.display="none";
+                    progressIndicatorManageAcct.style.display = "none";
                     if (data.success) {
 
                         errorWrapperManageAcct.style.display = "none";
@@ -1096,18 +1194,18 @@ $(function () {
 
         successWrapperManageAcct.style.display = "none";
         errorWrapperManageAcct.style.display = "none";
-        progressIndicatorManageAcct.style.display="block";
+        progressIndicatorManageAcct.style.display = "block";
 
         const msisdn = document.getElementById("msisdn").value;
         const state = document.getElementById("acct-states").value;
 
-        const postbody ={msisdn,state};
+        const postbody = {msisdn, state};
 
 
         $.post("/changeacctstate", postbody)
             .done(function (data) {
                 if (data) {
-                    progressIndicatorManageAcct.style.display="none";
+                    progressIndicatorManageAcct.style.display = "none";
                     if (data.success) {
 
                         errorWrapperManageAcct.style.display = "none";
@@ -1145,18 +1243,18 @@ $(function () {
 
         successWrapperManageAcct.style.display = "none";
         errorWrapperManageAcct.style.display = "none";
-        progressIndicatorManageAcct.style.display="block";
+        progressIndicatorManageAcct.style.display = "block";
 
         const msisdn = document.getElementById("msisdn").value;
         const balancetype = document.getElementById("balanceTypes").value;
 
-        const postbody ={msisdn,balancetype};
+        const postbody = {msisdn, balancetype};
 
 
         $.post("/expiredata", postbody)
             .done(function (data) {
                 if (data) {
-                    progressIndicatorManageAcct.style.display="none";
+                    progressIndicatorManageAcct.style.display = "none";
                     if (data.success) {
 
                         errorWrapperManageAcct.style.display = "none";
@@ -1194,19 +1292,19 @@ $(function () {
 
         successWrapperManageAcct.style.display = "none";
         errorWrapperManageAcct.style.display = "none";
-        progressIndicatorManageAcct.style.display="block";
+        progressIndicatorManageAcct.style.display = "block";
 
         const msisdn = document.getElementById("msisdn").value;
         const balancetype = document.getElementById("balanceTypes").value;
         const expirydate = document.getElementById("expiry-date").value;
 
-        const postbody ={msisdn,balancetype,expirydate};
+        const postbody = {msisdn, balancetype, expirydate};
 
 
         $.post("/adjustexpiry", postbody)
             .done(function (data) {
                 if (data) {
-                    progressIndicatorManageAcct.style.display="none";
+                    progressIndicatorManageAcct.style.display = "none";
                     if (data.success) {
 
                         errorWrapperManageAcct.style.display = "none";
@@ -1245,17 +1343,17 @@ $(function () {
 
         successWrapperManageAcct.style.display = "none";
         errorWrapperManageAcct.style.display = "none";
-        progressIndicatorManageAcct.style.display="block";
+        progressIndicatorManageAcct.style.display = "block";
 
         const msisdn = document.getElementById("msisdn-recurrent").value;
         const recurrentplan = document.getElementById("terminate-btn").dataset.bundlename;
 
         if (msisdn && recurrentplan) {
-            const postbody ={msisdn,recurrentplan};
+            const postbody = {msisdn, recurrentplan};
             $.post("/managerecurrent", postbody)
                 .done(function (data) {
                     if (data) {
-                        progressIndicatorManageAcct.style.display="none";
+                        progressIndicatorManageAcct.style.display = "none";
                         if (data.success) {
 
                             errorWrapperManageAcct.style.display = "none";
@@ -1288,48 +1386,40 @@ $(function () {
         }
 
 
-
-
-
-
     }
-
-
-
 
 
     const changeContactForm = document.getElementById("change-contact-form");
-    if (changeContactForm){
+    if (changeContactForm) {
         changeContactForm.addEventListener("submit", processChangeContactForm)
     }
     const changeProductForm = document.getElementById("change-product-form");
-    if (changeProductForm){
+    if (changeProductForm) {
         changeProductForm.addEventListener("submit", processChangeProductForm)
     }
 
     const changeStateForm = document.getElementById("change-acct-state-Form");
-    if (changeStateForm){
+    if (changeStateForm) {
         changeStateForm.addEventListener("submit", processChangeStateForm)
     }
 
     const expireDataForm = document.getElementById("expire-data-form");
-    if (expireDataForm){
+    if (expireDataForm) {
         expireDataForm.addEventListener("submit", processExpireDataForm)
     }
 
     const adjustExpiryDateForm = document.getElementById("adjust-expiryDate-form");
-    if (adjustExpiryDateForm){
+    if (adjustExpiryDateForm) {
         adjustExpiryDateForm.addEventListener("submit", processAdjustExpiryDateForm)
     }
 
     const terminateRecurrentForm = document.getElementById("terminate-recurrent-form");
-    if (terminateRecurrentForm){
+    if (terminateRecurrentForm) {
         terminateRecurrentForm.addEventListener("submit", processReccurrentForm)
     }
 
 
-
-/*......Create User ........*/
+    /*......Create User ........*/
 
     const errorWrapperCreateAcct = document.getElementById("create-acct-error");
     const errorMessageCreateAcct = document.querySelector("#create-acct-error>small");
@@ -1340,9 +1430,9 @@ $(function () {
     const progressIndicatorCreateAcct = document.getElementById("progressIndicator-create-acct");
 
     const exitbtn = document.getElementById("exit-btn");
-    if (exitbtn){
-        exitbtn.addEventListener("click", function (event){
-            window.location.href ="/";
+    if (exitbtn) {
+        exitbtn.addEventListener("click", function (event) {
+            window.location.href = "/";
 
         })
     }
@@ -1352,34 +1442,34 @@ $(function () {
 
         successWrapperCreateAcct.style.display = "none";
         errorWrapperCreateAcct.style.display = "none";
-        progressIndicatorCreateAcct.style.display="block";
+        progressIndicatorCreateAcct.style.display = "block";
 
-        const username= document.getElementById("username").value;
+        const username = document.getElementById("username").value;
         const email = document.getElementById("email").value;
-        const firstname= document.getElementById("firstname").value;
+        const firstname = document.getElementById("firstname").value;
         const lastname = document.getElementById("lastname").value;
-        const password= document.getElementById("password").value;
+        const password = document.getElementById("password").value;
         const password2 = document.getElementById("password2").value;
-        const role= document.getElementById("role").value;
+        const role = document.getElementById("role").value;
 
 
         if (username && email && firstname && lastname && password && password2 && role) {
 
             if (password !== password2) {
-                progressIndicatorCreateAcct.style.display="none";
+                progressIndicatorCreateAcct.style.display = "none";
                 errorMessageCreateAcct.innerText = "Passwords do not match";
                 successWrapperCreateAcct.style.display = "none";
                 errorWrapperCreateAcct.style.display = "block";
-                return ;
+                return;
 
             }
 
 
-            const postbody ={username,email,firstname,lastname,password,password2,role};
+            const postbody = {username, email, firstname, lastname, password, password2, role};
             $.post("/user", postbody)
                 .done(function (data) {
                     if (data) {
-                        progressIndicatorCreateAcct.style.display="none";
+                        progressIndicatorCreateAcct.style.display = "none";
                         if (data.success) {
 
                             errorWrapperCreateAcct.style.display = "none";
@@ -1412,24 +1502,268 @@ $(function () {
         }
 
 
-
-
-
-
     }
 
-    const createUserForm =document.getElementById("create-user-form");
+    const createUserForm = document.getElementById("create-user-form");
 
-    if (createUserForm){
+    if (createUserForm) {
         createUserForm.addEventListener("submit", processCreateUserForm)
     }
 
 
+    /*.... Forgot Password.....*/
+    const forgotExitBtn = document.getElementById("cancel-forget-pass-btn");
+    if (forgotExitBtn) {
+        forgotExitBtn.addEventListener("click", function (event) {
+            window.location.href = "/login";
+
+        })
+    }
+
+    const forgetPasswdForm = document.getElementById("forgetpasswd-form");
+    const progressForgetPasswd = document.getElementById("progressIndicator-forgetpasswd");
+    const messageForgetPass = document.getElementById("message-forgetPass");
+
+    function processForgetPasswdForm(event) {
+        event.preventDefault();
+        messageForgetPass.innerHTML = "";
+        progressForgetPasswd.style.display = "block";
+        const email = document.getElementById("email-forget-passwd").value;
+        if (email) {
+            const postbody = {email};
+            $.post("/forgetpass", postbody)
+                .done(function (data) {
+                    if (data) {
+                        progressForgetPasswd.style.display = "none";
+                        if (data.success) {
+                            messageForgetPass.innerHTML = '<i class="fas fa-check-circle"></i>&nbsp;Password reset link sent to your inbox';
+                            messageForgetPass.style.color = "#fff";
 
 
+                        } else {
+                            messageForgetPass.innerHTML = '<i class="fas fa-exclamation-triangle"></i>&nbsp;' + data.error.toString();
+                            messageForgetPass.style.color = "#ec0b72";
+
+                        }
 
 
+                    }
 
+
+                }).fail(function (error) {
+                console.log(error);
+                progressForgetPasswd.style.display = "none";
+                messageForgetPass.innerHTML = '<i class="fas fa-exclamation-triangle"></i>&nbsp;' + error.toString();
+                messageForgetPass.style.color = "#ec0b72";
+
+            })
+
+        }
+
+
+    }
+
+    if (forgetPasswdForm) {
+        forgetPasswdForm.addEventListener("submit", processForgetPasswdForm);
+
+    }
+
+    /*.....Reset Password ......*/
+    const resetPasswordForm = document.getElementById("reset-Password-Form");
+    const errorMessageRestPass = document.getElementById("error-message-reset-passwd");
+    const successMessageBox = document.getElementById("reset-pass-group-1");
+    const formBlock = document.getElementById("reset-pass-group-2");
+
+    function processResetPasswdForm(event) {
+        event.preventDefault();
+        errorMessageRestPass.innerHTML = "";
+        progressForgetPasswd.style.display = "block";
+
+        const password = document.getElementById("password").value;
+        const password2 = document.getElementById("password2").value;
+        const uuid = document.getElementById("reset-submit-pass-btn").dataset.id;
+
+
+        if (password && password2) {
+            if (password !== password2) {
+                progressForgetPasswd.style.display = "none";
+                errorMessageRestPass.innerHTML = '<i class="fas fa-exclamation-triangle"></i>&nbsp;' + 'Passwords do not match';
+                return;
+            }
+
+            const postbody = {password, password2, uuid};
+            $.post("/reset", postbody)
+                .done(function (data) {
+                    if (data) {
+                        progressForgetPasswd.style.display = "none";
+                        if (data.success) {
+                            formBlock.style.display = "none";
+                            successMessageBox.style.display = "block";
+
+
+                        } else {
+                            errorMessageRestPass.innerHTML = '<i class="fas fa-exclamation-triangle"></i>&nbsp;' + data.error.toString();
+
+                        }
+
+
+                    }
+
+
+                }).fail(function (error) {
+                console.log(error);
+                errorMessageRestPass.innerHTML = '<i class="fas fa-exclamation-triangle"></i>&nbsp;' + error.toString();
+
+            })
+
+        }
+
+
+    }
+
+    if (resetPasswordForm) {
+        resetPasswordForm.addEventListener("submit", processResetPasswdForm);
+    }
+
+
+    /*......Change Password....*/
+
+    const togglePassList = document.querySelectorAll(".togglePassword");
+    const changePasswdForm = document.getElementById("change-pass-form");
+    const changePassExitBtn = document.getElementById("cancel-forget-pass-btn2");
+    if (changePassExitBtn) {
+        changePassExitBtn.addEventListener("click", function (event) {
+            window.location.href = "/";
+
+        })
+    }
+
+    if (togglePassList) {
+        togglePassList.forEach(function (togglePass) {
+            togglePass.addEventListener("click", function (event) {
+                // toggle the type attribute
+                const oldpassword = togglePass.nextElementSibling;
+
+                const type = oldpassword.getAttribute('type') === 'password' ? 'text' : 'password';
+                oldpassword.setAttribute('type', type);
+                // toggle the eye slash icon
+                this.classList.toggle('fa-eye-slash');
+
+            })
+
+        })
+    }
+
+    function processChangePasswdForm(event) {
+        event.preventDefault();
+        errorMessageRestPass.innerHTML = "";
+        progressForgetPasswd.style.display = "block";
+
+        const password = document.getElementById("password").value;
+        const password2 = document.getElementById("password2").value;
+        const oldpassword = document.getElementById("oldpass").value;
+
+
+        if (password && password2 && oldpassword) {
+            if (password !== password2) {
+                progressForgetPasswd.style.display = "none";
+                errorMessageRestPass.innerHTML = '<i class="fas fa-exclamation-triangle"></i>&nbsp;' + 'Passwords do not match';
+                return;
+            }
+
+            const postbody = {password, password2, oldpassword};
+            $.post("/changepass", postbody)
+                .done(function (data) {
+                    if (data) {
+                        progressForgetPasswd.style.display = "none";
+                        if (data.success) {
+                            formBlock.style.display = "none";
+                            successMessageBox.style.display = "block";
+
+
+                        } else {
+                            errorMessageRestPass.innerHTML = '<i class="fas fa-exclamation-triangle"></i>&nbsp;' + data.error.toString();
+
+                        }
+
+
+                    }
+
+
+                }).fail(function (error) {
+                console.log(error);
+                errorMessageRestPass.innerHTML = '<i class="fas fa-exclamation-triangle"></i>&nbsp;' + error.toString();
+
+            })
+
+        }
+
+
+    }
+
+    if (changePasswdForm) {
+        changePasswdForm.addEventListener("submit", processChangePasswdForm)
+    }
+
+
+    /*......Setting date.....*/
+    let testdate = document.getElementById("startdate");
+    if (testdate) {
+
+        let date = new Date();
+        let yesterday = date - 1000 * 60 * 60 * 24 * 2;   // current date's milliseconds - 1,000 ms * 60 s * 60 mins * 24 hrs * (# of days beyond one to go back)
+        yesterday = new Date(yesterday);
+
+
+        $(testdate).datetimepicker({
+            value: yesterday,
+            format: 'd-m-Y H:i:s',
+            step: 1
+        });
+    }
+
+
+    let histBeginDate = document.getElementById("startdate");
+    let histEndDate = document.getElementById("enddate");
+    $.datetimepicker.setLocale('en-GB');
+    if (histBeginDate && histEndDate) {
+        let today = new Date();
+        let yesterday = today - 1000 * 60 * 60 * 24 * 2;
+        yesterday = new Date(yesterday);
+
+        $(histBeginDate).datetimepicker({
+            value: yesterday,
+            format: 'd-m-Y H:i:s',
+            step: 1,
+            yearStart: 1900,
+            yearEnd: 2100
+        });
+
+        $(histEndDate).datetimepicker({
+            value: today,
+            format: 'd-m-Y H:i:s',
+            step: 1,
+            yearStart: 1900,
+            yearEnd: 2100,
+        });
+
+
+    }
+
+    let adjustExpiryDateSet = document.getElementById("expiry-date");
+    if (adjustExpiryDateSet){
+        let today = new Date();
+        $(adjustExpiryDateSet).datetimepicker({
+            value: today,
+            format: 'd-m-Y H:i:s',
+            step: 1,
+            yearStart: 1900,
+            yearEnd: 2100,
+        });
+
+    }
 
 
 })
+
+

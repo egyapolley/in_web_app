@@ -61,6 +61,7 @@ a:focus {
     flex-grow: 0;
     padding-bottom: 30px;
     padding-left: 10px;
+    line-height: 2;
 }
 
 .side-nav-main {
@@ -109,6 +110,10 @@ a:focus {
     display: block;
     color: white;
 
+}
+
+.side-nav-footer a:hover{
+    text-decoration: underline;
 }
 
 .side-nav li.active {
@@ -602,57 +607,234 @@ a:focus {
     text-decoration: underline;
 }
 
+.login-body-container .message_error {
+    color: #e70a0a;
+    padding: 10px;
+}
+
+
+
+
+/* ....Forget Password......*/
+
 .login-body-container .forget-passwd-main-container {
-    width: 40vw;
-    height: 40vh;
-    margin: 70px auto;
-    background: #aec5b6;
-    padding: 50px;
-    font-family: 'PT Serif', serif;
-    color: #0c2131;
-    border-radius: 10px;
-    box-shadow: 2px 1px 1px #0c2131;
+    width: 400px;
+    margin: 30px auto;
+    height: 350px;
+    background: #3d3d56;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px #2c434e;
+
+}
+.login-body-container .forget-pass-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
-.login-body-container .forget-passwd-main-container .forget-pass-container {
-    padding: 30px 0
+.login-body-container .forget-passwd-main-container .form-control-forget_passwd {
+    width: 100%;
+    line-height: 2;
+    padding: 20px ;
 }
-
-.login-body-container  .forget-passwd-main-container input[placeholder] {
-    font-weight: bold;
-    font-family: 'PT Serif', serif;
-}
-.login-body-container .forget-passwd-main-container input {
+.login-body-container .forget-passwd-main-container .form-control-forget_passwd input {
     display: block;
     width: 100%;
-    padding: 8px;
-    margin-bottom: 20px;
-    outline: none;
+    padding: 10px;
     border: none;
+    outline: none;
+    border-radius: 5px;
+    text-align: center;
+    font-family: 'PT Serif', serif;
+
 }
-.login-body-container .forget-passwd-main-container .forget-pass-btn-group {
+
+.login-body-container .forget-passwd-main-container .form-control-forget_passwd .forget-pass-btn-group{
+    margin-top: 20px;
     display: flex;
     justify-content: center;
-    flex-wrap: wrap;
+    align-items: center;
+    padding: 5px 20px;
 }
 
-.login-body-container .forget-passwd-main-container button {
+.login-body-container .forget-pass-btn-group button {
+
     display: inline-block;
-    margin: 0 10px;
-    padding: 10px 30px;
-    font-family: 'PT Serif', serif;
-    font-weight: bold;
-    color: #0c2131;
-    font-size: 18px;
-    border-radius: 5px;
+    padding: 5px 30px;
+    border: none;
+    outline: none;
     cursor: pointer;
+    border-radius: 5px;
+    font-weight: bolder;
+
 }
 
-.login-body-container .forget-passwd-main-container button:hover,
-.forget-passwd-main-container button:active {
-    background: #0c2131;
-    color: #ccc;
+.login-body-container .forget-pass-btn-group button:nth-child(1){
+    margin-right: 40px;
+    background: #e91e63;
+    color: white;
+    font-family: 'PT Serif', serif;
 }
+
+.login-body-container .forget-pass-btn-group button:nth-child(2){
+    background: green;
+    color: white;
+    font-family: 'PT Serif', serif;
+
+}
+
+.login-body-container .forget-pass-btn-group button:hover{
+
+    background: white;
+    color: black;
+    box-shadow: 0 0 2px 5px #999191;
+
+}
+
+.login-body-container .forgot-password-heading {
+    text-align: center;
+    color: #464646;
+    padding-top: 30px;
+
+}
+
+.login-body-container #progressIndicator-forgetpasswd {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.login-body-container #progressIndicator-forgetpasswd img {
+    width: 30px;
+    height: 30px;
+}
+
+.login-body-container .message_wrapper-forgetPass {
+    padding-top: 20px;
+    line-height: 3;
+    text-align: center;
+    color: #fff;
+    font-weight: bolder;
+}
+
+
+
+/*.....Reset Password .....*/
+.login-body-container .change-password-form-container {
+    width: 400px;
+    margin: 50px auto;
+    background: #3d3d56;
+    padding: 40px 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px #2c434e;
+    color: #fff;
+
+}
+
+.login-body-container .change-password-form-container #reset-pass-group-1 {
+    display: none;
+    text-align: center;
+
+}
+.login-body-container .change-password-form-container #reset-pass-group-1 a{
+    color: #0ee70e;
+    display: inline-block;
+    padding: 10px 20px;
+    margin-top: 20px;
+    font-weight: bolder;
+    font-family: 'PT Serif', serif;
+}
+.login-body-container .change-password-form-container #reset-pass-group-1 a:hover{
+    background: white;
+    color: black;
+    box-shadow: 0 0 2px 2px #999191;
+    border: none;
+    outline: none;
+
+}
+
+.login-body-container .change-password-form-container #reset-pass-group-2 .messageWrapper-reset-passwd{
+    text-align: center;
+    line-height: 2;
+    color: #e91e63;
+
+}
+
+
+
+.login-body-container .change-password-form-container .form-control-changePass input,
+.login-body-container .change-password-form-container .form-control-changePass input label{
+    display: block;
+
+}
+.login-body-container .change-password-form-container .form-control-changePass {
+    padding: 20px;
+    position: relative;
+}
+
+.login-body-container .change-password-form-container .form-control-changePass input {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    font-family: 'PT Serif', serif;
+}
+
+.login-body-container .change-password-form-container .form-control-changePass:last-child {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+.login-body-container .change-password-form-container .form-control-changePass button{
+    display: inline-block;
+    padding: 5px 30px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-weight: bolder
+
+}
+
+.login-body-container .change-password-form-container .form-control-changePass  button:nth-child(1){
+    margin-right: 40px;
+    background: #e91e63;
+    color: white;
+    font-family: 'PT Serif', serif;
+}
+
+.login-body-container .change-password-form-container .form-control-changePass button:nth-child(2){
+    background: green;
+    color: white;
+    font-family: 'PT Serif', serif;
+
+}
+
+
+.login-body-container .change-password-form-container .form-control-changePass button:hover{
+    background: white;
+    color: black;
+    box-shadow: 0 0 2px 5px #999191;
+}
+
+
+/*.....Change Password....*/
+
+.togglePassword {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    color: #464646;
+    font-size: 12px;
+    font-weight: bolder;
+    cursor: pointer;
+    padding: 0 5px;
+}
+
+
 
 
 /*.......Create User.....*/
@@ -763,6 +945,38 @@ input:-webkit-autofill:active {
     -webkit-transition: color 9999s ease-out, background-color 9999s ease-out;
     -webkit-transition-delay: 9999s;
 }
+input {
+    font-family: 'PT Serif', serif;
+}
+
+select {
+    font-family: 'PT Serif', serif;
+}
+
+.hist-date {
+    padding: 5px 10px;
+    border: none;
+    outline: none;
+}
+
+.error-404 {
+    width: 300px;
+    margin: 50px auto;
+    color: #464646;
+    font-weight: bolder;
+    text-align: center;
+}
+
+.error-404 a {
+    display: inline-block;
+    padding: 20px 40px;
+    color: #e91e63;
+
+}
+.error-404 a:hover{
+    text-decoration: underline;
+}
+
 
 
 
