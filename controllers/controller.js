@@ -21,8 +21,6 @@ require("dotenv").config({
 });
 
 
-
-
 const options = {
     attributeNamePrefix: "@_",
     attrNodeName: "attr", //default is 'false'
@@ -43,14 +41,14 @@ const options = {
 };
 
 
-let PI_ENDPOINT ="http://172.25.39.13:3003";
-let OSD_ENDPOINT="http://172.25.39.16:2222";
+let PI_ENDPOINT = "http://172.25.39.13:3003";
+let OSD_ENDPOINT = "http://172.25.39.16:2222";
 
 let HOST = process.env.PROD_HOST;
 if (process.env.NODE_ENV === "development") {
     HOST = process.env.TEST_HOST;
-    PI_ENDPOINT ="http://172.25.38.42:3003";
-    OSD_ENDPOINT="http://172.25.38.43:2222";
+    PI_ENDPOINT = "http://172.25.38.42:3003";
+    OSD_ENDPOINT = "http://172.25.38.43:2222";
 }
 
 
@@ -244,14 +242,14 @@ module.exports = {
                             });
                             const {body} = response;
                             let jsonObj = parser.parse(body, options);
-                            if (jsonObj.Envelope.Body.CCSCD9_QRYResponse && jsonObj.Envelope.Body.CCSCD9_QRYResponse.TAGS && jsonObj.Envelope.Body.CCSCD9_QRYResponse.TAGS.TAG){
+                            if (jsonObj.Envelope.Body.CCSCD9_QRYResponse && jsonObj.Envelope.Body.CCSCD9_QRYResponse.TAGS && jsonObj.Envelope.Body.CCSCD9_QRYResponse.TAGS.TAG) {
                                 let acct_tags_jsonResult = jsonObj.Envelope.Body.CCSCD9_QRYResponse.TAGS.TAG;
 
 
                                 let isImsi, isImei, isDeviceType, isEmailId, isPhoneContact, isGiftTransferCounter,
                                     isTemTag = false;
 
-                                if (Array.isArray(acct_tags_jsonResult)){
+                                if (Array.isArray(acct_tags_jsonResult)) {
                                     acct_tags_jsonResult.forEach(function (tag) {
                                         if (tag.NAME === 'AltSMSNotifNo') {
                                             general_acct_info.push({
@@ -306,7 +304,7 @@ module.exports = {
 
                                     })
 
-                                }else {
+                                } else {
                                     let tag = acct_tags_jsonResult;
 
                                     if (tag.NAME === 'AltSMSNotifNo') {
@@ -1521,7 +1519,7 @@ module.exports = {
                 let jsonObj = parser.parse(body, options);
                 if (jsonObj.Envelope.Body.CCSCD7_QRYResponse) {
                     let finalResult = [];
-                    let regex = /BALANCE_TYPES=(.+?)\|BALANCES=(.+?)\|COSTS=(.+?)\|.*RATING_GROUP=(.+?)\|/;
+                    let regex = /BALANCE_TYPES=(.+?)\|BALANCES=(.+?)\|COSTS=(.+?)\|.*TCS=(.+?)\|TCE=(.+?)\|.*RATING_GROUP=(.+?)\|/;
                     if (jsonObj.Envelope.Body.CCSCD7_QRYResponse.EDRS) {
                         let result = jsonObj['Envelope']['Body']['CCSCD7_QRYResponse']['EDRS']['EDR_ITEM'];
 
@@ -1535,15 +1533,32 @@ module.exports = {
                                         let balance_type = el[1];
                                         let balance_before = el[2];
                                         let cost = el[3];
+                                        let start_time = el[4];
+                                        let end_time = el[5];
 
-                                        let rating_group = el[4];
+                                        let rating_group = el[6];
                                         if (balance_type.includes(",")) {
+                                            let record_date = utils.formateDate(edr.RECORD_DATE);
+                                            let f_start_time = utils.formateDate(start_time);
+                                            let f_end_time = utils.formateDate(end_time);
                                             let balance_type_items = balance_type.split(",");
                                             let cost_items = cost.split(",");
                                             let balance_before_items = balance_before.split(",");
                                             for (let i = 0; i < balance_type_items.length; i++) {
                                                 let edr_info = {};
-                                                edr_info.record_date = utils.formateDate(edr.RECORD_DATE);
+
+
+                                                if (i === 0) {
+                                                    edr_info.record_date = record_date;
+                                                    edr_info.start_time = f_start_time;
+                                                    edr_info.end_time = f_end_time;
+
+                                                } else {
+                                                    edr_info.record_date = "";
+                                                    edr_info.start_time = "";
+                                                    edr_info.end_time = "";
+
+                                                }
                                                 edr_info.balance_type = utils.getBundleName(balance_type_items[i]);
                                                 edr_info.balance_before = balance_before_items[i];
                                                 edr_info.cost = cost_items[i];
@@ -1557,6 +1572,8 @@ module.exports = {
                                         } else {
                                             let edr_info = {};
                                             edr_info.record_date = utils.formateDate(edr.RECORD_DATE);
+                                            edr_info.start_time = utils.formateDate(start_time);
+                                            edr_info.end_time = utils.formateDate(end_time);
                                             edr_info.balance_type = utils.getBundleName(balance_type);
                                             edr_info.balance_before = balance_before;
                                             edr_info.cost = cost;
@@ -1585,22 +1602,39 @@ module.exports = {
                                     let balance_type = el[1];
                                     let balance_before = el[2];
                                     let cost = el[3];
-                                    // let start_time = el[4];
-                                    // let end_time = el[5];
-                                    let rating_group = el[4];
+                                    let start_time = el[4];
+                                    let end_time = el[5];
+
+                                    let rating_group = el[6];
+
                                     if (balance_type.includes(",")) {
+                                        let record_date = utils.formateDate(edr.RECORD_DATE);
+                                        let f_start_time = utils.formateDate(start_time);
+                                        let f_end_time = utils.formateDate(end_time);
                                         let balance_type_items = balance_type.split(",");
                                         let cost_items = cost.split(",");
                                         let balance_before_items = balance_before.split(",");
                                         for (let i = 0; i < balance_type_items.length; i++) {
                                             let edr_info = {};
-                                            edr_info.record_date = utils.formateDate(edr.RECORD_DATE);
+
+
+                                            if (i === 0) {
+                                                edr_info.record_date = record_date;
+                                                edr_info.start_time = f_start_time;
+                                                edr_info.end_time = f_end_time;
+
+                                            } else {
+                                                edr_info.record_date = "";
+                                                edr_info.start_time = "";
+                                                edr_info.end_time = "";
+
+                                            }
+
                                             edr_info.balance_type = utils.getBundleName(balance_type_items[i]);
                                             edr_info.balance_before = balance_before_items[i];
                                             edr_info.cost = cost_items[i];
                                             edr_info.balance_after = (parseInt(balance_before_items[i]) - parseInt(cost_items[i])).toString()
-                                            // edr_info.start_time = utils.formateDate(start_time);
-                                            // edr_info.end_time = utils.formateDate(end_time);
+
                                             edr_info.rating_group = rating_group;
                                             finalResult.push(edr_info);
 
@@ -1609,12 +1643,12 @@ module.exports = {
                                     } else {
                                         let edr_info = {};
                                         edr_info.record_date = utils.formateDate(edr.RECORD_DATE);
+                                        edr_info.start_time = utils.formateDate(start_time);
+                                        edr_info.end_time = utils.formateDate(end_time);
                                         edr_info.balance_type = utils.getBundleName(balance_type);
                                         edr_info.balance_before = balance_before;
                                         edr_info.cost = cost;
                                         edr_info.balance_after = (parseInt(balance_before) - parseInt(cost)).toString()
-                                        // edr_info.start_time = utils.formateDate(start_time);
-                                        // edr_info.end_time = utils.formateDate(end_time);
                                         edr_info.rating_group = rating_group;
                                         finalResult.push(edr_info)
 
@@ -1703,7 +1737,7 @@ module.exports = {
                 let jsonObj = parser.parse(body, options);
                 if (jsonObj.Envelope.Body.CCSCD7_QRYResponse) {
                     let finalResult = [];
-                    let regex = /BALANCES=(.+?)\|.*BALANCE_TYPES=(.+?)\|.*COSTS=(.+?)\|/;
+                    let regexNoChannel = /BALANCES=(.+?)\|.*BALANCE_TYPES=(.+?)\|.*COSTS=(.+?)\|/;
                     if (jsonObj.Envelope.Body.CCSCD7_QRYResponse.EDRS) {
                         let result = jsonObj['Envelope']['Body']['CCSCD7_QRYResponse']['EDRS']['EDR_ITEM'];
 
@@ -1711,12 +1745,13 @@ module.exports = {
                             result.forEach(function (edr) {
                                 let edrType = utils.getEdrType(edr.EDR_TYPE);
                                 let record_date = utils.formateDate(edr.RECORD_DATE);
+                                if (/CHANNEL/i.test(edr.EXTRA_INFORMATION)) {
 
-                                let matches = edr.EXTRA_INFORMATION.matchAll(regex);
-                                for (const el of matches) {
-                                    let balance_before = el[1];
-                                    let balance_types = el[2];
-                                    let cost = el[3];
+                                    let balance_before = (/BALANCES=(.+?)\|/.exec(edr.EXTRA_INFORMATION))[1];
+                                    let balance_types = (/BALANCE_TYPES=(.+?)\|/.exec(edr.EXTRA_INFORMATION))[1];
+                                    let cost = (/COSTS=(.+?)\|/.exec(edr.EXTRA_INFORMATION))[1];
+                                    let channel = (/CHANNEL=(.+?)\|/.exec(edr.EXTRA_INFORMATION))[1];
+
 
                                     if (balance_types.includes(",")) {
                                         let balance_type_items = balance_types.split(",");
@@ -1725,13 +1760,18 @@ module.exports = {
 
                                         for (let i = 0; i < balance_before_items.length; i++) {
                                             let edr_info = {};
-                                            edr_info.edrType = edrType;
+
 
                                             if (i === 0) {
                                                 edr_info.record_date = record_date;
+                                                edr_info.edrType = edrType;
+                                                edr_info.channel = channel;
 
                                             } else {
                                                 edr_info.record_date = "";
+                                                edr_info.edrType = "";
+                                                edr_info.channel = "";
+
 
                                             }
                                             edr_info.balance_type = appData.balanceTypes[balance_type_items[i]];
@@ -1756,6 +1796,7 @@ module.exports = {
                                         let edr_info = {};
                                         edr_info.edrType = edrType;
                                         edr_info.record_date = record_date;
+                                        edr_info.channel = channel;
                                         edr_info.balance_type = appData.balanceTypes[balance_types];
                                         if (balance_types === '21') {
                                             edr_info.cost = (parseFloat(cost) / 100).toFixed(2);
@@ -1774,6 +1815,81 @@ module.exports = {
                                     }
 
 
+                                } else {
+
+                                    let matches = edr.EXTRA_INFORMATION.matchAll(regexNoChannel);
+
+                                    for (const el of matches) {
+
+                                        let balance_before = el[1];
+                                        let balance_types = el[2];
+                                        let cost = el[3];
+                                        let channel = "";
+
+                                        if (balance_types.includes(",")) {
+                                            let balance_type_items = balance_types.split(",");
+                                            let cost_items = cost.split(",");
+                                            let balance_before_items = balance_before.split(",");
+
+                                            for (let i = 0; i < balance_before_items.length; i++) {
+                                                let edr_info = {};
+
+
+                                                if (i === 0) {
+                                                    edr_info.record_date = record_date;
+                                                    edr_info.edrType = edrType;
+                                                    edr_info.channel = channel;
+
+                                                } else {
+                                                    edr_info.record_date = "";
+                                                    edr_info.edrType = "";
+                                                    edr_info.channel = "";
+
+
+                                                }
+                                                edr_info.balance_type = appData.balanceTypes[balance_type_items[i]];
+                                                if (balance_type_items[i] === '21') {
+                                                    edr_info.cost = (parseFloat(cost_items[i]) / 100).toFixed(2);
+                                                    edr_info.balance_before = (parseFloat(balance_before_items[i]) / 100).toFixed(2);
+                                                    edr_info.balance_after = ((parseFloat(balance_before_items[i]) - parseFloat(cost_items[i])) / 100).toFixed(2);
+
+                                                } else {
+                                                    edr_info.balance_before = balance_before_items[i];
+                                                    edr_info.cost = cost_items[i];
+                                                    edr_info.balance_after = (parseInt(balance_before_items[i]) - parseInt(cost_items[i]));
+
+                                                }
+
+                                                finalResult.push(edr_info);
+
+
+                                            }
+
+                                        } else {
+                                            let edr_info = {};
+                                            edr_info.edrType = edrType;
+                                            edr_info.record_date = record_date;
+                                            edr_info.channel = channel;
+                                            edr_info.balance_type = appData.balanceTypes[balance_types];
+                                            if (balance_types === '21') {
+                                                edr_info.cost = (parseFloat(cost) / 100).toFixed(2);
+                                                edr_info.balance_before = (parseFloat(balance_before) / 100).toFixed(2);
+                                                edr_info.balance_after = ((parseFloat(balance_before) - parseFloat(cost)) / 100).toFixed(2);
+
+                                            } else {
+                                                edr_info.balance_before = balance_before;
+                                                edr_info.cost = cost;
+                                                edr_info.balance_after = (parseInt(balance_before) - parseInt(cost));
+
+                                            }
+
+                                            finalResult.push(edr_info)
+
+                                        }
+
+
+                                    }
+
                                 }
 
 
@@ -1784,66 +1900,149 @@ module.exports = {
                             let edrType = utils.getEdrType(edr.EDR_TYPE);
                             let record_date = utils.formateDate(edr.RECORD_DATE);
 
-                            let matches = edr.EXTRA_INFORMATION.matchAll(regex);
-                            for (const el of matches) {
-                                let balance_before = el[1];
-                                let balance_types = el[2];
-                                let cost = el[3];
+                            if (/CHANNEL/i.test(edr.EXTRA_INFORMATION)) {
 
-                                if (balance_types.includes(",")) {
-                                    let balance_type_items = balance_types.split(",");
-                                    let cost_items = cost.split(",");
-                                    let balance_before_items = balance_before.split(",");
 
-                                    for (let i = 0; i < balance_before_items.length; i++) {
-                                        let edr_info = {};
-                                        edr_info.edrType = edrType;
-                                        if (i === 0) {
-                                            edr_info.record_date = record_date;
+                                let balance_before = (/BALANCES=(.+?)\|/.exec(edr.EXTRA_INFORMATION))[1];
+                                let balance_types = (/BALANCE_TYPES=(.+?)\|/.exec(edr.EXTRA_INFORMATION))[1];
+                                let cost = (/COSTS=(.+?)\|/.exec(edr.EXTRA_INFORMATION))[1];
+                                let channel = (/CHANNEL=(.+?)\|/.exec(edr.EXTRA_INFORMATION))[1];
 
-                                        } else {
-                                            edr_info.record_date = "";
+
+                                    if (balance_types.includes(",")) {
+                                        let balance_type_items = balance_types.split(",");
+                                        let cost_items = cost.split(",");
+                                        let balance_before_items = balance_before.split(",");
+
+                                        for (let i = 0; i < balance_before_items.length; i++) {
+                                            let edr_info = {};
+
+                                            if (i === 0) {
+                                                edr_info.record_date = record_date;
+                                                edr_info.edrType = edrType;
+                                                edr_info.channel = channel;
+
+                                            } else {
+                                                edr_info.record_date = "";
+                                                edr_info.edrType = "";
+                                                edr_info.channel = "";
+
+                                            }
+                                            edr_info.balance_type = appData.balanceTypes[balance_type_items[i]];
+                                            if (balance_type_items[i] === '21') {
+                                                edr_info.cost = (parseFloat(cost_items[i]) / 100).toFixed(2);
+                                                edr_info.balance_before = (parseFloat(balance_before_items[i]) / 100).toFixed(2);
+                                                edr_info.balance_after = ((parseFloat(balance_before_items[i]) - parseFloat(cost_items[i])) / 100).toFixed(2);
+
+                                            } else {
+                                                edr_info.balance_before = balance_before_items[i];
+                                                edr_info.cost = cost_items[i];
+                                                edr_info.balance_after = (parseInt(balance_before_items[i]) - parseInt(cost_items[i]));
+
+                                            }
+
+                                            finalResult.push(edr_info);
+
 
                                         }
-                                        edr_info.balance_type = appData.balanceTypes[balance_type_items[i]];
-                                        if (balance_type_items[i] === '21') {
-                                            edr_info.cost = (parseFloat(cost_items[i]) / 100).toFixed(2);
-                                            edr_info.balance_before = (parseFloat(balance_before_items[i]) / 100).toFixed(2);
-                                            edr_info.balance_after = ((parseFloat(balance_before_items[i]) - parseFloat(cost_items[i])) / 100).toFixed(2);
-
-                                        } else {
-                                            edr_info.balance_before = balance_before_items[i];
-                                            edr_info.cost = cost_items[i];
-                                            edr_info.balance_after = (parseInt(balance_before_items[i]) - parseInt(cost_items[i]));
-
-                                        }
-
-                                        finalResult.push(edr_info);
-
-
-                                    }
-
-                                } else {
-                                    let edr_info = {};
-                                    edr_info.edrType = edrType;
-                                    edr_info.record_date = record_date;
-                                    edr_info.balance_type = appData.balanceTypes[balance_types];
-                                    if (balance_types === '21') {
-                                        edr_info.cost = (parseFloat(cost) / 100).toFixed(2);
-                                        edr_info.balance_before = (parseFloat(balance_before) / 100).toFixed(2);
-                                        edr_info.balance_after = ((parseFloat(balance_before) - parseFloat(cost)) / 100).toFixed(2);
 
                                     } else {
-                                        edr_info.balance_before = balance_before;
-                                        edr_info.cost = cost;
-                                        edr_info.balance_after = (parseInt(balance_before) - parseInt(cost));
+                                        let edr_info = {};
+                                        edr_info.edrType = edrType;
+                                        edr_info.record_date = record_date;
+                                        edr_info.channel = channel;
+                                        edr_info.balance_type = appData.balanceTypes[balance_types];
+                                        if (balance_types === '21') {
+                                            edr_info.cost = (parseFloat(cost) / 100).toFixed(2);
+                                            edr_info.balance_before = (parseFloat(balance_before) / 100).toFixed(2);
+                                            edr_info.balance_after = ((parseFloat(balance_before) - parseFloat(cost)) / 100).toFixed(2);
+
+                                        } else {
+                                            edr_info.balance_before = balance_before;
+                                            edr_info.cost = cost;
+                                            edr_info.balance_after = (parseInt(balance_before) - parseInt(cost));
+
+                                        }
+
+                                        finalResult.push(edr_info)
 
                                     }
 
-                                    finalResult.push(edr_info)
 
+                            } else {
+                                let matches = edr.EXTRA_INFORMATION.matchAll(regexNoChannel);
+                                for (const el of matches) {
+
+
+                                    let balance_before = el[1];
+                                    let balance_types = el[2];
+                                    let cost = el[3];
+                                    let channel = "";
+
+
+                                    if (balance_types.includes(",")) {
+                                        let balance_type_items = balance_types.split(",");
+                                        let cost_items = cost.split(",");
+                                        let balance_before_items = balance_before.split(",");
+
+                                        for (let i = 0; i < balance_before_items.length; i++) {
+                                            let edr_info = {};
+
+                                            if (i === 0) {
+                                                edr_info.record_date = record_date;
+                                                edr_info.edrType = edrType;
+                                                edr_info.channel = channel;
+
+                                            } else {
+                                                edr_info.record_date = "";
+                                                edr_info.edrType = "";
+                                                edr_info.channel = "";
+
+                                            }
+                                            edr_info.balance_type = appData.balanceTypes[balance_type_items[i]];
+                                            if (balance_type_items[i] === '21') {
+                                                edr_info.cost = (parseFloat(cost_items[i]) / 100).toFixed(2);
+                                                edr_info.balance_before = (parseFloat(balance_before_items[i]) / 100).toFixed(2);
+                                                edr_info.balance_after = ((parseFloat(balance_before_items[i]) - parseFloat(cost_items[i])) / 100).toFixed(2);
+
+                                            } else {
+                                                edr_info.balance_before = balance_before_items[i];
+                                                edr_info.cost = cost_items[i];
+                                                edr_info.balance_after = (parseInt(balance_before_items[i]) - parseInt(cost_items[i]));
+
+                                            }
+
+                                            finalResult.push(edr_info);
+
+
+                                        }
+
+                                    } else {
+                                        let edr_info = {};
+                                        edr_info.edrType = edrType;
+                                        edr_info.record_date = record_date;
+                                        edr_info.channel = channel;
+                                        edr_info.balance_type = appData.balanceTypes[balance_types];
+                                        if (balance_types === '21') {
+                                            edr_info.cost = (parseFloat(cost) / 100).toFixed(2);
+                                            edr_info.balance_before = (parseFloat(balance_before) / 100).toFixed(2);
+                                            edr_info.balance_after = ((parseFloat(balance_before) - parseFloat(cost)) / 100).toFixed(2);
+
+                                        } else {
+                                            edr_info.balance_before = balance_before;
+                                            edr_info.cost = cost;
+                                            edr_info.balance_after = (parseInt(balance_before) - parseInt(cost));
+
+                                        }
+
+                                        finalResult.push(edr_info)
+
+                                    }
                                 }
+
+
                             }
+
                         }
 
 
@@ -1943,12 +2142,14 @@ module.exports = {
 
                                         for (let i = 0; i < balance_before_items.length; i++) {
                                             let edr_info = {};
-                                            edr_info.edrType = edrType;
+
                                             if (i === 0) {
                                                 edr_info.record_date = record_date;
+                                                edr_info.edrType = edrType;
 
                                             } else {
                                                 edr_info.record_date = "";
+                                                edr_info.edrType = "";
 
                                             }
 
@@ -2016,12 +2217,14 @@ module.exports = {
 
                                     for (let i = 0; i < balance_before_items.length; i++) {
                                         let edr_info = {};
-                                        edr_info.edrType = edrType;
+
                                         if (i === 0) {
                                             edr_info.record_date = record_date;
+                                            edr_info.edrType = edrType;
 
                                         } else {
                                             edr_info.record_date = "";
+                                            edr_info.edrType = "";
 
                                         }
                                         edr_info.balance_type = appData.balanceTypes[balance_type_items[i]];
@@ -2098,7 +2301,6 @@ module.exports = {
 
     postviewHistAll: async (req, res) => {
         let {msisdn, begin_date, end_date} = req.body;
-        console.log(req.body)
         begin_date = moment(begin_date, 'DD-MM-YYYY HH:mm:ss').format("YYYYMMDDHHmmss");
         end_date = moment(end_date, 'DD-MM-YYYY HH:mm:ss').format("YYYYMMDDHHmmss");
 
@@ -2157,12 +2359,14 @@ module.exports = {
 
                         for (let i = 0; i < balance_before_items.length; i++) {
                             let edr_info = {};
-                            edr_info.edrType = edrType;
+
                             if (i === 0) {
                                 edr_info.record_date = record_date;
+                                edr_info.edrType = edrType;
 
                             } else {
                                 edr_info.record_date = "";
+                                edr_info.edrType = "";
 
                             }
                             edr_info.balance_type = appData.balanceTypes[balance_type_items[i]];
@@ -2252,12 +2456,14 @@ module.exports = {
 
                             for (let i = 0; i < balance_before_items.length; i++) {
                                 let edr_info = {};
-                                edr_info.edrType = edrType;
+
                                 if (i === 0) {
                                     edr_info.record_date = record_date;
+                                    edr_info.edrType = edrType;
 
                                 } else {
                                     edr_info.record_date = "";
+                                    edr_info.edrType = "";
 
                                 }
                                 edr_info.balance_type = appData.balanceTypes[balance_type_items[i]];

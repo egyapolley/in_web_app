@@ -856,11 +856,11 @@ $(function () {
                             errorWrapperViewHist.style.display = "none";
                             if (data.success) {
 
-                                let theadstring = "<th>Record Date</th><th>Cdr Type</th><th>Rating Group</th><th>Balance Type</th><th>Balance Before</th><th>Cost</th><th>Balance After</th>"
+                                let theadstring = "<th>Record Date</th><th>Cdr Type</th><th>Rating Group</th><th>Balance Type</th><th>Balance Before</th><th>Cost</th><th>Balance After</th><th>Start Time</th><th>End Time</th>"
                                 let dataSet = data.success;
                                 let tablebodyString = "";
                                 dataSet.forEach(function (cdrItem) {
-                                    tablebodyString += `<tr><td>${cdrItem.record_date}</td><td>Data Charging</td><td>${cdrItem.rating_group}</td><td>${cdrItem.balance_type}</td><td>${cdrItem.balance_before}</td><td>${cdrItem.cost}</td><td>${cdrItem.balance_after}</td></tr>`;
+                                    tablebodyString += `<tr><td>${cdrItem.record_date}</td><td>Data Charging</td><td>${cdrItem.rating_group}</td><td>${cdrItem.balance_type}</td><td>${cdrItem.balance_before}</td><td>${cdrItem.cost}</td><td>${cdrItem.balance_after}</td><td>${cdrItem.start_time}</td><td>${cdrItem.end_time}</td></tr>`;
                                 })
 
                                 historyTableHeader.innerHTML = theadstring;
@@ -899,11 +899,11 @@ $(function () {
                             errorWrapperViewHist.style.display = "none";
                             if (data.success) {
 
-                                let theadstring = "<th>Record Date</th><th>Cdr Type</th><th>Balance Type</th><th>Balance Before</th><th>Cost</th><th>Balance After</th>"
+                                let theadstring = "<th>Record Date</th><th>Cdr Type</th><th>Balance Type</th><th>Balance Before</th><th>Cost</th><th>Balance After</th><th>Channel</th>"
                                 let dataSet = data.success;
                                 let tablebodyString = "";
                                 dataSet.forEach(function (cdrItem) {
-                                    tablebodyString += `<tr><td>${cdrItem.record_date}</td><td>${cdrItem.edrType}</td><td>${cdrItem.balance_type}</td><td>${cdrItem.balance_before}</td><td>${cdrItem.cost}</td><td>${cdrItem.balance_after}</td></tr>`;
+                                    tablebodyString += `<tr><td>${cdrItem.record_date}</td><td>${cdrItem.edrType}</td><td>${cdrItem.balance_type}</td><td>${cdrItem.balance_before}</td><td>${cdrItem.cost}</td><td>${cdrItem.balance_after}</td><td>${cdrItem.channel}</td></tr>`;
                                 })
 
                                 historyTableHeader.innerHTML = theadstring;
