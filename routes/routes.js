@@ -43,6 +43,7 @@ router.get("/changeproduct",middleware.checkAuthenticated,middleware.checkForLev
 router.get("/adjustexpiry",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three,controller.renderadjustexpirydate);
 router.get("/managerecurrent",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three, controller.rendermanagerecurrent);
 router.get("/getrecurrent",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three,controller.getmanagerecurrent);
+router.get("/cashtransfer",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three,controller.rendercashtransfer);
 
 router.post("/expiredata", middleware.checkAuthenticated,middleware.checkForLevel_Two_Three,controller.postexpiredata);
 router.post("/changeacctstate",middleware.checkAuthenticated, middleware.checkForLevel_Two_Three,controller.postchangestate);
@@ -50,6 +51,7 @@ router.post("/changecontact",middleware.checkAuthenticated,middleware.checkForLe
 router.post("/changeproduct",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three,controller.postchangeproduct);
 router.post("/adjustexpiry",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three,controller.postadjustexpiry);
 router.post("/managerecurrent",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three, controller.postterminaterecurrent);
+router.post("/cashtransfer",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three,controller.postcashtransfer);
 
 
 router.get("/login", controller.renderlogin);

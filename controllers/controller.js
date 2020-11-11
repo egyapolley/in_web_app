@@ -1737,7 +1737,7 @@ module.exports = {
                 let jsonObj = parser.parse(body, options);
                 if (jsonObj.Envelope.Body.CCSCD7_QRYResponse) {
                     let finalResult = [];
-                    let regexNoChannel = /BALANCES=(.+?)\|.*BALANCE_TYPES=(.+?)\|.*COSTS=(.+?)\|/;
+
                     if (jsonObj.Envelope.Body.CCSCD7_QRYResponse.EDRS) {
                         let result = jsonObj['Envelope']['Body']['CCSCD7_QRYResponse']['EDRS']['EDR_ITEM'];
 
@@ -1745,150 +1745,83 @@ module.exports = {
                             result.forEach(function (edr) {
                                 let edrType = utils.getEdrType(edr.EDR_TYPE);
                                 let record_date = utils.formateDate(edr.RECORD_DATE);
+
+                                let balance_before = (/BALANCES=(.+?)\|/.exec(edr.EXTRA_INFORMATION))[1];
+                                let balance_types = (/BALANCE_TYPES=(.+?)\|/.exec(edr.EXTRA_INFORMATION))[1];
+                                let cost = (/COSTS=(.+?)\|/.exec(edr.EXTRA_INFORMATION))[1];
+
+                                let transaction_id = "";
+                                if (/TRANSACTION/i.test(edr.EXTRA_INFORMATION)) {
+                                    transaction_id = (/TRANSACTION_ID=(.+?)\|/.exec(edr.EXTRA_INFORMATION))[1];
+                                }
+
+                                let channel = "";
                                 if (/CHANNEL/i.test(edr.EXTRA_INFORMATION)) {
-
-                                    let balance_before = (/BALANCES=(.+?)\|/.exec(edr.EXTRA_INFORMATION))[1];
-                                    let balance_types = (/BALANCE_TYPES=(.+?)\|/.exec(edr.EXTRA_INFORMATION))[1];
-                                    let cost = (/COSTS=(.+?)\|/.exec(edr.EXTRA_INFORMATION))[1];
-                                    let channel = (/CHANNEL=(.+?)\|/.exec(edr.EXTRA_INFORMATION))[1];
+                                    channel = (/CHANNEL=(.+?)\|/.exec(edr.EXTRA_INFORMATION))[1];
+                                }
 
 
-                                    if (balance_types.includes(",")) {
-                                        let balance_type_items = balance_types.split(",");
-                                        let cost_items = cost.split(",");
-                                        let balance_before_items = balance_before.split(",");
+                                if (balance_types.includes(",")) {
+                                    let balance_type_items = balance_types.split(",");
+                                    let cost_items = cost.split(",");
+                                    let balance_before_items = balance_before.split(",");
 
-                                        for (let i = 0; i < balance_before_items.length; i++) {
-                                            let edr_info = {};
-
-
-                                            if (i === 0) {
-                                                edr_info.record_date = record_date;
-                                                edr_info.edrType = edrType;
-                                                edr_info.channel = channel;
-
-                                            } else {
-                                                edr_info.record_date = "";
-                                                edr_info.edrType = "";
-                                                edr_info.channel = "";
-
-
-                                            }
-                                            edr_info.balance_type = appData.balanceTypes[balance_type_items[i]];
-                                            if (balance_type_items[i] === '21') {
-                                                edr_info.cost = (parseFloat(cost_items[i]) / 100).toFixed(2);
-                                                edr_info.balance_before = (parseFloat(balance_before_items[i]) / 100).toFixed(2);
-                                                edr_info.balance_after = ((parseFloat(balance_before_items[i]) - parseFloat(cost_items[i])) / 100).toFixed(2);
-
-                                            } else {
-                                                edr_info.balance_before = balance_before_items[i];
-                                                edr_info.cost = cost_items[i];
-                                                edr_info.balance_after = (parseInt(balance_before_items[i]) - parseInt(cost_items[i]));
-
-                                            }
-
-                                            finalResult.push(edr_info);
-
-
-                                        }
-
-                                    } else {
+                                    for (let i = 0; i < balance_before_items.length; i++) {
                                         let edr_info = {};
-                                        edr_info.edrType = edrType;
-                                        edr_info.record_date = record_date;
-                                        edr_info.channel = channel;
-                                        edr_info.balance_type = appData.balanceTypes[balance_types];
-                                        if (balance_types === '21') {
-                                            edr_info.cost = (parseFloat(cost) / 100).toFixed(2);
-                                            edr_info.balance_before = (parseFloat(balance_before) / 100).toFixed(2);
-                                            edr_info.balance_after = ((parseFloat(balance_before) - parseFloat(cost)) / 100).toFixed(2);
+
+
+                                        if (i === 0) {
+                                            edr_info.record_date = record_date;
+                                            edr_info.edrType = edrType;
+                                            edr_info.channel = channel;
+                                            edr_info.transaction_id = transaction_id
 
                                         } else {
-                                            edr_info.balance_before = balance_before;
-                                            edr_info.cost = cost;
-                                            edr_info.balance_after = (parseInt(balance_before) - parseInt(cost));
+                                            edr_info.record_date = "";
+                                            edr_info.edrType = "";
+                                            edr_info.channel = "";
+                                            edr_info.transaction_id = "";
+
+
+                                        }
+                                        edr_info.balance_type = appData.balanceTypes[balance_type_items[i]];
+                                        if (balance_type_items[i] === '21') {
+                                            edr_info.cost = (parseFloat(cost_items[i]) / 100).toFixed(2);
+                                            edr_info.balance_before = (parseFloat(balance_before_items[i]) / 100).toFixed(2);
+                                            edr_info.balance_after = ((parseFloat(balance_before_items[i]) - parseFloat(cost_items[i])) / 100).toFixed(2);
+
+                                        } else {
+                                            edr_info.balance_before = balance_before_items[i];
+                                            edr_info.cost = cost_items[i];
+                                            edr_info.balance_after = (parseInt(balance_before_items[i]) - parseInt(cost_items[i]));
 
                                         }
 
-                                        finalResult.push(edr_info)
+                                        finalResult.push(edr_info);
+
 
                                     }
-
 
                                 } else {
+                                    let edr_info = {};
+                                    edr_info.edrType = edrType;
+                                    edr_info.record_date = record_date;
+                                    edr_info.channel = channel;
+                                    edr_info.transaction_id = transaction_id
+                                    edr_info.balance_type = appData.balanceTypes[balance_types];
+                                    if (balance_types === '21') {
+                                        edr_info.cost = (parseFloat(cost) / 100).toFixed(2);
+                                        edr_info.balance_before = (parseFloat(balance_before) / 100).toFixed(2);
+                                        edr_info.balance_after = ((parseFloat(balance_before) - parseFloat(cost)) / 100).toFixed(2);
 
-                                    let matches = edr.EXTRA_INFORMATION.matchAll(regexNoChannel);
-
-                                    for (const el of matches) {
-
-                                        let balance_before = el[1];
-                                        let balance_types = el[2];
-                                        let cost = el[3];
-                                        let channel = "";
-
-                                        if (balance_types.includes(",")) {
-                                            let balance_type_items = balance_types.split(",");
-                                            let cost_items = cost.split(",");
-                                            let balance_before_items = balance_before.split(",");
-
-                                            for (let i = 0; i < balance_before_items.length; i++) {
-                                                let edr_info = {};
-
-
-                                                if (i === 0) {
-                                                    edr_info.record_date = record_date;
-                                                    edr_info.edrType = edrType;
-                                                    edr_info.channel = channel;
-
-                                                } else {
-                                                    edr_info.record_date = "";
-                                                    edr_info.edrType = "";
-                                                    edr_info.channel = "";
-
-
-                                                }
-                                                edr_info.balance_type = appData.balanceTypes[balance_type_items[i]];
-                                                if (balance_type_items[i] === '21') {
-                                                    edr_info.cost = (parseFloat(cost_items[i]) / 100).toFixed(2);
-                                                    edr_info.balance_before = (parseFloat(balance_before_items[i]) / 100).toFixed(2);
-                                                    edr_info.balance_after = ((parseFloat(balance_before_items[i]) - parseFloat(cost_items[i])) / 100).toFixed(2);
-
-                                                } else {
-                                                    edr_info.balance_before = balance_before_items[i];
-                                                    edr_info.cost = cost_items[i];
-                                                    edr_info.balance_after = (parseInt(balance_before_items[i]) - parseInt(cost_items[i]));
-
-                                                }
-
-                                                finalResult.push(edr_info);
-
-
-                                            }
-
-                                        } else {
-                                            let edr_info = {};
-                                            edr_info.edrType = edrType;
-                                            edr_info.record_date = record_date;
-                                            edr_info.channel = channel;
-                                            edr_info.balance_type = appData.balanceTypes[balance_types];
-                                            if (balance_types === '21') {
-                                                edr_info.cost = (parseFloat(cost) / 100).toFixed(2);
-                                                edr_info.balance_before = (parseFloat(balance_before) / 100).toFixed(2);
-                                                edr_info.balance_after = ((parseFloat(balance_before) - parseFloat(cost)) / 100).toFixed(2);
-
-                                            } else {
-                                                edr_info.balance_before = balance_before;
-                                                edr_info.cost = cost;
-                                                edr_info.balance_after = (parseInt(balance_before) - parseInt(cost));
-
-                                            }
-
-                                            finalResult.push(edr_info)
-
-                                        }
-
+                                    } else {
+                                        edr_info.balance_before = balance_before;
+                                        edr_info.cost = cost;
+                                        edr_info.balance_after = (parseInt(balance_before) - parseInt(cost));
 
                                     }
+
+                                    finalResult.push(edr_info)
 
                                 }
 
@@ -1900,148 +1833,85 @@ module.exports = {
                             let edrType = utils.getEdrType(edr.EDR_TYPE);
                             let record_date = utils.formateDate(edr.RECORD_DATE);
 
+                            let balance_before = (/BALANCES=(.+?)\|/.exec(edr.EXTRA_INFORMATION))[1];
+                            let balance_types = (/BALANCE_TYPES=(.+?)\|/.exec(edr.EXTRA_INFORMATION))[1];
+                            let cost = (/COSTS=(.+?)\|/.exec(edr.EXTRA_INFORMATION))[1];
+
+                            let transaction_id = "";
+                            if (/TRANSACTION/i.test(edr.EXTRA_INFORMATION)) {
+                                transaction_id = (/TRANSACTION_ID=(.+?)\|/.exec(edr.EXTRA_INFORMATION))[1];
+                            }
+
+                            let channel = "";
                             if (/CHANNEL/i.test(edr.EXTRA_INFORMATION)) {
+                                channel = (/CHANNEL=(.+?)\|/.exec(edr.EXTRA_INFORMATION))[1];
+                            }
 
 
-                                let balance_before = (/BALANCES=(.+?)\|/.exec(edr.EXTRA_INFORMATION))[1];
-                                let balance_types = (/BALANCE_TYPES=(.+?)\|/.exec(edr.EXTRA_INFORMATION))[1];
-                                let cost = (/COSTS=(.+?)\|/.exec(edr.EXTRA_INFORMATION))[1];
-                                let channel = (/CHANNEL=(.+?)\|/.exec(edr.EXTRA_INFORMATION))[1];
+                            if (balance_types.includes(",")) {
+                                let balance_type_items = balance_types.split(",");
+                                let cost_items = cost.split(",");
+                                let balance_before_items = balance_before.split(",");
+
+                                for (let i = 0; i < balance_before_items.length; i++) {
+                                    let edr_info = {};
 
 
-                                    if (balance_types.includes(",")) {
-                                        let balance_type_items = balance_types.split(",");
-                                        let cost_items = cost.split(",");
-                                        let balance_before_items = balance_before.split(",");
-
-                                        for (let i = 0; i < balance_before_items.length; i++) {
-                                            let edr_info = {};
-
-                                            if (i === 0) {
-                                                edr_info.record_date = record_date;
-                                                edr_info.edrType = edrType;
-                                                edr_info.channel = channel;
-
-                                            } else {
-                                                edr_info.record_date = "";
-                                                edr_info.edrType = "";
-                                                edr_info.channel = "";
-
-                                            }
-                                            edr_info.balance_type = appData.balanceTypes[balance_type_items[i]];
-                                            if (balance_type_items[i] === '21') {
-                                                edr_info.cost = (parseFloat(cost_items[i]) / 100).toFixed(2);
-                                                edr_info.balance_before = (parseFloat(balance_before_items[i]) / 100).toFixed(2);
-                                                edr_info.balance_after = ((parseFloat(balance_before_items[i]) - parseFloat(cost_items[i])) / 100).toFixed(2);
-
-                                            } else {
-                                                edr_info.balance_before = balance_before_items[i];
-                                                edr_info.cost = cost_items[i];
-                                                edr_info.balance_after = (parseInt(balance_before_items[i]) - parseInt(cost_items[i]));
-
-                                            }
-
-                                            finalResult.push(edr_info);
-
-
-                                        }
+                                    if (i === 0) {
+                                        edr_info.record_date = record_date;
+                                        edr_info.edrType = edrType;
+                                        edr_info.channel = channel;
+                                        edr_info.transaction_id = transaction_id
 
                                     } else {
-                                        let edr_info = {};
-                                        edr_info.edrType = edrType;
-                                        edr_info.record_date = record_date;
-                                        edr_info.channel = channel;
-                                        edr_info.balance_type = appData.balanceTypes[balance_types];
-                                        if (balance_types === '21') {
-                                            edr_info.cost = (parseFloat(cost) / 100).toFixed(2);
-                                            edr_info.balance_before = (parseFloat(balance_before) / 100).toFixed(2);
-                                            edr_info.balance_after = ((parseFloat(balance_before) - parseFloat(cost)) / 100).toFixed(2);
+                                        edr_info.record_date = "";
+                                        edr_info.edrType = "";
+                                        edr_info.channel = "";
+                                        edr_info.transaction_id = "";
 
-                                        } else {
-                                            edr_info.balance_before = balance_before;
-                                            edr_info.cost = cost;
-                                            edr_info.balance_after = (parseInt(balance_before) - parseInt(cost));
 
-                                        }
+                                    }
+                                    edr_info.balance_type = appData.balanceTypes[balance_type_items[i]];
+                                    if (balance_type_items[i] === '21') {
+                                        edr_info.cost = (parseFloat(cost_items[i]) / 100).toFixed(2);
+                                        edr_info.balance_before = (parseFloat(balance_before_items[i]) / 100).toFixed(2);
+                                        edr_info.balance_after = ((parseFloat(balance_before_items[i]) - parseFloat(cost_items[i])) / 100).toFixed(2);
 
-                                        finalResult.push(edr_info)
+                                    } else {
+                                        edr_info.balance_before = balance_before_items[i];
+                                        edr_info.cost = cost_items[i];
+                                        edr_info.balance_after = (parseInt(balance_before_items[i]) - parseInt(cost_items[i]));
 
                                     }
 
-
-                            } else {
-                                let matches = edr.EXTRA_INFORMATION.matchAll(regexNoChannel);
-                                for (const el of matches) {
+                                    finalResult.push(edr_info);
 
 
-                                    let balance_before = el[1];
-                                    let balance_types = el[2];
-                                    let cost = el[3];
-                                    let channel = "";
-
-
-                                    if (balance_types.includes(",")) {
-                                        let balance_type_items = balance_types.split(",");
-                                        let cost_items = cost.split(",");
-                                        let balance_before_items = balance_before.split(",");
-
-                                        for (let i = 0; i < balance_before_items.length; i++) {
-                                            let edr_info = {};
-
-                                            if (i === 0) {
-                                                edr_info.record_date = record_date;
-                                                edr_info.edrType = edrType;
-                                                edr_info.channel = channel;
-
-                                            } else {
-                                                edr_info.record_date = "";
-                                                edr_info.edrType = "";
-                                                edr_info.channel = "";
-
-                                            }
-                                            edr_info.balance_type = appData.balanceTypes[balance_type_items[i]];
-                                            if (balance_type_items[i] === '21') {
-                                                edr_info.cost = (parseFloat(cost_items[i]) / 100).toFixed(2);
-                                                edr_info.balance_before = (parseFloat(balance_before_items[i]) / 100).toFixed(2);
-                                                edr_info.balance_after = ((parseFloat(balance_before_items[i]) - parseFloat(cost_items[i])) / 100).toFixed(2);
-
-                                            } else {
-                                                edr_info.balance_before = balance_before_items[i];
-                                                edr_info.cost = cost_items[i];
-                                                edr_info.balance_after = (parseInt(balance_before_items[i]) - parseInt(cost_items[i]));
-
-                                            }
-
-                                            finalResult.push(edr_info);
-
-
-                                        }
-
-                                    } else {
-                                        let edr_info = {};
-                                        edr_info.edrType = edrType;
-                                        edr_info.record_date = record_date;
-                                        edr_info.channel = channel;
-                                        edr_info.balance_type = appData.balanceTypes[balance_types];
-                                        if (balance_types === '21') {
-                                            edr_info.cost = (parseFloat(cost) / 100).toFixed(2);
-                                            edr_info.balance_before = (parseFloat(balance_before) / 100).toFixed(2);
-                                            edr_info.balance_after = ((parseFloat(balance_before) - parseFloat(cost)) / 100).toFixed(2);
-
-                                        } else {
-                                            edr_info.balance_before = balance_before;
-                                            edr_info.cost = cost;
-                                            edr_info.balance_after = (parseInt(balance_before) - parseInt(cost));
-
-                                        }
-
-                                        finalResult.push(edr_info)
-
-                                    }
                                 }
 
+                            } else {
+                                let edr_info = {};
+                                edr_info.edrType = edrType;
+                                edr_info.record_date = record_date;
+                                edr_info.channel = channel;
+                                edr_info.transaction_id = transaction_id
+                                edr_info.balance_type = appData.balanceTypes[balance_types];
+                                if (balance_types === '21') {
+                                    edr_info.cost = (parseFloat(cost) / 100).toFixed(2);
+                                    edr_info.balance_before = (parseFloat(balance_before) / 100).toFixed(2);
+                                    edr_info.balance_after = ((parseFloat(balance_before) - parseFloat(cost)) / 100).toFixed(2);
+
+                                } else {
+                                    edr_info.balance_before = balance_before;
+                                    edr_info.cost = cost;
+                                    edr_info.balance_after = (parseInt(balance_before) - parseInt(cost));
+
+                                }
+
+                                finalResult.push(edr_info)
 
                             }
+
 
                         }
 
@@ -2122,7 +1992,7 @@ module.exports = {
                     let regex = /BALANCE_TYPES=(.+?)\|.*BALANCES=(.+?)\|*.COSTS=(.+?)\|/;
                     if (jsonObj.Envelope.Body.CCSCD7_QRYResponse.EDRS) {
                         let result = jsonObj['Envelope']['Body']['CCSCD7_QRYResponse']['EDRS']['EDR_ITEM'];
-                        console.log(result);
+
 
                         if (Array.isArray(result)) {
                             result.forEach(function (edr) {
@@ -2134,6 +2004,7 @@ module.exports = {
                                     let balance_before = el[2];
                                     let balance_types = el[1];
                                     let cost = el[3];
+
 
                                     if (balance_types.includes(",")) {
                                         let balance_type_items = balance_types.split(",");
@@ -2200,14 +2071,15 @@ module.exports = {
                             });
 
                         } else {
+
                             let edr = result;
                             let edrType = utils.getEdrType(edr.EDR_TYPE);
                             let record_date = utils.formateDate(edr.RECORD_DATE);
 
                             let matches = edr.EXTRA_INFORMATION.matchAll(regex);
                             for (const el of matches) {
-                                let balance_before = el[1];
-                                let balance_types = el[2];
+                                let balance_before = el[2];
+                                let balance_types = el[1];
                                 let cost = el[3];
 
                                 if (balance_types.includes(",")) {
@@ -2330,12 +2202,10 @@ module.exports = {
 </soapenv:Envelope>
 `;
 
-        let regex = /BALANCES=(.+?)\|.*BALANCE_TYPES=(.+?)\|.*COSTS=(.+?)\|/;
-        let regexOther = /BALANCE_TYPES=(.+?)\|.*BALANCES=(.+?)\|.*COSTS=(.+?)\|/;
         const finalResult = [];
 
 
-        function processEdr2(edr) {
+        function processEdr(edr) {
 
 
             let edrType = utils.getEdrType(edr.EDR_TYPE);
@@ -2344,73 +2214,68 @@ module.exports = {
 
             if (extra_info.includes("BALANCES=") && extra_info.includes("BALANCE_TYPES=") && extra_info.includes("COSTS=")) {
 
-                let matches = extra_info.matchAll(regexOther);
-
-                for (const el of matches) {
-
-                    let balance_before = el[2];
-                    let balance_types = el[1];
-                    let cost = el[3];
-
-                    if (balance_types.includes(",")) {
-                        let balance_type_items = balance_types.split(",");
-                        let cost_items = cost.split(",");
-                        let balance_before_items = balance_before.split(",");
-
-                        for (let i = 0; i < balance_before_items.length; i++) {
-                            let edr_info = {};
-
-                            if (i === 0) {
-                                edr_info.record_date = record_date;
-                                edr_info.edrType = edrType;
-
-                            } else {
-                                edr_info.record_date = "";
-                                edr_info.edrType = "";
-
-                            }
-                            edr_info.balance_type = appData.balanceTypes[balance_type_items[i]];
-                            if (balance_type_items[i] === '21') {
-                                edr_info.cost = (parseFloat(cost_items[i]) / 100).toFixed(2);
-                                edr_info.balance_before = (parseFloat(balance_before_items[i]) / 100).toFixed(2);
-                                edr_info.balance_after = ((parseFloat(balance_before_items[i]) - parseFloat(cost_items[i])) / 100).toFixed(2);
-
-                            } else {
-                                edr_info.balance_before = balance_before_items[i];
-                                edr_info.cost = cost_items[i];
-                                edr_info.balance_after = (parseInt(balance_before_items[i]) - parseInt(cost_items[i]));
-
-                            }
+                let balance_before = (/BALANCES=(.+?)\|/.exec(extra_info))[1];
+                let balance_types = (/BALANCE_TYPES=(.+?)\|/.exec(extra_info))[1];
+                let cost = (/COSTS=(.+?)\|/.exec(extra_info))[1];
 
 
-                            finalResult.push(edr_info);
+                if (balance_types.includes(",")) {
+                    let balance_type_items = balance_types.split(",");
+                    let cost_items = cost.split(",");
+                    let balance_before_items = balance_before.split(",");
 
-
-                        }
-
-                    } else {
+                    for (let i = 0; i < balance_before_items.length; i++) {
                         let edr_info = {};
-                        edr_info.edrType = edrType;
-                        edr_info.record_date = record_date;
-                        edr_info.balance_type = appData.balanceTypes[balance_types];
-                        if (balance_types === '21') {
-                            edr_info.cost = (parseFloat(cost) / 100).toFixed(2);
-                            edr_info.balance_before = (parseFloat(balance_before) / 100).toFixed(2);
-                            edr_info.balance_after = ((parseFloat(balance_before) - parseFloat(cost)) / 100).toFixed(2);
+
+                        if (i === 0) {
+                            edr_info.record_date = record_date;
+                            edr_info.edrType = edrType;
 
                         } else {
-                            edr_info.balance_before = balance_before;
-                            edr_info.cost = cost;
-                            edr_info.balance_after = (parseInt(balance_before) - parseInt(cost));
+                            edr_info.record_date = "";
+                            edr_info.edrType = "";
+
+                        }
+                        edr_info.balance_type = appData.balanceTypes[balance_type_items[i]];
+                        if (balance_type_items[i] === '21') {
+                            edr_info.cost = (parseFloat(cost_items[i]) / 100).toFixed(2);
+                            edr_info.balance_before = (parseFloat(balance_before_items[i]) / 100).toFixed(2);
+                            edr_info.balance_after = ((parseFloat(balance_before_items[i]) - parseFloat(cost_items[i])) / 100).toFixed(2);
+
+                        } else {
+                            edr_info.balance_before = balance_before_items[i];
+                            edr_info.cost = cost_items[i];
+                            edr_info.balance_after = (parseInt(balance_before_items[i]) - parseInt(cost_items[i]));
 
                         }
 
-                        finalResult.push(edr_info)
+
+                        finalResult.push(edr_info);
+
 
                     }
 
+                } else {
+                    let edr_info = {};
+                    edr_info.edrType = edrType;
+                    edr_info.record_date = record_date;
+                    edr_info.balance_type = appData.balanceTypes[balance_types];
+                    if (balance_types === '21') {
+                        edr_info.cost = (parseFloat(cost) / 100).toFixed(2);
+                        edr_info.balance_before = (parseFloat(balance_before) / 100).toFixed(2);
+                        edr_info.balance_after = ((parseFloat(balance_before) - parseFloat(cost)) / 100).toFixed(2);
+
+                    } else {
+                        edr_info.balance_before = balance_before;
+                        edr_info.cost = cost;
+                        edr_info.balance_after = (parseInt(balance_before) - parseInt(cost));
+
+                    }
+
+                    finalResult.push(edr_info)
 
                 }
+
 
             } else if (!extra_info.includes("NACK=INS")) {
                 let edr_info = {};
@@ -2427,105 +2292,6 @@ module.exports = {
 
             }
 
-
-        }
-
-        function processEdr(edr) {
-
-            if (edr.EDR_TYPE === 1 || edr.EDR_TYPE === 2 || edr.EDR_TYPE === 5) {
-                processEdr2(edr)
-            } else {
-                let edrType = utils.getEdrType(edr.EDR_TYPE);
-                let record_date = utils.formateDate(edr.RECORD_DATE);
-                let extra_info = edr.EXTRA_INFORMATION.toString();
-
-                if (extra_info.includes("BALANCES=") && extra_info.includes("BALANCE_TYPES=") && extra_info.includes("COSTS=")) {
-
-                    let matches = extra_info.matchAll(regex);
-
-                    for (const el of matches) {
-
-                        let balance_before = el[1];
-                        let balance_types = el[2];
-                        let cost = el[3];
-
-                        if (balance_types.includes(",")) {
-                            let balance_type_items = balance_types.split(",");
-                            let cost_items = cost.split(",");
-                            let balance_before_items = balance_before.split(",");
-
-                            for (let i = 0; i < balance_before_items.length; i++) {
-                                let edr_info = {};
-
-                                if (i === 0) {
-                                    edr_info.record_date = record_date;
-                                    edr_info.edrType = edrType;
-
-                                } else {
-                                    edr_info.record_date = "";
-                                    edr_info.edrType = "";
-
-                                }
-                                edr_info.balance_type = appData.balanceTypes[balance_type_items[i]];
-                                if (balance_type_items[i] === '21') {
-                                    edr_info.cost = (parseFloat(cost_items[i]) / 100).toFixed(2);
-                                    edr_info.balance_before = (parseFloat(balance_before_items[i]) / 100).toFixed(2);
-                                    edr_info.balance_after = ((parseFloat(balance_before_items[i]) - parseFloat(cost_items[i])) / 100).toFixed(2);
-
-                                } else {
-                                    edr_info.balance_before = balance_before_items[i];
-                                    edr_info.cost = cost_items[i];
-                                    edr_info.balance_after = (parseInt(balance_before_items[i]) - parseInt(cost_items[i]));
-
-                                }
-
-
-                                finalResult.push(edr_info);
-
-
-                            }
-
-                        } else {
-                            let edr_info = {};
-                            edr_info.edrType = edrType;
-                            edr_info.record_date = record_date;
-                            edr_info.balance_type = appData.balanceTypes[balance_types];
-                            if (balance_types === '21') {
-                                edr_info.cost = (parseFloat(cost) / 100).toFixed(2);
-                                edr_info.balance_before = (parseFloat(balance_before) / 100).toFixed(2);
-                                edr_info.balance_after = ((parseFloat(balance_before) - parseFloat(cost)) / 100).toFixed(2);
-
-                            } else {
-                                edr_info.balance_before = balance_before;
-                                edr_info.cost = cost;
-                                edr_info.balance_after = (parseInt(balance_before) - parseInt(cost));
-
-                            }
-
-                            finalResult.push(edr_info)
-
-                        }
-
-
-                    }
-
-                } else if (!extra_info.includes("NACK=INS")) {
-                    let edr_info = {};
-                    let edrType = utils.getEdrType(edr.EDR_TYPE);
-                    let record_date = utils.formateDate(edr.RECORD_DATE);
-
-                    edr_info.edrType = edrType;
-                    edr_info.record_date = record_date;
-                    edr_info.balance_type = "---";
-                    edr_info.balance_before = "---"
-                    edr_info.cost = "---";
-                    edr_info.balance_after = "---";
-                    finalResult.push(edr_info);
-
-                }
-
-
-            }
 
         }
 
@@ -2598,7 +2364,8 @@ module.exports = {
             changephonecontact: "",
             managerecurrent: "",
             changeproduct: "",
-            adjustexpiry: ""
+            adjustexpiry: "",
+            cashtransfer: "",
         };
 
         const role = utils.getUserRole(req.user)
@@ -2624,7 +2391,8 @@ module.exports = {
             changephonecontact: "",
             managerecurrent: "",
             changeproduct: "",
-            adjustexpiry: ""
+            adjustexpiry: "",
+            cashtransfer: "",
         };
         const role = utils.getUserRole(req.user)
 
@@ -2648,7 +2416,9 @@ module.exports = {
             changephonecontact: "active",
             managerecurrent: "",
             changeproduct: "",
-            adjustexpiry: ""
+            adjustexpiry: "",
+            cashtransfer: "",
+
         };
         const role = utils.getUserRole(req.user)
         res.render("changecontact", {status, topNav, ...role});
@@ -2673,7 +2443,8 @@ module.exports = {
             changephonecontact: "",
             managerecurrent: "",
             changeproduct: "active",
-            adjustexpiry: ""
+            adjustexpiry: "",
+            cashtransfer: "",
         };
         const role = utils.getUserRole(req.user)
         res.render("changeproduct", {products: appData.productTypes, status, topNav, ...role});
@@ -2696,10 +2467,36 @@ module.exports = {
             changephonecontact: "",
             managerecurrent: "",
             changeproduct: "",
-            adjustexpiry: "active"
+            adjustexpiry: "active",
+            cashtransfer: "",
         };
         const role = utils.getUserRole(req.user)
         res.render("adjustexpirydate", {balanceTypes: appData.balanceTypesArrays, status, topNav, ...role});
+    },
+
+    rendercashtransfer: async (req, res) => {
+        const status = {
+            sub: "",
+            maccount: "active",
+            top: "",
+            load: "",
+            manage: "",
+            overscratch: "",
+            hist: "",
+            act: "",
+            tra: "",
+        };
+        const topNav = {
+            expiredata: "",
+            changeacctstate: "",
+            changephonecontact: "",
+            managerecurrent: "",
+            changeproduct: "",
+            adjustexpiry: "",
+            cashtransfer: "active",
+        };
+        const role = utils.getUserRole(req.user)
+        res.render("transfercash", {status, topNav, ...role});
     },
 
     rendermanagerecurrent: async (req, res) => {
@@ -2720,7 +2517,8 @@ module.exports = {
             changephonecontact: "",
             managerecurrent: "active",
             changeproduct: "",
-            adjustexpiry: ""
+            adjustexpiry: "",
+            cashtransfer: "",
         };
         const role = utils.getUserRole(req.user)
         res.render("managerecurrentplan", {status, topNav, ...role})
@@ -3090,7 +2888,7 @@ module.exports = {
             const {body} = response;
 
             let jsonObj = parser.parse(body, options);
-            console.log(jsonObj.Envelope.Body)
+
 
             if (jsonObj.Envelope.Body.CCSCD1_CHGResponse && jsonObj.Envelope.Body.CCSCD1_CHGResponse.AUTH) {
                 res.json({success: "success"})
@@ -3139,7 +2937,7 @@ module.exports = {
         }
 
         expirydate = moment(expirydate).format("YYYYMMDDHHmmss");
-        console.log(expirydate)
+
 
         const url = PI_ENDPOINT;
         const sampleHeaders = {
@@ -3215,11 +3013,161 @@ module.exports = {
     },
 
     postterminaterecurrent: async (req, res) => {
-        console.log(req.body)
+
         const {msisdn, recurrentplan} = req.body;
         await setTimeout(() => {
             res.json({error: "Work in Progress, you would be updated when completed. Thank you"})
         }, 1000)
+    },
+
+    postcashtransfer: async (req, res) => {
+
+
+        try {
+
+            let {from_msisdn, to_msisdn, amount} = req.body;
+
+            const {error} = validator.validateCashTransfer({from_msisdn, to_msisdn, amount});
+            if (error) {
+                res.json({error: error.message})
+
+            } else {
+
+                amount = amount * 100;
+
+                let isDebitSuccess = false;
+
+
+                let txn_id = uuid.v4();
+                let user = req.user.username;
+
+                const debiturl = PI_ENDPOINT;
+
+                const debitheaders = {
+                    'User-Agent': 'NodeApp',
+                    'Content-Type': 'text/xml;charset=UTF-8',
+                    'SOAPAction': 'urn:CCSCD1_CHG',
+                };
+
+
+                const debitXML = `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:pi="http://xmlns.oracle.com/communications/ncc/2009/05/15/pi">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <pi:CCSCD1_CHG>
+         <pi:username>admin</pi:username>
+         <pi:password>admin</pi:password>
+         <pi:MSISDN>${from_msisdn}</pi:MSISDN>
+         <pi:BALANCE_TYPE>General Cash</pi:BALANCE_TYPE>
+         <pi:BALANCE>${amount}</pi:BALANCE>
+         <pi:EXTRA_EDR>TRANSACTION_ID=${txn_id}|CHANNEL=IN_Web|POS_USER=${user}</pi:EXTRA_EDR>
+      </pi:CCSCD1_CHG>
+   </soapenv:Body>
+</soapenv:Envelope>`;
+
+                const {response} = await soapRequest({
+                    url: debiturl,
+                    headers: debitheaders,
+                    xml: debitXML,
+                    timeout: 4000
+                });
+                const {body} = response;
+                let jsonObj = parser.parse(body, options);
+
+                const soapResponseBody = jsonObj.Envelope.Body;
+
+                if (soapResponseBody.CCSCD1_CHGResponse && soapResponseBody.CCSCD1_CHGResponse.AUTH) {
+                    isDebitSuccess = true;
+                } else {
+                    let soapFault = jsonObj.Envelope.Body.Fault;
+                    let faultString = soapFault.faultstring;
+                    return res.json({error: faultString.toString()})
+                }
+
+                if (isDebitSuccess) {
+
+                    const url = OSD_ENDPOINT;
+
+                    const headers = {
+                        'User-Agent': 'NodeApp',
+                        'Content-Type': 'text/xml;charset=UTF-8',
+                        'SOAPAction': 'http://172.25.39.13/wsdls/Surfline/CustomRecharge/CustomRecharge',
+                        'Authorization': 'Basic YWlhb3NkMDE6YWlhb3NkMDE='
+                    };
+
+
+                    const creditXML = `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:dat="http://SCLINSMSVM01T/wsdls/Surfline/DataTransferManual.wsdl">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <dat:DataTransferManualRequest>
+         <CC_Calling_Party_Id>${to_msisdn}</CC_Calling_Party_Id>
+         <Recharge_List_List>
+            <Recharge_List>
+               <Balance_Type_Name>General Cash</Balance_Type_Name>
+               <Recharge_Amount>${amount}</Recharge_Amount>
+               <Balance_Expiry_Extension_Period></Balance_Expiry_Extension_Period>
+               <Balance_Expiry_Extension_Policy></Balance_Expiry_Extension_Policy>
+               <Bucket_Creation_Policy></Bucket_Creation_Policy>
+               <Balance_Expiry_Extension_Type></Balance_Expiry_Extension_Type>
+            </Recharge_List>
+         </Recharge_List_List>
+         <CHANNEL>IN_Web</CHANNEL>
+         <TRANSACTION_ID>${txn_id}</TRANSACTION_ID>
+         <POS_USER>${user}</POS_USER>
+      </dat:DataTransferManualRequest>
+   </soapenv:Body>
+</soapenv:Envelope>`;
+                    const {response} = await soapRequest({
+                        url: url,
+                        headers: headers,
+                        xml: creditXML,
+                        timeout: 4000
+                    });
+                    const {body} = response;
+                    let jsonObj = parser.parse(body, options);
+                    const soapResponseBody = jsonObj.Envelope.Body;
+                    if (!soapResponseBody.DataTransferManualResult) {
+                        res.json({success: "success"})
+                        let transaction_details = `to_msisdn=${to_msisdn}|from_msisdn=${from_msisdn}|amount=${amount}`;
+                        let username = user;
+                        let transaction_id = txn_id;
+                        let status = "completed";
+                        let transaction_type = "cash transfer";
+                        let userlog = new UserLog({
+                            username,
+                            transaction_id,
+                            transaction_type,
+                            transaction_details,
+                            status
+                        });
+                        userlog = await userlog.save();
+                        if (userlog) {
+                        } else {
+                            console.log("Transaction logging failed")
+
+                        }
+                    } else {
+                        let soapFault = jsonObj.Envelope.Body.Fault;
+                        let faultString = soapFault.faultstring;
+                        res.json({error: faultString.toString()})
+                    }
+                } else {
+                    res.json({error: "Error occurred during debit"})
+                }
+
+            }
+
+
+        } catch (error) {
+            let errorBody = error.toString();
+            let jsonObj = parser.parse(errorBody, options);
+            let soapFault = jsonObj.Envelope.Body.Fault;
+            let faultString = soapFault.faultstring;
+            res.json({error: faultString.toString()})
+
+
+        }
+
+
     },
 
     postcreateuser: async (req, res) => {

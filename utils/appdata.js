@@ -142,6 +142,8 @@ module.exports = {
 
     balanceTypesArrays:[
         'Autorecovery',
+        'Bundle ExpiryTrack Status',
+        'Surfplus Count',
         'Data',
         'Promotional Data',
         'Gift Data',

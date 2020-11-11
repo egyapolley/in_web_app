@@ -54,17 +54,20 @@ module.exports = {
     validateDataTransfer: (body) => {
 
         const schema = Joi.object({
-            to_msisdn: Joi.string()
-                .alphanum()
-                .length(12)
-                .regex(/^233255.+/)
-                .required(),
 
             from_msisdn: Joi.string()
                 .alphanum()
                 .length(12)
                 .regex(/^233255.+/)
                 .required(),
+
+            to_msisdn: Joi.string()
+                .alphanum()
+                .length(12)
+                .disallow(Joi.ref("from_msisdn"))
+                .regex(/^233255.+/)
+                .required(),
+
 
             amount: Joi.number()
                 .min(0.1)
@@ -95,7 +98,33 @@ module.exports = {
         });
 
         return schema.validate(body);
-    }
+    },
+
+    validateCashTransfer: (body) => {
+
+        const schema = Joi.object({
+            from_msisdn: Joi.string()
+                .alphanum()
+                .length(12)
+                .regex(/^233255.+/)
+                .required(),
+
+            to_msisdn: Joi.string()
+                .alphanum()
+                .length(12)
+                .disallow(Joi.ref("from_msisdn"))
+                .regex(/^233255.+/)
+                .required(),
+
+            amount: Joi.number()
+                .min(0.1)
+                .max(1000)
+                .required(),
+        });
+
+        return schema.validate(body)
+
+    },
 
 
 }

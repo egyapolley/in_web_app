@@ -736,6 +736,25 @@ $(function () {
 
     }
 
+    const setExpiryCheckBox = document.getElementById("setexpiry");
+    const validityDetils =document.getElementById("validity-details");
+    const validityTo = document.getElementById("to-validity")
+    if (setExpiryCheckBox){
+        setExpiryCheckBox.addEventListener("click", function (event) {
+            if (event.target.checked){
+                validityDetils.style.display = "block";
+                validityTo.setAttribute("required","");
+
+
+            }else {
+                validityDetils.style.display = "none";
+                validityTo.removeAttribute("required");
+
+            }
+
+        })
+    }
+
 
     /* ...................Account Activate .................*/
     const activateForm = document.getElementById("activate-form");
@@ -899,11 +918,11 @@ $(function () {
                             errorWrapperViewHist.style.display = "none";
                             if (data.success) {
 
-                                let theadstring = "<th>Record Date</th><th>Cdr Type</th><th>Balance Type</th><th>Balance Before</th><th>Cost</th><th>Balance After</th><th>Channel</th>"
+                                let theadstring = "<th>Record Date</th><th>Cdr Type</th><th>Balance Type</th><th>Balance Before</th><th>Cost</th><th>Balance After</th><th>Channel</th><th>Transaction_Id</th>"
                                 let dataSet = data.success;
                                 let tablebodyString = "";
                                 dataSet.forEach(function (cdrItem) {
-                                    tablebodyString += `<tr><td>${cdrItem.record_date}</td><td>${cdrItem.edrType}</td><td>${cdrItem.balance_type}</td><td>${cdrItem.balance_before}</td><td>${cdrItem.cost}</td><td>${cdrItem.balance_after}</td><td>${cdrItem.channel}</td></tr>`;
+                                    tablebodyString += `<tr><td>${cdrItem.record_date}</td><td>${cdrItem.edrType}</td><td>${cdrItem.balance_type}</td><td>${cdrItem.balance_before}</td><td>${cdrItem.cost}</td><td>${cdrItem.balance_after}</td><td>${cdrItem.channel}</td><td>${cdrItem.transaction_id}</td></tr>`;
                                 })
 
                                 historyTableHeader.innerHTML = theadstring;
@@ -1337,7 +1356,6 @@ $(function () {
 
     }
 
-
     function processReccurrentForm(event) {
         event.preventDefault();
 
@@ -1386,6 +1404,62 @@ $(function () {
         }
 
 
+    }
+
+    function processTransferCashForm(event) {
+        event.preventDefault();
+
+        successWrapperManageAcct.style.display = "none";
+        errorWrapperManageAcct.style.display = "none";
+        progressIndicatorManageAcct.style.display = "block";
+
+        const from_msisdn = document.getElementById("from-msisdn-cash").value;
+        const to_msisdn = document.getElementById("to-msisdn-cash").value;
+        const amount = document.getElementById("amount-cash").value;
+
+        const postbody = {from_msisdn,to_msisdn,amount};
+
+
+        $.post("/cashtransfer", postbody)
+            .done(function (data) {
+                if (data) {
+                    progressIndicatorManageAcct.style.display = "none";
+                    if (data.success) {
+
+                        errorWrapperManageAcct.style.display = "none";
+                        successMessageManageAcct.innerText = "Success";
+                        successWrapperManageAcct.style.display = "block";
+
+
+                    } else {
+                        errorMessageManageAcct.innerText = data.error;
+                        successWrapperManageAcct.style.display = "none";
+                        errorWrapperManageAcct.style.display = "block";
+
+
+                    }
+
+
+                }
+
+
+            }).fail(function (error) {
+            console.log(error);
+            progressIndicatorManageAcct.style.display = "none";
+            errorMessageManageAcct.innerText = error.toString();
+            successWrapperManageAcct.style.display = "none";
+            errorWrapperManageAcct.style.display = "block";
+
+
+        })
+
+
+    }
+
+
+    const transferCashForm = document.getElementById("transfer-cash-form");
+    if (transferCashForm){
+        transferCashForm.addEventListener("submit", processTransferCashForm);
     }
 
 

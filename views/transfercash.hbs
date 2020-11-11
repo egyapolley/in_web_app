@@ -17,10 +17,9 @@
 
 
                 <main>
-
                     <div class="task-container">
 
-                        <h3>Change SMS Contact</h3>
+                        <h3>Transfer Cash</h3>
 
                         <div class="form-wrapper-task">
                             <div class="manageVoucher-error" id="manage-acct-error">
@@ -38,25 +37,28 @@
 
 
 
-                            <form action="/changephonecontact" method="post" id="change-contact-form">
+                            <form action="/cashtransfer" method="post" id="transfer-cash-form">
 
                                 <div class="form-control">
-                                    <label for="msisdn">Subscriber msisdn:</label>
-                                    <input type="text" id="msisdn" name="msisdn" placeholder="233255..." required autocomplete="true" autofocus minlength="12" pattern="^233255.+">
+                                    <label for="from-msisdn-cash">From msisdn:</label>
+                                    <input type="text" placeholder="233255..." id="from-msisdn-cash" name="from_msisdn" autocomplete="true" autofocus required minlength="12" pattern="^233255.+">
                                 </div>
 
                                 <div class="form-control">
-                                    <label for="phone-contact">New Phone Contact:</label>
-                                    <input type="text"  id="phone-contact" name="phone-contact" autofocus autocomplete="true" required>
+                                    <label for="to-msisdn-cash">To msisdn:</label>
+                                    <input type="text" placeholder="233255..." id="to-msisdn-cash" name="to_msisdn" autocomplete="true"  required minlength="12" pattern="^233255.+">
+                                </div>
 
+                                <div class="form-control">
+                                    <label for="amount-cash">Amount(GHC):</label>
+                                    <input type="text" id="amount-cash" name="amount"   required  pattern="\d+\.?\d*">
                                 </div>
 
                                 <div id="progressIndicator-manage-acct" class="progressIndicator">
                                     <img src="/images/ajax-loader.gif" alt="Loading Bundles...">
                                 </div>
-
                                 <div class="form-control form-control-btn">
-                                    <button class="proceed-btn">Submit</button>
+                                    <button class="proceed-btn" type="submit">Submit</button>
                                 </div>
 
                             </form>
@@ -64,6 +66,7 @@
                         </div>
 
                     </div>
+
                 </main>
 
             </div>
@@ -73,7 +76,6 @@
 
 
 </div>
-
 
 
 

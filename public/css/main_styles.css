@@ -891,7 +891,7 @@ legend {
     border: 2px solid #180c0c;
 }
 
-.form-wrapper-transfer .form-body-transfer .form-control fieldset> label {
+.form-wrapper-transfer .form-body-transfer .form-control fieldset > label {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -906,8 +906,8 @@ legend {
 
 }
 
-.form-wrapper-transfer .form-body-transfer .form-control fieldset>label input,
-.form-wrapper-transfer .form-body-transfer .form-control fieldset>label select{
+.form-wrapper-transfer .form-body-transfer .form-control fieldset label input,
+.form-wrapper-transfer .form-body-transfer .form-control fieldset label select{
     flex: 2;
     padding: 5px 15px;
     font-family: inherit;
@@ -915,12 +915,12 @@ legend {
     background: #f5f2f2;;
 }
 
-.form-wrapper-transfer .form-body-transfer .form-control fieldset>label span {
+.form-wrapper-transfer .form-body-transfer .form-control fieldset label span {
     padding: 5px 10px;
     font-weight: bolder;
 }
 
-.form-wrapper-transfer .form-body-transfer .form-control fieldset>label .validity-type {
+.form-wrapper-transfer .form-body-transfer .form-control fieldset label .validity-type {
     flex: 2;
     padding: 5px 15px;
     display: flex;
@@ -952,6 +952,7 @@ legend {
     box-shadow: 0 0 2px 5px #999191;
 }
 
+
 .transfer-widget-wrapper {
     display: flex;
     flex-direction: column;
@@ -959,6 +960,39 @@ legend {
     align-items: center;
     padding-top: 20px;
     text-align: center;
+}
+
+#validiy-box {
+    padding: 10px 20px;
+
+}
+
+#validiy-box .validity-checkbox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#validiy-box label {
+    font-weight: bolder;
+}
+#validiy-box .validity-checkbox >* {
+    padding: 5px;
+    cursor: pointer;
+}
+#validiy-box .validity-checkbox input[type="checkbox"]{
+    display: inline-block;
+    padding: 5px 20px;
+}
+
+#validiy-box #validity-details label {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+#validity-details {
+    display: none;
 }
 
 .main-content-manage-acct {
