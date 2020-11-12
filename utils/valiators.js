@@ -100,6 +100,18 @@ module.exports = {
         return schema.validate(body);
     },
 
+    validateGeneralEmail : (body) =>{
+        const schema = Joi.object({
+
+            email: Joi.string()
+                .email()
+                .required(),
+
+        });
+
+        return schema.validate(body);
+    },
+
     validateCashTransfer: (body) => {
 
         const schema = Joi.object({

@@ -136,7 +136,7 @@ module.exports = {
          <pi:username>admin</pi:username>
          <pi:password>admin</pi:password>
          <pi:MSISDN>${msisdn}</pi:MSISDN>
-         <pi:TAG>IMSI|IMEI|DeviceType|AltSMSNotifNo|GiftTransferCount|TempTag</pi:TAG>
+         <pi:TAG>IMSI|IMEI|DeviceType|AltSMSNotifNo|GiftTransferCount|TempTag|EmailID</pi:TAG>
       </pi:CCSCD9_QRY>
    </soapenv:Body>
 </soapenv:Envelope>`;
@@ -2771,7 +2771,16 @@ module.exports = {
 
     postchangecontact: async (req, res) => {
 
-        const {msisdn, contact} = req.body;
+        let contact_type='AltSMSNotifNo';
+
+        const {msisdn, contact,contacttype} = req.body;
+        if (contacttype ==='email_type'){
+            contact_type ='EmailID';
+            const {error} = validator.validateGeneralEmail({email:contact});
+            if (error){
+                return res.json({error:error.message})
+            }
+        }
 
         const url = PI_ENDPOINT;
         const sampleHeaders = {
@@ -2792,7 +2801,7 @@ module.exports = {
          <pi:username>admin</pi:username>
          <pi:password>admin</pi:password>
          <pi:MSISDN>${msisdn}</pi:MSISDN>
-         <pi:TAG>AltSMSNotifNo</pi:TAG>
+         <pi:TAG>${contact_type}</pi:TAG>
          <pi:VALUE>${contact}</pi:VALUE>
       </pi:CCSCD9_CHG>
    </soapenv:Body>

@@ -1119,8 +1119,10 @@ $(function () {
 
         const msisdn = document.getElementById("msisdn").value;
         const contact = document.getElementById("phone-contact").value;
+        const contacttype = document.getElementById("contact-type").value;
 
-        const postbody = {msisdn, contact};
+
+        const postbody = {msisdn, contact,contacttype};
 
 
         $.post("/changecontact", postbody)

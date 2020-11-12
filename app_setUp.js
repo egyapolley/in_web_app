@@ -6,7 +6,8 @@ const express = require('express'),
     flash = require("connect-flash"),
     initializePassport = require("./utils/passport_config"),
     passport = require("passport"),
-    mongoose = require("mongoose");
+    mongoose = require("mongoose"),
+    favicon = require('serve-favicon');
 
 
 
@@ -25,6 +26,7 @@ module.exports = function (app){
     if (process.env.NODE_ENV === "development"){
         app.use(require("morgan")("tiny"));
     }
+    app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
     app.use(express.static("public"))
     app.use(express.json());
     app.use(express.urlencoded({extended:false}));

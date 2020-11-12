@@ -46,7 +46,16 @@
                                 </div>
 
                                 <div class="form-control">
-                                    <label for="phone-contact">New Phone Contact:</label>
+                                    <label for="contact-type">Contact Type:</label>
+                                    <select name="contact-type" id="contact-type" required>
+                                        <option value="phone_type">Phone Contact</option>
+                                        <option value="email_type">Email</option>
+                                    </select>
+
+                                </div>
+
+                                <div class="form-control">
+                                    <label for="phone-contact">New Contact:</label>
                                     <input type="text"  id="phone-contact" name="phone-contact" autofocus autocomplete="true" required>
 
                                 </div>
