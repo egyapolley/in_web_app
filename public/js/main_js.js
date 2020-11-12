@@ -33,14 +33,14 @@ $(function () {
 
 
                     } else {
-                        console.log(data)
+
 
                         if (data.balances) {
                             let balances = data.balances;
 
                             let row = "";
                             balances.forEach(function (item) {
-                                console.log(item)
+
                                 if (item.balance_type.endsWith("Cash")) {
                                     row = row + `<tr><td>${item.balance_type}</td><td class="balance_value">&#162;&nbsp;${new Intl.NumberFormat("en-US").format(item.value / 100)}</td><td>${item.expiry_date}</td></tr>`;
 
@@ -128,7 +128,7 @@ $(function () {
 
                                 let row = "";
                                 balances.forEach(function (item) {
-                                    console.log(item)
+
                                     if (item.balance_type.endsWith("Cash")) {
                                         row = row + `<tr><td>${item.balance_type}</td><td class="balance_value">&#162;&nbsp;${new Intl.NumberFormat("en-US").format(item.value / 100)}</td><td>${item.expiry_date}</td></tr>`;
 
@@ -570,7 +570,7 @@ $(function () {
                             $(divwrapperContaier).show(300);
 
                         } else {
-                            console.log(data.error)
+
                             progressIndicator.style.display = "none";
                             errorMessageManageVoucher.innerText = data.error.message;
                             errorManageVoucherWrapper.style.display = "block"
@@ -580,7 +580,7 @@ $(function () {
 
 
                     }).fail(function (error) {
-                    console.log(error);
+
                     progressIndicator.style.display = "none";
                     errorMessageManageVoucher.innerText = error.toString();
                     errorManageVoucherWrapper.style.display = "block"
@@ -722,7 +722,6 @@ $(function () {
 
 
                 }).fail(function (error) {
-                console.log(error);
                 progressIndicatorTransfer.style.display = "none";
                 errorMessageTransfer.innerText = error.toString();
                 successWrapperTransfer.style.display = "none";
@@ -797,7 +796,7 @@ $(function () {
                     if (data) {
                         progressIndicatorActivate.style.display = "none";
                         if (data.success) {
-                            console.log("success");
+
 
 
                             errorWrapperActivate.style.display = "none";
@@ -806,7 +805,7 @@ $(function () {
 
 
                         } else {
-                            console.log("error");
+
                             errorMessageActivate.innerText = data.error;
                             successWrapperActivate.style.display = "none";
                             errorWrapperActivate.style.display = "block";
@@ -819,7 +818,6 @@ $(function () {
 
 
                 }).fail(function (error) {
-                console.log(error);
                 progressIndicatorActivate.style.display = "none";
                 errorMessageActivate.innerText = error.toString();
                 successWrapperActivate.style.display = "none";
@@ -1086,6 +1084,8 @@ $(function () {
 
                                 tbody.innerHTML = rows;
 
+                            }else {
+                                tbody.innerHTML="";
                             }
                             recurrentTableWrapper.style.display = "block";
 
@@ -1149,7 +1149,6 @@ $(function () {
 
 
             }).fail(function (error) {
-            console.log(error);
             progressIndicatorManageAcct.style.display = "none";
             errorMessageManageAcct.innerText = error.toString();
             successWrapperManageAcct.style.display = "none";
@@ -1198,7 +1197,6 @@ $(function () {
 
 
             }).fail(function (error) {
-            console.log(error);
             progressIndicatorManageAcct.style.display = "none";
             errorMessageManageAcct.innerText = error.toString();
             successWrapperManageAcct.style.display = "none";
@@ -1247,7 +1245,6 @@ $(function () {
 
 
             }).fail(function (error) {
-            console.log(error);
             progressIndicatorManageAcct.style.display = "none";
             errorMessageManageAcct.innerText = error.toString();
             successWrapperManageAcct.style.display = "none";
@@ -1296,7 +1293,6 @@ $(function () {
 
 
             }).fail(function (error) {
-            console.log(error);
             progressIndicatorManageAcct.style.display = "none";
             errorMessageManageAcct.innerText = error.toString();
             successWrapperManageAcct.style.display = "none";
@@ -1346,7 +1342,6 @@ $(function () {
 
 
             }).fail(function (error) {
-            console.log(error);
             progressIndicatorManageAcct.style.display = "none";
             errorMessageManageAcct.innerText = error.toString();
             successWrapperManageAcct.style.display = "none";
@@ -1367,6 +1362,7 @@ $(function () {
 
         const msisdn = document.getElementById("msisdn-recurrent").value;
         const recurrentplan = document.getElementById("terminate-btn").dataset.bundlename;
+        const tbody = document.getElementById("recurrent-tbody");
 
         if (msisdn && recurrentplan) {
             const postbody = {msisdn, recurrentplan};
@@ -1387,6 +1383,7 @@ $(function () {
                             errorWrapperManageAcct.style.display = "block";
 
 
+
                         }
 
 
@@ -1394,7 +1391,6 @@ $(function () {
 
 
                 }).fail(function (error) {
-                console.log(error);
                 progressIndicatorManageAcct.style.display = "none";
                 errorMessageManageAcct.innerText = error.toString();
                 successWrapperManageAcct.style.display = "none";
@@ -1446,7 +1442,6 @@ $(function () {
 
 
             }).fail(function (error) {
-            console.log(error);
             progressIndicatorManageAcct.style.display = "none";
             errorMessageManageAcct.innerText = error.toString();
             successWrapperManageAcct.style.display = "none";
@@ -1566,7 +1561,6 @@ $(function () {
 
 
                 }).fail(function (error) {
-                console.log(error);
                 progressIndicatorCreateAcct.style.display = "none";
                 errorMessageCreateAcct.innerText = error.toString();
                 successWrapperCreateAcct.style.display = "none";
@@ -1627,7 +1621,6 @@ $(function () {
 
 
                 }).fail(function (error) {
-                console.log(error);
                 progressForgetPasswd.style.display = "none";
                 messageForgetPass.innerHTML = '<i class="fas fa-exclamation-triangle"></i>&nbsp;' + error.toString();
                 messageForgetPass.style.color = "#ec0b72";
@@ -1687,7 +1680,6 @@ $(function () {
 
 
                 }).fail(function (error) {
-                console.log(error);
                 errorMessageRestPass.innerHTML = '<i class="fas fa-exclamation-triangle"></i>&nbsp;' + error.toString();
 
             })
@@ -1767,7 +1759,6 @@ $(function () {
 
 
                 }).fail(function (error) {
-                console.log(error);
                 errorMessageRestPass.innerHTML = '<i class="fas fa-exclamation-triangle"></i>&nbsp;' + error.toString();
 
             })

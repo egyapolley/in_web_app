@@ -2771,14 +2771,14 @@ module.exports = {
 
     postchangecontact: async (req, res) => {
 
-        let contact_type='AltSMSNotifNo';
+        let contact_type = 'AltSMSNotifNo';
 
-        const {msisdn, contact,contacttype} = req.body;
-        if (contacttype ==='email_type'){
-            contact_type ='EmailID';
-            const {error} = validator.validateGeneralEmail({email:contact});
-            if (error){
-                return res.json({error:error.message})
+        const {msisdn, contact, contacttype} = req.body;
+        if (contacttype === 'email_type') {
+            contact_type = 'EmailID';
+            const {error} = validator.validateGeneralEmail({email: contact});
+            if (error) {
+                return res.json({error: error.message})
             }
         }
 
@@ -3024,9 +3024,76 @@ module.exports = {
     postterminaterecurrent: async (req, res) => {
 
         const {msisdn, recurrentplan} = req.body;
-        await setTimeout(() => {
-            res.json({error: "Work in Progress, you would be updated when completed. Thank you"})
-        }, 1000)
+        let user = req.user.username;
+        let txn_id = uuid.v4();
+
+        try {
+
+            const url = OSD_ENDPOINT;
+
+            const headers = {
+                'User-Agent': 'NodeApp',
+                'Content-Type': 'text/xml;charset=UTF-8',
+                'SOAPAction': 'http://172.25.39.13/wsdls/Surfline/CustomRecharge/CustomRecharge',
+                'Authorization': 'Basic YWlhb3NkMDE6YWlhb3NkMDE='
+            };
+
+
+            const SoapXML = `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ter="http://SCLINSMSVM01P/wsdls/Surfline/TerminateRecurrentPlan.wsdl">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <ter:TerminateRecurrentPlanRequest>
+         <CC_Calling_Party_Id>${msisdn}</CC_Calling_Party_Id>
+         <BundleName>${recurrentplan}</BundleName>
+      </ter:TerminateRecurrentPlanRequest>
+   </soapenv:Body>
+</soapenv:Envelope>`;
+            const {response} = await soapRequest({
+                url: url,
+                headers: headers,
+                xml: SoapXML,
+                timeout: 4000
+            });
+            const {body} = response;
+            let jsonObj = parser.parse(body, options);
+            const soapResponseBody = jsonObj.Envelope.Body;
+            if (!soapResponseBody.TerminateRecurrentPlanResult) {
+                res.json({success: "success"})
+                let transaction_details = `msisdn=${msisdn}|recurrentplan=${recurrentplan}`;
+                let username = user;
+                let transaction_id = txn_id;
+                let status = "completed";
+                let transaction_type = "terminate recurrent";
+                let userlog = new UserLog({
+                    username,
+                    transaction_id,
+                    transaction_type,
+                    transaction_details,
+                    status
+                });
+                userlog = await userlog.save();
+                if (userlog) {
+                } else {
+                    console.log("Transaction logging failed")
+
+                }
+            } else {
+                let soapFault = jsonObj.Envelope.Body.Fault;
+                let faultString = soapFault.faultstring;
+                res.json({error: faultString.toString()})
+            }
+
+
+        } catch (error) {
+
+            let errorBody = error.toString();
+            let jsonObj = parser.parse(errorBody, options);
+            let soapFault = jsonObj.Envelope.Body.Fault;
+            let faultString = soapFault.faultstring;
+            res.json({error: faultString.toString()})
+
+        }
+
     },
 
     postcashtransfer: async (req, res) => {
