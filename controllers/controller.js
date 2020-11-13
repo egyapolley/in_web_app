@@ -14,7 +14,9 @@ const sendMail = require("../utils/send_mail");
 const path = require("path");
 const UserLog = require("../models/userlogs");
 
-const User = require("../models/users")
+const User = require("../models/users");
+const Parser = require("json2csv").Parser;
+const fs = require("fs");
 
 require("dotenv").config({
     path: path.join(__dirname, "../config.env")
@@ -1661,11 +1663,22 @@ module.exports = {
 
                         }
 
+                        if (finalResult.length > 0) {
+                            req.session.exportData = {
+                                fields: ['record_date', 'rating_group', 'balance_type', 'balance_before', 'cost', 'balance_after', 'start_time', 'end_time'],
+                                msisdn: msisdn,
+                                cdr_type: 'Usage',
+                                dataSet: finalResult,
+                            };
+
+                        }
+
 
                         return res.json({success: finalResult})
 
                     } else {
                         return res.json({success: finalResult})
+
                     }
 
 
@@ -1915,6 +1928,16 @@ module.exports = {
 
                         }
 
+                        if (finalResult.length > 0) {
+                            req.session.exportData = {
+                                fields: ['record_date', 'edrType', 'balance_type', 'balance_before', 'cost', 'balance_after', 'channel', 'transaction_id'],
+                                msisdn: msisdn,
+                                cdr_type: 'Recharges',
+                                dataSet: finalResult,
+                            };
+
+                        }
+
 
                         return res.json({success: finalResult})
 
@@ -2141,8 +2164,19 @@ module.exports = {
                             }
                         }
 
+                        if (finalResult.length > 0) {
+                            req.session.exportData = {
+                                fields: ['record_date', 'edrType', 'balance_type', 'balance_before', 'cost', 'balance_after'],
+                                msisdn: msisdn,
+                                cdr_type: 'Event_Debit',
+                                dataSet: finalResult,
+                            };
+
+                        }
+
 
                         return res.json({success: finalResult})
+
 
                     } else {
                         return res.json({success: finalResult})
@@ -2313,6 +2347,16 @@ module.exports = {
 
                         } else {
                             processEdr(result)
+                        }
+
+                        if (finalResult.length > 0) {
+                            req.session.exportData = {
+                                fields: ['record_date', 'edrType', 'balance_type', 'balance_before', 'cost', 'balance_after'],
+                                msisdn: msisdn,
+                                cdr_type: 'All_History',
+                                dataSet: finalResult,
+                            };
+
                         }
 
                         return res.json({success: finalResult})
@@ -3453,6 +3497,47 @@ module.exports = {
             res.json({error: "Incorrect password provided"})
 
         }
+
+    },
+
+    getGenerateCSV: async (req, res) => {
+
+        if (req.session.exportData) {
+            const fields =req.session.exportData.fields ;
+            const parser = new Parser({fields,excelStrings:true});
+            let csv = parser.parse(req.session.exportData.dataSet);
+            let msisdn= req.session.exportData.msisdn;
+            let reportname = req.session.exportData.cdr_type;
+            let fileName = msisdn + "_"+reportname+"_" + moment().format("YYYYMMDD-HHmmss-SSS") + ".csv"
+            let filepath = path.join(__dirname, "../tmp", fileName);
+            fs.writeFile(filepath, csv, err => {
+                if (err) {
+                    console.log(err);
+                    return  res.json({error:"Error in generating file"});
+                }
+                res.json({success:fileName});
+            })
+
+
+        } else {
+            res.json({error: "Error: No data to export"})
+        }
+
+
+    },
+
+    getCSVFile: async (req, res) =>{
+
+        let fileName = req.query.fileName
+        let filepath = path.join(__dirname, "../tmp", fileName);
+        res.download(filepath, fileName, err => {
+            if (err) throw err;
+            fs.unlink(filepath, err => {
+                if (err) throw err;
+                console.log("File " + fileName + " removed");
+            })
+
+        })
 
     }
 

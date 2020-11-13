@@ -23,6 +23,7 @@
     "fast-xml-parser": "^3.17.4",
     "he": "^1.2.0",
     "joi": "^17.2.1",
+    "json2csv": "^5.0.4",
     "moment": "^2.29.1",
     "mongodb": "^3.6.2",
     "mongoose": "^5.10.8",

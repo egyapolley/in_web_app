@@ -6,6 +6,34 @@
     {{> sideNavlevel_one }}
 {{/if}}
 
+<div class="export-overlay" id="export-overlay">
+    <div class="export-dialog-box">
+        <h3><i class="fas fa-exclamation-triangle"></i>&nbsp;&nbsp;Disclaimer</h3>
+        <div class="export-error-wrapper" id="export-error-wrapper">
+            <small id="export-error-message"></small>
+        </div>
+
+        <div class="message-box">
+            This is for internal purposes.<br>
+            However, if you intend to <em>share</em> with a customer,<br>
+            Please make sure you <em>verify</em> the data. Thank you.
+        </div>
+        <div id="progressIndicator-export" class="progressIndicator">
+            <img src="/images/ajax-loader.gif" alt="Loading Bundles...">
+        </div>
+
+        <div class="button-group">
+            <button id="cancel-export" >Cancel</button>
+            <button id="submit-export">Proceed</button>
+        </div>
+
+
+        </div>
+
+
+    </div>
+</div>
+
 <div class="all-container">
 
     <div class="all-main-content">
@@ -86,6 +114,9 @@
 
             <div class="history-main-container" id="history-main-container">
              <div class="history-table-container" id="history-table-container">
+                 <div class="export-container" id="export-btn-container">
+                     <button id="export-btn"><i class="fas fa-file-download"></i>&nbsp;&nbsp;Export</button>
+                 </div>
                  <table id="history-table" class="history-table">
                      <thead>
                      <tr id="history-tab-header">

@@ -845,6 +845,7 @@ $(function () {
 
     const errorWrapperViewHist = document.getElementById("viewHist-error");
     const errorMessageViewHist = document.querySelector("#viewHist-error>small");
+    const exportBtnWrapper = document.getElementById("export-btn-container");
 
     if (viewHistoryForm) {
         viewHistoryForm.addEventListener("submit", function (event) {
@@ -882,12 +883,14 @@ $(function () {
 
                                 historyTableHeader.innerHTML = theadstring;
                                 historyTableBody.innerHTML = tablebodyString;
+                                exportBtnWrapper.style.display=dataSet.length>0?"flex":"none";
                                 historyTable.style.display = "table";
 
 
 
 
                             } else {
+                                exportBtnWrapper.style.display="none"
                                 historyTable.style.display = "none";
                                 errorMessageViewHist.innerText = data.error;
                                 errorWrapperViewHist.style.display = "block";
@@ -901,6 +904,7 @@ $(function () {
 
                     }).fail(function (error) {
                     progressIndicatorHistory.style.display = "none";
+                    exportBtnWrapper.style.display="none"
                     historyTable.style.display = "none";
                     errorMessageViewHist.innerText = error.toString();
                     errorWrapperViewHist.style.display = "block";
@@ -925,12 +929,14 @@ $(function () {
 
                                 historyTableHeader.innerHTML = theadstring;
                                 historyTableBody.innerHTML = tablebodyString;
+                                exportBtnWrapper.style.display=dataSet.length>0?"flex":"none";
                                 historyTable.style.display = "table";
 
 
 
 
                             } else {
+                                exportBtnWrapper.style.display="none"
                                 historyTable.style.display = "none";
                                 errorMessageViewHist.innerText = data.error;
                                 errorWrapperViewHist.style.display = "block";
@@ -944,6 +950,7 @@ $(function () {
 
                     }).fail(function (error) {
                     progressIndicatorHistory.style.display = "none";
+                    exportBtnWrapper.style.display="none"
                     historyTable.style.display = "none";
                     errorMessageViewHist.innerText = error.toString();
                     errorWrapperViewHist.style.display = "block";
@@ -968,12 +975,14 @@ $(function () {
 
                                 historyTableHeader.innerHTML = theadstring;
                                 historyTableBody.innerHTML = tablebodyString;
+                                exportBtnWrapper.style.display=dataSet.length>0?"flex":"none";
                                 historyTable.style.display = "table";
 
 
 
 
                             } else {
+                                exportBtnWrapper.style.display="none"
                                 historyTable.style.display = "none";
                                 errorMessageViewHist.innerText = data.error;
                                 errorWrapperViewHist.style.display = "block";
@@ -987,6 +996,7 @@ $(function () {
 
                     }).fail(function (error) {
                     progressIndicatorHistory.style.display = "none";
+                    exportBtnWrapper.style.display="none"
                     historyTable.style.display = "none";
                     errorMessageViewHist.innerText = error.toString();
                     errorWrapperViewHist.style.display = "block";
@@ -1010,12 +1020,13 @@ $(function () {
 
                                 historyTableHeader.innerHTML = theadstring;
                                 historyTableBody.innerHTML = tablebodyString;
+                                exportBtnWrapper.style.display=dataSet.length>0?"flex":"none";
                                 historyTable.style.display = "table";
 
 
 
                             } else {
-
+                                exportBtnWrapper.style.display="none"
                                 historyTable.style.display = "none";
                                 errorMessageViewHist.innerText = data.error;
                                 errorWrapperViewHist.style.display = "block";
@@ -1030,6 +1041,7 @@ $(function () {
 
                     }).fail(function (error) {
                     progressIndicatorHistory.style.display = "none";
+                    exportBtnWrapper.style.display="none"
                     historyTable.style.display = "none";
                     errorMessageViewHist.innerText = error.toString();
                     errorWrapperViewHist.style.display = "block";
@@ -1828,6 +1840,73 @@ $(function () {
             yearEnd: 2100,
         });
 
+    }
+
+    /*.........Export History .........*/
+    const exportbtn = document.getElementById("export-btn");
+    const progressIndicatorExport = document.getElementById("progressIndicator-export");
+
+    if (exportbtn){
+        exportbtn.addEventListener("click", function (event) {
+            const exportOverLay = document.getElementById("export-overlay");
+            exportOverLay.style.display="block";
+
+
+        })
+    }
+
+    const cancelExportBtn = document.getElementById("cancel-export");
+    if (cancelExportBtn){
+        cancelExportBtn.addEventListener("click", function (event){
+            const exportOverLay = document.getElementById("export-overlay");
+            progressIndicatorExport.style.display="none";
+            exportOverLay.style.display="none";
+
+        })
+    }
+
+    const exportSubmit = document.getElementById("submit-export");
+    const exportErrorWrapper = document.getElementById("export-error-wrapper");
+    const exportErrormessage = document.getElementById("export-error-message");
+
+    if (exportSubmit){
+        exportSubmit.addEventListener("click", function (event) {
+            exportErrormessage.innerHTML="";
+            exportErrorWrapper.style.display="none";
+            progressIndicatorExport.style.display="block";
+
+            $.get("/gencsv")
+                .done(function (data) {
+                    if (data) {
+                        progressIndicatorExport.style.display="none";
+                        if (data.success) {
+                            const exportOverLay = document.getElementById("export-overlay");
+                            exportErrormessage.innerHTML="";
+                            exportErrorWrapper.style.display="none";
+                            exportOverLay.style.display="none";
+                            window.open("/csv?fileName="+data.success);
+
+
+
+                        } else {
+                            exportErrormessage.innerHTML = '<i class="fas fa-exclamation-triangle"></i>&nbsp;' + data.error;
+                            exportErrorWrapper.style.display="block";
+
+                        }
+
+
+                    }
+
+
+                }).fail(function (error) {
+                exportErrormessage.innerHTML = '<i class="fas fa-exclamation-triangle"></i>&nbsp;' + error.toString;
+                exportErrorWrapper.style.display="block";
+
+            })
+
+
+
+        })
     }
 
 

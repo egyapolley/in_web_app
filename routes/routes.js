@@ -5,6 +5,9 @@ const express = require("express"),
     router = express.Router();
 
 
+
+
+
 router.get("/",middleware.checkAuthenticated,controller.renderdashboard);
 router.get("/manageaccount",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three, controller.rendermanageAccount)
 router.get("/topup",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three, controller.rendertopup);
@@ -24,6 +27,9 @@ router.post("/viewhist",middleware.checkAuthenticated, controller.postViewHistor
 router.post("/viewHistRecharge",middleware.checkAuthenticated, controller.postViewHistRecharge)
 router.post("/viewHistEventCharge", middleware.checkAuthenticated,controller.postviewHistEventCharge);
 router.post("/viewHistAll", middleware.checkAuthenticated,controller.postviewHistAll);
+
+router.get("/gencsv",middleware.checkAuthenticated,controller.getGenerateCSV);
+router.get("/csv",middleware.checkAuthenticated,controller.getCSVFile);
 
 router.get("/overscratch", middleware.checkAuthenticated,middleware.checkForLevel_Two_Three,controller.renderoverscratch);
 router.post("/overscratchtop",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three, controller.postoverscratchtop);

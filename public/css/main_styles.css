@@ -1038,6 +1038,28 @@ legend {
     text-decoration: none;
 }
 
+.export-container {
+    display: none;
+    justify-content: flex-end;
+    padding-top: 10px;
+}
+.export-container button {
+    padding: 5px 15px;
+    background: #162641;
+    color: white;
+    cursor: pointer;
+    font-family: 'PT Serif', serif;
+    font-weight: lighter;
+    border-radius: 5px;
+    outline: none;
+    border: none;
+}
+
+.export-container button:hover{
+    background: white;
+    color: black;
+    box-shadow: 0 0 2px 5px #999191;
+}
 
 
 
