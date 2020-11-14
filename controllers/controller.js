@@ -1512,7 +1512,7 @@ module.exports = {
 `;
 
         try {
-            const {response} = await soapRequest({url: url, headers: sampleHeaders, xml: xmlRequest, timeout: 3000}); // Optional timeout parameter(milliseconds)
+            const {response} = await soapRequest({url: url, headers: sampleHeaders, xml: xmlRequest, timeout: 5000}); // Optional timeout parameter(milliseconds)
 
             const {body} = response;
 
@@ -1579,8 +1579,7 @@ module.exports = {
                                             edr_info.balance_type = utils.getBundleName(balance_type);
                                             edr_info.balance_before = balance_before;
                                             edr_info.cost = cost;
-                                            edr_info.balance_after = (parseInt(balance_before) - parseInt(cost)).toString()
-
+                                            edr_info.balance_after = (parseInt(balance_before) - parseInt(cost)).toString();
                                             edr_info.rating_group = rating_group;
                                             finalResult.push(edr_info)
 
@@ -1741,7 +1740,7 @@ module.exports = {
 `;
 
         try {
-            const {response} = await soapRequest({url: url, headers: sampleHeaders, xml: xmlRequest, timeout: 3000}); // Optional timeout parameter(milliseconds)
+            const {response} = await soapRequest({url: url, headers: sampleHeaders, xml: xmlRequest, timeout: 5000}); // Optional timeout parameter(milliseconds)
 
             const {body} = response;
 
@@ -2003,7 +2002,7 @@ module.exports = {
 `;
 
         try {
-            const {response} = await soapRequest({url: url, headers: sampleHeaders, xml: xmlRequest, timeout: 3000}); // Optional timeout parameter(milliseconds)
+            const {response} = await soapRequest({url: url, headers: sampleHeaders, xml: xmlRequest, timeout: 5000}); // Optional timeout parameter(milliseconds)
 
             const {body} = response;
 
@@ -2330,7 +2329,7 @@ module.exports = {
         }
 
         try {
-            const {response} = await soapRequest({url: url, headers: sampleHeaders, xml: xmlRequest, timeout: 4000}); // Optional timeout parameter(milliseconds)
+            const {response} = await soapRequest({url: url, headers: sampleHeaders, xml: xmlRequest, timeout: 5000}); // Optional timeout parameter(milliseconds)
 
             const {body} = response;
 

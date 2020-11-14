@@ -878,6 +878,11 @@ $(function () {
                                 let dataSet = data.success;
                                 let tablebodyString = "";
                                 dataSet.forEach(function (cdrItem) {
+                                    if (cdrItem.balance_type.endsWith("Data")){
+                                        cdrItem.balance_before = new Intl.NumberFormat("en-US").format((cdrItem.balance_before / 1024).toFixed(3));
+                                        cdrItem.cost = new Intl.NumberFormat("en-US").format((cdrItem.cost / 1024).toFixed(3));
+                                        cdrItem.balance_after = new Intl.NumberFormat("en-US").format((cdrItem.balance_after/ 1024).toFixed(3));
+                                    }
                                     tablebodyString += `<tr><td>${cdrItem.record_date}</td><td>Data Charging</td><td>${cdrItem.rating_group}</td><td>${cdrItem.balance_type}</td><td>${cdrItem.balance_before}</td><td>${cdrItem.cost}</td><td>${cdrItem.balance_after}</td><td>${cdrItem.start_time}</td><td>${cdrItem.end_time}</td></tr>`;
                                 })
 
@@ -924,6 +929,11 @@ $(function () {
                                 let dataSet = data.success;
                                 let tablebodyString = "";
                                 dataSet.forEach(function (cdrItem) {
+                                    if (cdrItem.balance_type.endsWith("Data")){
+                                        cdrItem.balance_before = new Intl.NumberFormat("en-US").format((cdrItem.balance_before / 1024).toFixed(3));
+                                        cdrItem.cost = new Intl.NumberFormat("en-US").format((cdrItem.cost / 1024).toFixed(3));
+                                        cdrItem.balance_after = new Intl.NumberFormat("en-US").format((cdrItem.balance_after/ 1024).toFixed(3));
+                                    }
                                     tablebodyString += `<tr><td>${cdrItem.record_date}</td><td>${cdrItem.edrType}</td><td>${cdrItem.balance_type}</td><td>${cdrItem.balance_before}</td><td>${cdrItem.cost}</td><td>${cdrItem.balance_after}</td><td>${cdrItem.channel}</td><td>${cdrItem.transaction_id}</td></tr>`;
                                 })
 
@@ -970,6 +980,11 @@ $(function () {
                                 let dataSet = data.success;
                                 let tablebodyString = "";
                                 dataSet.forEach(function (cdrItem) {
+                                    if (cdrItem.balance_type.endsWith("Data")){
+                                        cdrItem.balance_before = new Intl.NumberFormat("en-US").format((cdrItem.balance_before / 1024).toFixed(3));
+                                        cdrItem.cost = new Intl.NumberFormat("en-US").format((cdrItem.cost / 1024).toFixed(3));
+                                        cdrItem.balance_after = new Intl.NumberFormat("en-US").format((cdrItem.balance_after/ 1024).toFixed(3));
+                                    }
                                     tablebodyString += `<tr><td>${cdrItem.record_date}</td><td>${cdrItem.edrType}</td><td>${cdrItem.balance_type}</td><td>${cdrItem.balance_before}</td><td>${cdrItem.cost}</td><td>${cdrItem.balance_after}</td></tr>`;
                                 })
 
@@ -1015,6 +1030,11 @@ $(function () {
                                 let dataSet = data.success;
                                 let tablebodyString = "";
                                 dataSet.forEach(function (cdrItem) {
+                                    if (cdrItem.balance_type.endsWith("Data")){
+                                        cdrItem.balance_before = new Intl.NumberFormat("en-US").format((cdrItem.balance_before / 1024).toFixed(3));
+                                        cdrItem.cost = new Intl.NumberFormat("en-US").format((cdrItem.cost / 1024).toFixed(3));
+                                        cdrItem.balance_after = new Intl.NumberFormat("en-US").format((cdrItem.balance_after/ 1024).toFixed(3));
+                                    }
                                     tablebodyString += `<tr><td>${cdrItem.record_date}</td><td>${cdrItem.edrType}</td><td>${cdrItem.balance_type}</td><td>${cdrItem.balance_before}</td><td>${cdrItem.cost}</td><td>${cdrItem.balance_after}</td></tr>`;
                                 })
 
