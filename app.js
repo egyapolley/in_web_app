@@ -17,7 +17,6 @@ if (process.env.NODE_ENV === "development"){
 
 
 mongoose.connect("mongodb://localhost/in_web", {
-
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
