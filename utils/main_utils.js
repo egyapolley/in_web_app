@@ -53,7 +53,7 @@ module.exports = {
         else if (bundleId === "802" || bundleId === "FreeTime Data") return "FreeTime Bonus Data";
         else if (bundleId === "862" || bundleId === "1GBSurfplus Data") return "1GB Surfplus Data";
         else if (bundleId === "863" || bundleId === "1.6GBSurfplus Data") return "1.6GB Surfplus Data";
-        else if (bundleId === "864" || bundleId === "7GBSurfplus Data") return "6GB Surfplus Data";
+        else if (bundleId === "864" || bundleId === "7GBSurfplus Data") return "7GB Surfplus Data";
         else if (bundleId === "865" || bundleId === "2GBSurfplus Data") return "2GB Surfplus Data";
         else if (bundleId === "866" || bundleId === "3.2GBSurfplus Data") return "3.2GB Surfplus Data";
         else if (bundleId === "867" || bundleId === "5GBSurfplus Data") return "5GB Surfplus Data";
@@ -61,7 +61,7 @@ module.exports = {
         else if (bundleId === "869" || bundleId === "30GBSurfplus Data") return "30GB Surfplus Data";
         else if (bundleId === "870" || bundleId === "45GBSurfplus Data") return "45GB Surfplus Data";
         else if (bundleId === "871" || bundleId === "65GBSurfplus Data") return "65GB Surfplus Data";
-        else if (bundleId === "872" || bundleId === "120GBSurfplus Data") return "120GBS urfplus Data";
+        else if (bundleId === "872" || bundleId === "120GBSurfplus Data") return "120GB Surfplus Data";
         else if (bundleId === "873" || bundleId === "180GBSurfplus Data") return "180GB Surfplus Data";
         else if (bundleId === "876" || bundleId === "Free Saturday Data") return "Free Saturday Data";
         else if (bundleId === "942" || bundleId === "Taxify Data") return "Taxify Data";
