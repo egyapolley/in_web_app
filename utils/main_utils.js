@@ -79,6 +79,8 @@ module.exports = {
         else if (bundleId === "1045" || bundleId === "UL_AlwaysON_Lite Status") return "AlwaysON_Lite Status";
         else if (bundleId === "1046" || bundleId === "UL_AlwaysON_Streamer Data") return "AlwaysON_Streamer Data";
         else if (bundleId === "1047" || bundleId === "UL_AlwaysON_Streamer Status") return "AlwaysON_Streamer Status";
+        else if (bundleId === "1184" || bundleId === "UL_AlwaysON_Maxi Data") return "AlwaysON_Maxi Data";
+        else if (bundleId === "1185" || bundleId === "UL_AlwaysON_Maxi Status") return "AlwaysON_Maxi Status";
         else if (bundleId === "1082" || bundleId === "Staff_AlwaysON_1GB Data") return "Staff_AlwaysON_1GB Data";
         else if (bundleId === "1083" || bundleId === "Staff_AlwaysON_1GB Count") return "Staff_AlwaysON_1GB Count";
         else if (bundleId === "1084" || bundleId === "Staff_AlwaysON_2GB Data") return "Staff_AlwaysON_2GB Data";

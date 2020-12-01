@@ -138,6 +138,8 @@ module.exports = {
         1142:"Lite Boost Ext",
         1143:"Activate_Unlimited Count",
         1162:"SetPromoExtensionTag  Count",
+        1184:"UL_AlwaysON_Maxi Data",
+        1185:"UL_AlwaysON_Maxi Status",
     },
 
     balanceTypesArrays:[
@@ -180,6 +182,8 @@ module.exports = {
         'UL_AlwaysON_Lite Status',
         'UL_AlwaysON_Streamer Data',
         'UL_AlwaysON_Streamer Status',
+        'UL_AlwaysON_Maxi Data',
+        'UL_AlwaysON_Maxi Status',
         'Staff_AlwaysON_1GB Data',
         'Staff_AlwaysON_2GB Data',
         'Staff_AlwaysON_5GB Data',
