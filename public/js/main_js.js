@@ -93,7 +93,10 @@ $(function () {
 
                 })
                 .fail(function (error) {
-                    throw error;
+                    dashboardMessage.innerText = "Network Failure";
+                    progressIndicator.style.display = "none";
+                    dashboardErrorWrapper.style.display = "block";
+
 
                 })
 
