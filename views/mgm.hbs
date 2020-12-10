@@ -1,0 +1,198 @@
+{{#if l3}}
+    {{> sideNav }}
+{{else if l2}}
+    {{> sideNavlevel_two }}
+{{else }}
+    {{> sideNavlevel_one }}
+{{/if}}
+
+<div class="all-container">
+
+    <div class="all-main-content">
+        <div class="all-main-content-wrapper">
+            <div class="main-content-manage-acct">
+                <header>
+                    <nav>
+                        <ul>
+                            <li><a href="" class="mgm-links" data-id="gen-code">Generate Code</a></li>
+                            <li><a href="" class="mgm-links" data-id="act-code">Activate Code</a></li>
+                            <li><a href="" class="mgm-links" data-id="get-code">Get Code Details</a></li>
+                            <li><a href="" class="mgm-links" data-id="sub-ref">Subscriber Referred</a></li>
+                        </ul>
+
+                    </nav>
+                </header>
+
+                <main class="mgm-main">
+                    <div class="task-container-mgm gen-code">
+                        <div class="form-wrapper-mgm">
+                            <div class="manageVoucher-error mgm-error" id="mgm-error-gencode">
+                                <button  class="times-button times-button-mgm">&times;</button>
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <small></small>
+                            </div>
+
+                            <div class="manageVoucher-success mgm-success" id="mgm-success-gencode">
+                                <button  class="times-button times-button-mgm">&times;</button>
+                                <i class="fas fa-thumbs-up"></i>
+                                <small></small>
+                            </div>
+                            <form action="" id="gen-code-form">
+                                <div class="form-control">
+                                    <label for="msisdn-gencode">Subscriber msisdn:</label>
+                                    <input type="text" id="msisdn-gencode" name="msisdn-gencode" placeholder="233255..."
+                                           required autofocus autocomplete="true" minlength="12" pattern="^233255.+">
+                                </div>
+
+                                <div id="progressIndicator-gencode" class="progressIndicator mgm-progress">
+                                    <img src="/images/ajax-loader.gif" alt="Loading Bundles...">
+                                </div>
+                                <div class="form-control form-control-btn">
+                                    <button class="proceed-btn" type="submit">Generate</button>
+                                </div>
+                            </form>
+
+                        </div>
+
+
+                    </div>
+
+                    <div class="task-container-mgm act-code">
+                        <div class="form-wrapper-mgm">
+                            <div class="manageVoucher-error mgm-error" id="mgm-error-actcode">
+                                <button class="times-button times-button-mgm">&times;</button>
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <small></small>
+                            </div>
+
+                            <div class="manageVoucher-success mgm-success" id="mgm-success-actcode">
+                                <button class="times-button times-button-mgm">&times;</button>
+                                <i class="fas fa-thumbs-up"></i>
+                                <small></small>
+                            </div>
+                            <form action="" id="act-code-form">
+                                <div class="form-control">
+                                    <label for="msisdn-actcode">Referred msisdn:</label>
+                                    <input type="text" id="msisdn-actcode" name="msisdn-actcode" placeholder="233255..."
+                                           required autofocus autocomplete="true" minlength="12" pattern="^233255.+">
+                                </div>
+
+                                <div class="form-control">
+                                    <label for="code-actcode">Code:</label>
+                                    <input type="text" id="code-actcode" name="code-act" placeholder="Enter code ..."
+                                           required minlength="6" maxlength="6" pattern="[0-9A-Z]+">
+                                </div>
+
+
+                                <div id="progressIndicator-actcode" class="progressIndicator mgm-progress">
+                                    <img src="/images/ajax-loader.gif" alt="Loading Bundles...">
+                                </div>
+
+                                <div class="form-control form-control-btn">
+                                    <button class="proceed-btn" type="submit">Submit</button>
+                                </div>
+                            </form>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <div class="task-container-mgm get-code">
+                        <div class="form-wrapper-mgm">
+                            <div class="manageVoucher-error mgm-error" id="mgm-error-getcode">
+                                <button class="times-button times-button-mgm">&times;</button>
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <small></small>
+                            </div>
+
+                            <div class="manageVoucher-success mgm-success" id="mgm-success-getcode">
+                                <button class="times-button times-button-mgm">&times;</button>
+                                <i class="fas fa-thumbs-up"></i>
+                                <small></small>
+                            </div>
+                            <form action="" id="get-code-form">
+                                <div class="form-control">
+                                    <label for="code-getcode">Code:</label>
+                                    <input type="text" id="code-getcode" name="code-getcode"
+                                           placeholder="Enter code ..." required minlength="6" maxlength="6"
+                                           pattern="[0-9A-Z]+">
+                                </div>
+                                <div id="progressIndicator-getcode" class="progressIndicator mgm-progress">
+                                    <img src="/images/ajax-loader.gif" alt="Loading Bundles...">
+                                </div>
+
+                                <div class="form-control form-control-btn">
+                                    <button class="proceed-btn" type="submit">Submit</button>
+                                </div>
+                            </form>
+
+                        </div>
+
+                        <div class="getcode-tableWrapper" id="getcode-tableWrapper">
+                            <table id="getCode-table" class="getCode-table">
+                                <tbody id="getcode-table-tbody">
+
+                                </tbody>
+
+                            </table>
+                        </div>
+
+
+                    </div>
+
+
+                    <div class="task-container-mgm sub-ref">
+                        <div class="form-wrapper-mgm">
+                            <div class="manageVoucher-error mgm-error" id="mgm-error-subref">
+                                <button class="times-button times-button-mgm">&times;</button>
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <small></small>
+                            </div>
+
+                            <div class="manageVoucher-success mgm-success" id="mgm-success-subref">
+                                <button  class="times-button times-button-mgm">&times;</button>
+                                <i class="fas fa-thumbs-up"></i>
+                                <small></small>
+                            </div>
+                            <form action="" id="sub-ref-form">
+                                <div class="form-control">
+                                    <label for="msisdn-sub-ref">Referral msisdn:</label>
+                                    <input type="text" id="msisdn-sub-ref" name="msisdn-sub-ref" placeholder="233255..."
+                                           required autofocus autocomplete="true" minlength="12" pattern="^233255.+">
+                                </div>
+                                <div id="progressIndicator-subref" class="progressIndicator mgm-progress">
+                                    <img src="/images/ajax-loader.gif" alt="Loading Bundles...">
+                                </div>
+
+                                <div class="form-control form-control-btn">
+                                    <button class="proceed-btn" type="submit">Submit</button>
+                                </div>
+                            </form>
+
+                        </div>
+
+                        <div class="sub-ref-tableWrapper" id="sub-ref-tableWrapper">
+                            <table id="sub-ref-table" class="sub-ref-table">
+                                <tbody id="sub-ref-table-tbody">
+
+                                </tbody>
+
+                            </table>
+                        </div>
+
+
+                    </div>
+
+
+                </main>
+
+            </div>
+
+        </div>
+    </div>
+
+
+</div>
+

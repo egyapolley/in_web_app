@@ -444,10 +444,10 @@ $(function () {
 
     }
 
-    if (msisdnTopup){
+    if (msisdnTopup) {
         msisdnTopup.addEventListener("blur", function (event) {
             const msisdn = msisdnTopup.value;
-            if (msisdn.length < 12 ){
+            if (msisdn.length < 12) {
 
                 progressIndicatorBundles.style.display = "none";
                 loadbundleErrorMessage.innerText = `${msisdn} is Invalid. Number should start with 233`;
@@ -560,7 +560,17 @@ $(function () {
                     .done(function (data) {
                         if (data.success) {
 
-                            const {v_status, v_serial, v_pin, v_msisdn, v_redeemed_date, v_type, v_activation_date, v_expiration_date, v_description} = data.success;
+                            const {
+                                v_status,
+                                v_serial,
+                                v_pin,
+                                v_msisdn,
+                                v_redeemed_date,
+                                v_type,
+                                v_activation_date,
+                                v_expiration_date,
+                                v_description
+                            } = data.success;
 
                             divwrapper.innerHTML = `<div class="manage-voucher-info__item"> <ul> <li><span class="pname">Status:</span><span class="pvalue">${v_status}</span></li> <li><span class="pname">Voucher Serial:</span><span class="pvalue">${v_serial}</span></li> <li><span class="pname">Voucher PIN:</span><span class="pvalue">${v_pin}</span></li></ul> </div> <div class="manage-voucher-info__item"> <ul> <li><span class="pname">Subscriber Msisdn:</span><span class="pvalue">${v_msisdn}</span></li> <li><span class="pname">Redeemed Date:</span><span class="pvalue">${v_redeemed_date}</span></li> <li><span class="pname">Voucher Type:</span><span class="pvalue">${v_type}</span></li> </ul> </div> <div class="manage-voucher-info__item" id="manage-voucher-info__item__last"> <ul> <li><span class="pname">Activation Date:</span><span class="pvalue">${v_activation_date}</span></li> <li><span class="pname">Expiration Date:</span><span class="pvalue">${v_expiration_date}</span></li> <li><span class="pname">Description:</span><span class="pvalue">${v_description}</span></li> </ul> </div>`;
                             const updateVoucherStatus = document.getElementById("update-voucher-status");
@@ -739,16 +749,16 @@ $(function () {
     }
 
     const setExpiryCheckBox = document.getElementById("setexpiry");
-    const validityDetils =document.getElementById("validity-details");
+    const validityDetils = document.getElementById("validity-details");
     const validityTo = document.getElementById("to-validity")
-    if (setExpiryCheckBox){
+    if (setExpiryCheckBox) {
         setExpiryCheckBox.addEventListener("click", function (event) {
-            if (event.target.checked){
+            if (event.target.checked) {
                 validityDetils.style.display = "block";
-                validityTo.setAttribute("required","");
+                validityTo.setAttribute("required", "");
 
 
-            }else {
+            } else {
                 validityDetils.style.display = "none";
                 validityTo.removeAttribute("required");
 
@@ -799,7 +809,6 @@ $(function () {
                     if (data) {
                         progressIndicatorActivate.style.display = "none";
                         if (data.success) {
-
 
 
                             errorWrapperActivate.style.display = "none";
@@ -881,24 +890,22 @@ $(function () {
                                 let dataSet = data.success;
                                 let tablebodyString = "";
                                 dataSet.forEach(function (cdrItem) {
-                                    if (cdrItem.balance_type.endsWith("Data")){
+                                    if (cdrItem.balance_type.endsWith("Data")) {
                                         cdrItem.balance_before = new Intl.NumberFormat("en-US").format((cdrItem.balance_before / 1024).toFixed(3));
                                         cdrItem.cost = new Intl.NumberFormat("en-US").format((cdrItem.cost / 1024).toFixed(3));
-                                        cdrItem.balance_after = new Intl.NumberFormat("en-US").format((cdrItem.balance_after/ 1024).toFixed(3));
+                                        cdrItem.balance_after = new Intl.NumberFormat("en-US").format((cdrItem.balance_after / 1024).toFixed(3));
                                     }
                                     tablebodyString += `<tr><td>${cdrItem.record_date}</td><td>Data Charging</td><td>${cdrItem.rating_group}</td><td>${cdrItem.balance_type}</td><td>${cdrItem.balance_before}</td><td>${cdrItem.cost}</td><td>${cdrItem.balance_after}</td><td>${cdrItem.start_time}</td><td>${cdrItem.end_time}</td></tr>`;
                                 })
 
                                 historyTableHeader.innerHTML = theadstring;
                                 historyTableBody.innerHTML = tablebodyString;
-                                exportBtnWrapper.style.display=dataSet.length>0?"flex":"none";
+                                exportBtnWrapper.style.display = dataSet.length > 0 ? "flex" : "none";
                                 historyTable.style.display = "table";
 
 
-
-
                             } else {
-                                exportBtnWrapper.style.display="none"
+                                exportBtnWrapper.style.display = "none"
                                 historyTable.style.display = "none";
                                 errorMessageViewHist.innerText = data.error;
                                 errorWrapperViewHist.style.display = "block";
@@ -912,7 +919,7 @@ $(function () {
 
                     }).fail(function (error) {
                     progressIndicatorHistory.style.display = "none";
-                    exportBtnWrapper.style.display="none"
+                    exportBtnWrapper.style.display = "none"
                     historyTable.style.display = "none";
                     errorMessageViewHist.innerText = error.toString();
                     errorWrapperViewHist.style.display = "block";
@@ -932,24 +939,22 @@ $(function () {
                                 let dataSet = data.success;
                                 let tablebodyString = "";
                                 dataSet.forEach(function (cdrItem) {
-                                    if (cdrItem.balance_type.endsWith("Data")){
+                                    if (cdrItem.balance_type.endsWith("Data")) {
                                         cdrItem.balance_before = new Intl.NumberFormat("en-US").format((cdrItem.balance_before / 1024).toFixed(3));
                                         cdrItem.cost = new Intl.NumberFormat("en-US").format((cdrItem.cost / 1024).toFixed(3));
-                                        cdrItem.balance_after = new Intl.NumberFormat("en-US").format((cdrItem.balance_after/ 1024).toFixed(3));
+                                        cdrItem.balance_after = new Intl.NumberFormat("en-US").format((cdrItem.balance_after / 1024).toFixed(3));
                                     }
                                     tablebodyString += `<tr><td>${cdrItem.record_date}</td><td>${cdrItem.edrType}</td><td>${cdrItem.balance_type}</td><td>${cdrItem.balance_before}</td><td>${cdrItem.cost}</td><td>${cdrItem.balance_after}</td><td>${cdrItem.channel}</td><td>${cdrItem.transaction_id}</td></tr>`;
                                 })
 
                                 historyTableHeader.innerHTML = theadstring;
                                 historyTableBody.innerHTML = tablebodyString;
-                                exportBtnWrapper.style.display=dataSet.length>0?"flex":"none";
+                                exportBtnWrapper.style.display = dataSet.length > 0 ? "flex" : "none";
                                 historyTable.style.display = "table";
 
 
-
-
                             } else {
-                                exportBtnWrapper.style.display="none"
+                                exportBtnWrapper.style.display = "none"
                                 historyTable.style.display = "none";
                                 errorMessageViewHist.innerText = data.error;
                                 errorWrapperViewHist.style.display = "block";
@@ -963,11 +968,10 @@ $(function () {
 
                     }).fail(function (error) {
                     progressIndicatorHistory.style.display = "none";
-                    exportBtnWrapper.style.display="none"
+                    exportBtnWrapper.style.display = "none"
                     historyTable.style.display = "none";
                     errorMessageViewHist.innerText = error.toString();
                     errorWrapperViewHist.style.display = "block";
-
 
 
                 })
@@ -983,24 +987,22 @@ $(function () {
                                 let dataSet = data.success;
                                 let tablebodyString = "";
                                 dataSet.forEach(function (cdrItem) {
-                                    if (cdrItem.balance_type.endsWith("Data")){
+                                    if (cdrItem.balance_type.endsWith("Data")) {
                                         cdrItem.balance_before = new Intl.NumberFormat("en-US").format((cdrItem.balance_before / 1024).toFixed(3));
                                         cdrItem.cost = new Intl.NumberFormat("en-US").format((cdrItem.cost / 1024).toFixed(3));
-                                        cdrItem.balance_after = new Intl.NumberFormat("en-US").format((cdrItem.balance_after/ 1024).toFixed(3));
+                                        cdrItem.balance_after = new Intl.NumberFormat("en-US").format((cdrItem.balance_after / 1024).toFixed(3));
                                     }
                                     tablebodyString += `<tr><td>${cdrItem.record_date}</td><td>${cdrItem.edrType}</td><td>${cdrItem.balance_type}</td><td>${cdrItem.balance_before}</td><td>${cdrItem.cost}</td><td>${cdrItem.balance_after}</td></tr>`;
                                 })
 
                                 historyTableHeader.innerHTML = theadstring;
                                 historyTableBody.innerHTML = tablebodyString;
-                                exportBtnWrapper.style.display=dataSet.length>0?"flex":"none";
+                                exportBtnWrapper.style.display = dataSet.length > 0 ? "flex" : "none";
                                 historyTable.style.display = "table";
 
 
-
-
                             } else {
-                                exportBtnWrapper.style.display="none"
+                                exportBtnWrapper.style.display = "none"
                                 historyTable.style.display = "none";
                                 errorMessageViewHist.innerText = data.error;
                                 errorWrapperViewHist.style.display = "block";
@@ -1014,7 +1016,7 @@ $(function () {
 
                     }).fail(function (error) {
                     progressIndicatorHistory.style.display = "none";
-                    exportBtnWrapper.style.display="none"
+                    exportBtnWrapper.style.display = "none"
                     historyTable.style.display = "none";
                     errorMessageViewHist.innerText = error.toString();
                     errorWrapperViewHist.style.display = "block";
@@ -1033,27 +1035,25 @@ $(function () {
                                 let dataSet = data.success;
                                 let tablebodyString = "";
                                 dataSet.forEach(function (cdrItem) {
-                                    if (cdrItem.balance_type.endsWith("Data")){
+                                    if (cdrItem.balance_type.endsWith("Data")) {
                                         cdrItem.balance_before = new Intl.NumberFormat("en-US").format((cdrItem.balance_before / 1024).toFixed(3));
                                         cdrItem.cost = new Intl.NumberFormat("en-US").format((cdrItem.cost / 1024).toFixed(3));
-                                        cdrItem.balance_after = new Intl.NumberFormat("en-US").format((cdrItem.balance_after/ 1024).toFixed(3));
+                                        cdrItem.balance_after = new Intl.NumberFormat("en-US").format((cdrItem.balance_after / 1024).toFixed(3));
                                     }
                                     tablebodyString += `<tr><td>${cdrItem.record_date}</td><td>${cdrItem.edrType}</td><td>${cdrItem.balance_type}</td><td>${cdrItem.balance_before}</td><td>${cdrItem.cost}</td><td>${cdrItem.balance_after}</td></tr>`;
                                 })
 
                                 historyTableHeader.innerHTML = theadstring;
                                 historyTableBody.innerHTML = tablebodyString;
-                                exportBtnWrapper.style.display=dataSet.length>0?"flex":"none";
+                                exportBtnWrapper.style.display = dataSet.length > 0 ? "flex" : "none";
                                 historyTable.style.display = "table";
 
 
-
                             } else {
-                                exportBtnWrapper.style.display="none"
+                                exportBtnWrapper.style.display = "none"
                                 historyTable.style.display = "none";
                                 errorMessageViewHist.innerText = data.error;
                                 errorWrapperViewHist.style.display = "block";
-
 
 
                             }
@@ -1064,11 +1064,10 @@ $(function () {
 
                     }).fail(function (error) {
                     progressIndicatorHistory.style.display = "none";
-                    exportBtnWrapper.style.display="none"
+                    exportBtnWrapper.style.display = "none"
                     historyTable.style.display = "none";
                     errorMessageViewHist.innerText = error.toString();
                     errorWrapperViewHist.style.display = "block";
-
 
 
                 })
@@ -1119,8 +1118,8 @@ $(function () {
 
                                 tbody.innerHTML = rows;
 
-                            }else {
-                                tbody.innerHTML="";
+                            } else {
+                                tbody.innerHTML = "";
                             }
                             recurrentTableWrapper.style.display = "block";
 
@@ -1157,7 +1156,7 @@ $(function () {
         const contacttype = document.getElementById("contact-type").value;
 
 
-        const postbody = {msisdn, contact,contacttype};
+        const postbody = {msisdn, contact, contacttype};
 
 
         $.post("/changecontact", postbody)
@@ -1418,7 +1417,6 @@ $(function () {
                             errorWrapperManageAcct.style.display = "block";
 
 
-
                         }
 
 
@@ -1450,7 +1448,7 @@ $(function () {
         const to_msisdn = document.getElementById("to-msisdn-cash").value;
         const amount = document.getElementById("amount-cash").value;
 
-        const postbody = {from_msisdn,to_msisdn,amount};
+        const postbody = {from_msisdn, to_msisdn, amount};
 
 
         $.post("/cashtransfer", postbody)
@@ -1490,7 +1488,7 @@ $(function () {
 
 
     const transferCashForm = document.getElementById("transfer-cash-form");
-    if (transferCashForm){
+    if (transferCashForm) {
         transferCashForm.addEventListener("submit", processTransferCashForm);
     }
 
@@ -1853,7 +1851,7 @@ $(function () {
     }
 
     let adjustExpiryDateSet = document.getElementById("expiry-date");
-    if (adjustExpiryDateSet){
+    if (adjustExpiryDateSet) {
         let today = new Date();
         $(adjustExpiryDateSet).datetimepicker({
             value: today,
@@ -1869,21 +1867,21 @@ $(function () {
     const exportbtn = document.getElementById("export-btn");
     const progressIndicatorExport = document.getElementById("progressIndicator-export");
 
-    if (exportbtn){
+    if (exportbtn) {
         exportbtn.addEventListener("click", function (event) {
             const exportOverLay = document.getElementById("export-overlay");
-            exportOverLay.style.display="block";
+            exportOverLay.style.display = "block";
 
 
         })
     }
 
     const cancelExportBtn = document.getElementById("cancel-export");
-    if (cancelExportBtn){
-        cancelExportBtn.addEventListener("click", function (event){
+    if (cancelExportBtn) {
+        cancelExportBtn.addEventListener("click", function (event) {
             const exportOverLay = document.getElementById("export-overlay");
-            progressIndicatorExport.style.display="none";
-            exportOverLay.style.display="none";
+            progressIndicatorExport.style.display = "none";
+            exportOverLay.style.display = "none";
 
         })
     }
@@ -1892,28 +1890,27 @@ $(function () {
     const exportErrorWrapper = document.getElementById("export-error-wrapper");
     const exportErrormessage = document.getElementById("export-error-message");
 
-    if (exportSubmit){
+    if (exportSubmit) {
         exportSubmit.addEventListener("click", function (event) {
-            exportErrormessage.innerHTML="";
-            exportErrorWrapper.style.display="none";
-            progressIndicatorExport.style.display="block";
+            exportErrormessage.innerHTML = "";
+            exportErrorWrapper.style.display = "none";
+            progressIndicatorExport.style.display = "block";
 
             $.get("/gencsv")
                 .done(function (data) {
                     if (data) {
-                        progressIndicatorExport.style.display="none";
+                        progressIndicatorExport.style.display = "none";
                         if (data.success) {
                             const exportOverLay = document.getElementById("export-overlay");
-                            exportErrormessage.innerHTML="";
-                            exportErrorWrapper.style.display="none";
-                            exportOverLay.style.display="none";
-                            window.open("/csv?fileName="+data.success);
-
+                            exportErrormessage.innerHTML = "";
+                            exportErrorWrapper.style.display = "none";
+                            exportOverLay.style.display = "none";
+                            window.open("/csv?fileName=" + data.success);
 
 
                         } else {
                             exportErrormessage.innerHTML = '<i class="fas fa-exclamation-triangle"></i>&nbsp;' + data.error;
-                            exportErrorWrapper.style.display="block";
+                            exportErrorWrapper.style.display = "block";
 
                         }
 
@@ -1923,14 +1920,310 @@ $(function () {
 
                 }).fail(function (error) {
                 exportErrormessage.innerHTML = '<i class="fas fa-exclamation-triangle"></i>&nbsp;' + error.toString;
-                exportErrorWrapper.style.display="block";
+                exportErrorWrapper.style.display = "block";
 
             })
 
 
-
         })
     }
+
+
+    /*...........Member Get Member........*/
+
+    const mgmNavLinks = document.querySelectorAll(".mgm-links");
+    mgmNavLinks.forEach(function (mgmNavLink) {
+        mgmNavLink.addEventListener("click", function (event) {
+            event.preventDefault();
+            const targetLink = event.target;
+            targetLink.dataset.target = "active";
+            mgmNavLinks.forEach(function (alink) {
+                if (alink === targetLink) {
+                    alink.closest("li").classList.add("mgm-links-active");
+                    let dataId = alink.dataset.id;
+                    document.querySelectorAll("." + dataId)[0].style.display = "block"
+
+
+                } else {
+                    alink.closest("li").classList.remove("mgm-links-active");
+                    let dataId = alink.dataset.id;
+                    document.querySelectorAll("." + dataId)[0].style.display = "none"
+
+                }
+            })
+
+        })
+
+    })
+
+    const timeButtons = document.querySelectorAll(".times-button-mgm");
+    if (timeButtons) {
+        timeButtons.forEach(function (timeButton) {
+            timeButton.addEventListener("click", function (event) {
+                const wrapper = timeButton.closest("div");
+                wrapper.style.display = "none";
+
+            })
+
+        })
+
+    }
+
+
+    const genCodeSuccessWrapper = document.getElementById("mgm-success-gencode");
+    const genCodeSuccessMessage = document.querySelector("#mgm-success-gencode >small");
+    const genCodeErrorWrapper = document.getElementById("mgm-error-gencode");
+    const genCodeErrorMessage = document.querySelector("#mgm-error-gencode >small");
+    const progressIndicatorGenCode = document.getElementById("progressIndicator-gencode");
+
+
+    function mgmGenerateCode(event) {
+        event.preventDefault();
+
+        genCodeSuccessWrapper.style.display = "none";
+        genCodeErrorWrapper.style.display = "none";
+        progressIndicatorGenCode.style.display = "block";
+
+        const msisdn = document.getElementById("msisdn-gencode").value;
+        const postbody = {msisdn}
+
+
+        $.post("/gencode", postbody)
+            .done(function (data) {
+                if (data) {
+                    progressIndicatorGenCode.style.display = "none";
+                    if (data.success) {
+
+                        genCodeErrorWrapper.style.display = "none";
+                        genCodeSuccessMessage.innerHTML = data.message
+                        genCodeSuccessWrapper.style.display = "block";
+
+
+                    } else {
+                        genCodeErrorMessage.innerHTML = data.message;
+                        genCodeSuccessWrapper.style.display = "none";
+                        genCodeErrorWrapper.style.display = "block";
+
+
+                    }
+
+
+                }
+
+
+            }).fail(function (error) {
+            console.log(error)
+            progressIndicatorGenCode.style.display = "none";
+            genCodeErrorMessage.innerHTML += "Network Failure.Please check internet connection";
+            genCodeSuccessWrapper.style.display = "none";
+            genCodeErrorWrapper.style.display = "block";
+
+
+        })
+
+
+    }
+
+    const genCodeForm = document.getElementById("gen-code-form");
+    if (genCodeForm) {
+        genCodeForm.addEventListener("submit", mgmGenerateCode)
+    }
+
+
+    const actCodeSuccessWrapper = document.getElementById("mgm-success-actcode");
+    const actCodeSuccessMessage = document.querySelector("#mgm-success-actcode >small");
+    const actCodeErrorWrapper = document.getElementById("mgm-error-actcode");
+    const actCodeErrorMessage = document.querySelector("#mgm-error-actcode >small");
+    const progressIndicatoractCode = document.getElementById("progressIndicator-actcode");
+
+    function mgmactCode(event) {
+        event.preventDefault();
+
+        actCodeSuccessWrapper.style.display = "none";
+        actCodeErrorWrapper.style.display = "none";
+        progressIndicatoractCode.style.display = "block";
+
+        const msisdn = document.getElementById("msisdn-actcode").value;
+        const code = document.getElementById("code-actcode").value;
+        const postbody = {msisdn, code}
+
+
+        $.post("/actcode", postbody)
+            .done(function (data) {
+                if (data) {
+                    progressIndicatoractCode.style.display = "none";
+                    if (data.success) {
+
+                        actCodeErrorWrapper.style.display = "none";
+                        actCodeSuccessMessage.innerHTML = data.message
+                        actCodeSuccessWrapper.style.display = "block";
+
+
+                    } else {
+                        actCodeErrorMessage.innerHTML = data.message;
+                        actCodeSuccessWrapper.style.display = "none";
+                        actCodeErrorWrapper.style.display = "block";
+
+
+                    }
+
+
+                }
+
+
+            }).fail(function (error) {
+            console.log(error)
+            progressIndicatoractCode.style.display = "none";
+            actCodeErrorMessage.innerHTML += "Network Failure.Please check internet connection";
+            actCodeSuccessWrapper.style.display = "none";
+            actCodeErrorWrapper.style.display = "block";
+
+
+        })
+
+
+    }
+
+    const actCodeForm = document.getElementById("act-code-form");
+    if (actCodeForm) {
+        actCodeForm.addEventListener("submit", mgmactCode)
+    }
+
+
+
+    const getCodeSuccessWrapper = document.getElementById("mgm-success-getcode");
+    const getCodeErrorWrapper = document.getElementById("mgm-error-getcode");
+    const getCodeErrorMessage = document.querySelector("#mgm-error-getcode >small");
+    const progressIndicatorGetCode = document.getElementById("progressIndicator-getcode");
+
+    function mgmGetCode(event) {
+        event.preventDefault();
+
+        getCodeSuccessWrapper.style.display = "none";
+        getCodeErrorWrapper.style.display = "none";
+        progressIndicatorGetCode.style.display = "block";
+
+        const code = document.getElementById("code-getcode").value;
+        const postbody = {code};
+
+
+        const tableBody = document.getElementById("getcode-table-tbody");
+
+
+        $.post("/getcode", postbody)
+            .done(function (data) {
+                if (data) {
+                    progressIndicatorGetCode.style.display = "none";
+                    if (data.success) {
+                        getCodeErrorWrapper.style.display = "none";
+
+                        const codeInfo = data.codeInfo;
+                        tableBody.innerHTML=`<tr><td>Code</td> <td>${codeInfo.code}</td> </tr> <tr> <td>Status</td> <td>${codeInfo.status}</td> </tr> <tr> <td>Referral</td> <td>${codeInfo.referral}</td> </tr> <tr> <td>Date Generated</td> <td>${codeInfo.date_generated}</td> </tr> <tr> <td>Date Expiry</td> <td>${codeInfo.date_expiry}</td> </tr> <tr> <td>Referred</td><td>${codeInfo.referreds}</td></tr>`;
+                    } else {
+                        getCodeErrorMessage.innerHTML = data.message;
+                        getCodeSuccessWrapper.style.display = "none";
+                        getCodeErrorWrapper.style.display = "block";
+                        tableBody.innerHTML="";
+
+
+                    }
+
+
+                }
+
+
+            }).fail(function (error) {
+            console.log(error)
+            progressIndicatorGetCode.style.display = "none";
+            getCodeErrorMessage.innerHTML += "Network Failure.Please check internet connection";
+            getCodeSuccessWrapper.style.display = "none";
+            getCodeErrorWrapper.style.display = "block";
+            tableBody.innerHTML="";
+
+
+        })
+
+
+    }
+
+    const getCodeForm = document.getElementById("get-code-form");
+    if (getCodeForm) {
+        getCodeForm.addEventListener("submit", mgmGetCode)
+    }
+
+
+
+    const subRefSuccessWrapper = document.getElementById("mgm-success-subref");
+    const subRefErrorWrapper = document.getElementById("mgm-error-subref");
+    const subRefErrorMessage = document.querySelector("#mgm-error-subref >small");
+    const progressIndicatorSubRef = document.getElementById("progressIndicator-subref");
+
+    function mgmSubRef(event) {
+        event.preventDefault();
+
+        subRefSuccessWrapper.style.display = "none";
+        subRefErrorWrapper.style.display = "none";
+        progressIndicatorSubRef.style.display = "block";
+
+        const msisdn = document.getElementById("msisdn-sub-ref").value;
+        const postbody = {msisdn}
+
+        const tableBody = document.getElementById("sub-ref-table-tbody");
+
+
+        $.post("/subref", postbody)
+            .done(function (data) {
+                if (data) {
+                    progressIndicatorSubRef.style.display = "none";
+                    if (data.success) {
+
+                        subRefErrorWrapper.style.display = "none";
+                        const dataSet = data.dataSet;
+
+                        let tableRows ='<tr><td>Referred msisdn</td><td>Activation Date</td><td>Code</td></tr>'
+                        if (dataSet.length >0){
+                            dataSet.forEach(function (item) {
+                                tableRows+=`<tr><td>${item.msisdn}</td><td>${item.activation_date}</td><td>${item.code}</td></tr>`
+                            })
+
+
+                        }
+
+                        tableBody.innerHTML=tableRows;
+                    } else {
+                        subRefErrorMessage.innerHTML = data.message;
+                        subRefSuccessWrapper.style.display = "none";
+                        subRefErrorWrapper.style.display = "block";
+                        tableBody.innerHTML="";
+
+
+                    }
+
+
+                }
+
+
+            }).fail(function (error) {
+            console.log(error)
+            progressIndicatorSubRef.style.display = "none";
+            subRefErrorMessage.innerHTML += "Network Failure.Please check internet connection";
+            subRefSuccessWrapper.style.display = "none";
+            subRefErrorWrapper.style.display = "block";
+            tableBody.innerHTML="";
+
+
+        })
+
+
+    }
+
+    const subRefForm = document.getElementById("sub-ref-form");
+    if (subRefForm) {
+        subRefForm.addEventListener("submit", mgmSubRef)
+    }
+
+
+
 
 
 })

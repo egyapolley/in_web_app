@@ -13,6 +13,7 @@ const UserUUID = require("../models/userUUID");
 const sendMail = require("../utils/send_mail");
 const path = require("path");
 const UserLog = require("../models/userlogs");
+const axios = require("axios");
 
 const User = require("../models/users");
 const Parser = require("json2csv").Parser;
@@ -81,6 +82,7 @@ module.exports = {
             hist: "",
             act: "",
             tra: "",
+            mgm: "",
         };
         const role = utils.getUserRole(req.user);
         let firstname = req.user.firstname;
@@ -431,9 +433,28 @@ module.exports = {
             hist: "",
             act: "",
             tra: "",
+            mgm: "",
         }
         const role = utils.getUserRole(req.user)
         res.render("topUp", {status, ...role})
+
+    },
+
+    rendermgm: async (req, res) => {
+        const status = {
+            sub: "",
+            maccount: "",
+            top: "",
+            load: "",
+            manage: "",
+            overscratch: "",
+            hist: "",
+            act: "",
+            tra: "",
+            mgm: "active",
+        }
+        const role = utils.getUserRole(req.user)
+        res.render("mgm", {status, ...role})
 
     },
 
@@ -661,6 +682,7 @@ module.exports = {
             hist: "",
             act: "",
             tra: "",
+            mgm: "",
         }
         const role = utils.getUserRole(req.user);
         res.render("load_card", {status, ...role})
@@ -759,6 +781,7 @@ module.exports = {
             hist: "",
             act: "",
             tra: "",
+            mgm: "",
         }
         const role = utils.getUserRole(req.user)
         res.render("checkvoucher", {status, ...role})
@@ -886,6 +909,7 @@ module.exports = {
             hist: "active",
             act: "",
             tra: "",
+            mgm: "",
         }
         const role = utils.getUserRole(req.user);
         res.render("viewHist", {status, ...role});
@@ -904,6 +928,7 @@ module.exports = {
             hist: "",
             act: "active",
             tra: "",
+            mgm: "",
         }
         const role = utils.getUserRole(req.user);
         res.render("activateAccount", {status, ...role});
@@ -922,6 +947,7 @@ module.exports = {
             hist: "",
             act: "",
             tra: "active",
+            mgm: "",
         };
 
         const balanceTypes = [
@@ -957,6 +983,7 @@ module.exports = {
             hist: "",
             act: "",
             tra: "",
+            mgm: "",
         }
         const role = utils.getUserRole(req.user)
         res.render("overscratchtopup", {status, ...role})
@@ -2400,6 +2427,7 @@ module.exports = {
             hist: "",
             act: "",
             tra: "",
+            mgm: "",
         };
         const topNav = {
             expiredata: "active",
@@ -2427,6 +2455,7 @@ module.exports = {
             hist: "",
             act: "",
             tra: "",
+            mgm: "",
         };
         const topNav = {
             expiredata: "",
@@ -2452,6 +2481,7 @@ module.exports = {
             hist: "",
             act: "",
             tra: "",
+            mgm: "",
         };
         const topNav = {
             expiredata: "",
@@ -2479,6 +2509,7 @@ module.exports = {
             hist: "",
             act: "",
             tra: "",
+            mgm: "",
         };
         const topNav = {
             expiredata: "",
@@ -2503,6 +2534,7 @@ module.exports = {
             hist: "",
             act: "",
             tra: "",
+            mgm: "",
         };
         const topNav = {
             expiredata: "",
@@ -2528,6 +2560,7 @@ module.exports = {
             hist: "",
             act: "",
             tra: "",
+            mgm: "",
         };
         const topNav = {
             expiredata: "",
@@ -2553,6 +2586,7 @@ module.exports = {
             hist: "",
             act: "",
             tra: "",
+            mgm: "",
         };
         const topNav = {
             expiredata: "",
@@ -3502,19 +3536,19 @@ module.exports = {
     getGenerateCSV: async (req, res) => {
 
         if (req.session.exportData) {
-            const fields =req.session.exportData.fields ;
-            const parser = new Parser({fields,excelStrings:true});
+            const fields = req.session.exportData.fields;
+            const parser = new Parser({fields, excelStrings: true});
             let csv = parser.parse(req.session.exportData.dataSet);
-            let msisdn= req.session.exportData.msisdn;
+            let msisdn = req.session.exportData.msisdn;
             let reportname = req.session.exportData.cdr_type;
-            let fileName = msisdn + "_"+reportname+"_" + moment().format("YYYYMMDD-HHmmss-SSS") + ".csv"
+            let fileName = msisdn + "_" + reportname + "_" + moment().format("YYYYMMDD-HHmmss-SSS") + ".csv"
             let filepath = path.join(__dirname, "../tmp", fileName);
             fs.writeFile(filepath, csv, err => {
                 if (err) {
                     console.log(err);
-                    return  res.json({error:"Error in generating file"});
+                    return res.json({error: "Error in generating file"});
                 }
-                res.json({success:fileName});
+                res.json({success: fileName});
             })
 
 
@@ -3525,7 +3559,7 @@ module.exports = {
 
     },
 
-    getCSVFile: async (req, res) =>{
+    getCSVFile: async (req, res) => {
 
         let fileName = req.query.fileName
         let filepath = path.join(__dirname, "../tmp", fileName);
@@ -3538,7 +3572,177 @@ module.exports = {
 
         })
 
-    }
+    },
+
+    postgenCode: async (req, res) => {
+
+        let subscriberNumber = req.body.msisdn.toString().trim();
+
+        const url = "http://localhost:5200/code";
+        axios.get(url,
+            {
+                params:{
+                    subscriberNumber: subscriberNumber,
+                    channel: "inweb"
+
+                },
+
+                auth:{
+                    username:"inweb",
+                    password:"inweb1234"
+                }
+            }).then(function (response) {
+            let result = response.data;
+            if (result.status === 0) {
+                let phoneContact = result.phoneContact ? "0" + result.phoneContact.toString().substring(3) : "";
+                let message = `Your referral code has been sent to your phone contact (${phoneContact}). Thank you`;
+                res.json({
+                    success: "success",
+                    message: message
+                })
+
+            } else {
+                res.json({
+                    error: "error",
+                    message: result.reason.toString()
+                })
+
+            }
+
+        }).catch(function (error) {
+            console.log(error.response)
+            res.json({error: "error", message: "System Failure"})
+
+        })
+
+
+    },
+
+    postactCode: async (req, res) => {
+
+        const url = "http://localhost:5200/code";
+
+        let {msisdn, code} = req.body;
+
+        msisdn = msisdn.toString().trim();
+        code = code.toString().trim();
+
+        const messageBody = {
+            subscriberNumber: msisdn,
+            code: code,
+            channel:"inweb"
+        }
+
+
+        axios.post(url, messageBody, {
+            headers:{
+                "Content-Type":"application/json; charset=UTF-8",
+                Authorization: "Basic aW53ZWI6aW53ZWIxMjM0"
+
+            }
+        })
+            .then(response =>{
+                console.log(response);
+                const result = response.data;
+                if (result.status ===0){
+                    res.json({success:"success", message:"Code successfully activated"})
+                }else {
+                    res.json({error:"error", message:result.reason})
+
+                }
+            })
+            .catch(error=>{
+                console.log(error.response);
+                res.json({error:"error", message:"System Failure"})
+
+            })
+
+
+
+
+    },
+
+    postgetCode: async (req, res) => {
+
+        let codeReq = req.body.code.toString().trim();
+
+        const url = "http://localhost:5200/codeinfo";
+        axios.get(url,
+            {
+                params:{
+                    code:codeReq
+                },
+
+                auth:{
+                    username:"inweb",
+                    password:"inweb1234"
+                }
+            }).then(function (response) {
+            let result = response.data;
+            if (result.status === 0) {
+
+                res.json({
+                    success: "success",
+                    codeInfo : result.data
+                })
+
+            } else {
+                res.json({
+                    error: "error",
+                    message: result.reason.toString()
+                })
+
+            }
+
+        }).catch(function (error) {
+            console.log(error.response)
+            res.json({error: "error", message: "System Failure"})
+
+        })
+
+
+
+    },
+
+    postsubRef: async (req, res) => {
+        let subscriberNumber = req.body.msisdn.toString().trim();
+
+        const url = "http://localhost:5200/subref";
+        axios.get(url,
+            {
+                params:{
+                    subscriberNumber
+                },
+
+                auth:{
+                    username:"inweb",
+                    password:"inweb1234"
+                }
+            }).then(function (response) {
+            let result = response.data;
+            if (result.status === 0) {
+
+                res.json({
+                    success: "success",
+                    dataSet : result.data
+                })
+
+            } else {
+                res.json({
+                    error: "error",
+                    message: result.reason.toString()
+                })
+
+            }
+
+        }).catch(function (error) {
+            console.log(error.response)
+            res.json({error: "error", message: "System Failure"})
+
+        })
+
+
+    },
 
 
 }

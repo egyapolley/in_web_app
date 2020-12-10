@@ -1061,6 +1061,151 @@ legend {
     box-shadow: 0 0 2px 5px #999191;
 }
 
+/*  Memeber Get Member */
+
+
+
+.main-content-manage-acct nav ul li a.mgm-links {
+    line-height: 1.8;
+
+}
+
+.mgm-links-active {
+    background: #e91e63;
+
+}
+
+.main-content-manage-acct nav ul li.mgm-links-active a:hover{
+    text-decoration: none;
+}
+
+.task-container-mgm{
+    display: none;
+
+}
+
+
+.task-container-mgm h3 {
+    padding: 15px 0;
+    text-align: center;
+}
+
+.task-container-mgm .form-wrapper-mgm {
+    color: #424242;
+    width: 400px;
+    height: max-content;
+    margin: 10px auto;
+    padding: 10px 0;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 15px
+}
+
+.task-container-mgm .form-wrapper-mgm .form-control{
+    padding: 10px 0;
+
+}
+
+.task-container-mgm .form-wrapper-mgm .form-control label,
+.task-container-mgm .form-wrapper-mgm .form-control input{
+    display: block;
+}
+
+.task-container-mgm .form-wrapper-mgm .form-control input{
+    background: #3d3d56;
+    padding: 10px 20px;
+    width: 100%;
+    color: #fff;
+    outline: none;
+    border: none;
+}
+
+.task-container-mgm .form-wrapper-mgm .form-control label{
+    font-weight: bolder;
+    padding-bottom: 3px;
+}
+
+.task-container-mgm .form-wrapper-mgm .form-control-btn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.task-container-mgm .form-wrapper-mgm .form-control-btn button{
+    background: green;
+    color: white;
+    font-family: inherit;
+    border: none;
+    outline: none;
+    border-radius: 10px;
+    display: inline-block;
+    padding: 10px 25px;
+    margin-top: 25px;
+    cursor: pointer;
+    font-weight: bolder;
+
+}
+
+.task-container-mgm .form-wrapper-mgm .form-control-btn button:hover{
+    box-shadow: 0 2px 2px 5px #180c0c;
+    background: #ccc;
+    color: #1b0202;
+}
+
+.manageVoucher-success.mgm-success {
+    line-height: 1.2;
+    text-transform: none;
+    outline: none;
+    font-weight: lighter;
+    background: #2c434e;
+
+}
+
+.manageVoucher-success.mgm-success button {
+   color: #fff;
+}
+
+.progressIndicator.mgm-progress {
+    text-align: center;
+}
+.progressIndicator.mgm-progress img {
+    width: 40px;
+    height: 40px;
+}
+
+.getcode-tableWrapper, .sub-ref-tableWrapper {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+
+}
+
+.getcode-tableWrapper table  {
+    border-collapse: collapse;
+    width: 400px;
+    font-size: smaller;
+}
+
+.sub-ref-tableWrapper  table {
+    border-collapse: collapse;
+    width: 500px;
+    font-size: smaller;
+
+}
+.getcode-tableWrapper table td,  .sub-ref-tableWrapper  table td{
+    border: 2px solid #ffffff;
+    padding: 5px 10px;
+}
+.getcode-tableWrapper table td:first-child, .sub-ref-tableWrapper  table tr:first-child {
+    color: #00BCD4;
+
+}
+
+
+
+
 
 
 

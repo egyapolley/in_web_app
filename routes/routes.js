@@ -11,6 +11,7 @@ const express = require("express"),
 router.get("/",middleware.checkAuthenticated,controller.renderdashboard);
 router.get("/manageaccount",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three, controller.rendermanageAccount)
 router.get("/topup",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three, controller.rendertopup);
+router.get("/mgm",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three, controller.rendermgm);
 
 router.get("/bundles",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three,controller.getbundles)
 
@@ -58,6 +59,11 @@ router.post("/changeproduct",middleware.checkAuthenticated,middleware.checkForLe
 router.post("/adjustexpiry",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three,controller.postadjustexpiry);
 router.post("/managerecurrent",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three, controller.postterminaterecurrent);
 router.post("/cashtransfer",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three,controller.postcashtransfer);
+
+router.post("/gencode",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three,controller.postgenCode);
+router.post("/actcode",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three,controller.postactCode);
+router.post("/getcode",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three,controller.postgetCode);
+router.post("/subref",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three,controller.postsubRef);
 
 
 router.get("/login", controller.renderlogin);
