@@ -138,8 +138,13 @@ module.exports = {
         1142:"Lite Boost Ext",
         1143:"Activate_Unlimited Count",
         1162:"SetPromoExtensionTag  Count",
+        1182:"Test Drive Data",
+        1183:"Test Drive Track Count",
         1184:"UL_AlwaysON_Maxi Data",
         1185:"UL_AlwaysON_Maxi Status",
+        1186:"MGMRferredBonusTrack Count",
+        1187:"MGMRferralBonusTrack Count",
+
     },
 
     balanceTypesArrays:[

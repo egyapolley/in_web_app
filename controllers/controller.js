@@ -2274,67 +2274,86 @@ module.exports = {
 
             if (extra_info.includes("BALANCES=") && extra_info.includes("BALANCE_TYPES=") && extra_info.includes("COSTS=")) {
 
-                let balance_before = (/BALANCES=(.+?)\|/.exec(extra_info))[1];
-                let balance_types = (/BALANCE_TYPES=(.+?)\|/.exec(extra_info))[1];
-                let cost = (/COSTS=(.+?)\|/.exec(extra_info))[1];
+                let balance_before = (/BALANCES=(.*?)\|/.exec(extra_info))[1];
+                let balance_types = (/BALANCE_TYPES=(.*?)\|/.exec(extra_info))[1];
+                let cost = (/COSTS=(.*?)\|/.exec(extra_info))[1];
+
+                console.log(balance_types, balance_before,cost)
+
+                if (balance_types){
+                    if (balance_types.includes(",")) {
+                        let balance_type_items = balance_types.split(",");
+                        let cost_items = cost.split(",");
+                        let balance_before_items = balance_before.split(",");
+
+                        for (let i = 0; i < balance_before_items.length; i++) {
+                            let edr_info = {};
+
+                            if (i === 0) {
+                                edr_info.record_date = record_date;
+                                edr_info.edrType = edrType;
+
+                            } else {
+                                edr_info.record_date = "";
+                                edr_info.edrType = "";
+
+                            }
+                            edr_info.balance_type = appData.balanceTypes[balance_type_items[i]];
+                            if (balance_type_items[i] === '21') {
+                                edr_info.cost = (parseFloat(cost_items[i]) / 100).toFixed(2);
+                                edr_info.balance_before = (parseFloat(balance_before_items[i]) / 100).toFixed(2);
+                                edr_info.balance_after = ((parseFloat(balance_before_items[i]) - parseFloat(cost_items[i])) / 100).toFixed(2);
+
+                            } else {
+                                edr_info.balance_before = balance_before_items[i];
+                                edr_info.cost = cost_items[i];
+                                edr_info.balance_after = (parseInt(balance_before_items[i]) - parseInt(cost_items[i]));
+
+                            }
 
 
-                if (balance_types.includes(",")) {
-                    let balance_type_items = balance_types.split(",");
-                    let cost_items = cost.split(",");
-                    let balance_before_items = balance_before.split(",");
+                            finalResult.push(edr_info);
 
-                    for (let i = 0; i < balance_before_items.length; i++) {
-                        let edr_info = {};
-
-                        if (i === 0) {
-                            edr_info.record_date = record_date;
-                            edr_info.edrType = edrType;
-
-                        } else {
-                            edr_info.record_date = "";
-                            edr_info.edrType = "";
 
                         }
-                        edr_info.balance_type = appData.balanceTypes[balance_type_items[i]];
-                        if (balance_type_items[i] === '21') {
-                            edr_info.cost = (parseFloat(cost_items[i]) / 100).toFixed(2);
-                            edr_info.balance_before = (parseFloat(balance_before_items[i]) / 100).toFixed(2);
-                            edr_info.balance_after = ((parseFloat(balance_before_items[i]) - parseFloat(cost_items[i])) / 100).toFixed(2);
-
-                        } else {
-                            edr_info.balance_before = balance_before_items[i];
-                            edr_info.cost = cost_items[i];
-                            edr_info.balance_after = (parseInt(balance_before_items[i]) - parseInt(cost_items[i]));
-
-                        }
-
-
-                        finalResult.push(edr_info);
-
-
-                    }
-
-                } else {
-                    let edr_info = {};
-                    edr_info.edrType = edrType;
-                    edr_info.record_date = record_date;
-                    edr_info.balance_type = appData.balanceTypes[balance_types];
-                    if (balance_types === '21') {
-                        edr_info.cost = (parseFloat(cost) / 100).toFixed(2);
-                        edr_info.balance_before = (parseFloat(balance_before) / 100).toFixed(2);
-                        edr_info.balance_after = ((parseFloat(balance_before) - parseFloat(cost)) / 100).toFixed(2);
 
                     } else {
-                        edr_info.balance_before = balance_before;
-                        edr_info.cost = cost;
-                        edr_info.balance_after = (parseInt(balance_before) - parseInt(cost));
+                        let edr_info = {};
+                        edr_info.edrType = edrType;
+                        edr_info.record_date = record_date;
+                        edr_info.balance_type = appData.balanceTypes[balance_types];
+                        if (balance_types === '21') {
+                            edr_info.cost = (parseFloat(cost) / 100).toFixed(2);
+                            edr_info.balance_before = (parseFloat(balance_before) / 100).toFixed(2);
+                            edr_info.balance_after = ((parseFloat(balance_before) - parseFloat(cost)) / 100).toFixed(2);
+
+                        } else {
+                            edr_info.balance_before = balance_before;
+                            edr_info.cost = cost;
+                            edr_info.balance_after = (parseInt(balance_before) - parseInt(cost));
+
+                        }
+
+                        finalResult.push(edr_info)
 
                     }
 
-                    finalResult.push(edr_info)
+                }else {
+                    let edr_info = {};
+                    let edrType = utils.getEdrType(edr.EDR_TYPE);
+                    let record_date = utils.formateDate(edr.RECORD_DATE);
 
+                    edr_info.edrType = edrType;
+                    edr_info.record_date = record_date;
+                    edr_info.balance_type = "---";
+                    edr_info.balance_before = "---"
+                    edr_info.cost = "---";
+                    edr_info.balance_after = "---";
+                    finalResult.push(edr_info);
                 }
+
+
+
 
 
             } else if (!extra_info.includes("NACK=INS")) {
@@ -2385,9 +2404,12 @@ module.exports = {
 
                         }
 
+                        console.log(finalResult)
+
                         return res.json({success: finalResult})
 
                     } else {
+                        console.log(finalResult)
                         return res.json({success: finalResult})
                     }
 
