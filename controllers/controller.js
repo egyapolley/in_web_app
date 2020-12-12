@@ -1791,12 +1791,12 @@ module.exports = {
 
                                 let transaction_id = "";
                                 if (/TRANSACTION/i.test(edr.EXTRA_INFORMATION)) {
-                                    transaction_id = (/TRANSACTION_ID=(.+?)\|/.exec(edr.EXTRA_INFORMATION))[1];
+                                    transaction_id = (/TRANSACTION_ID=(.+?)\|/i.exec(edr.EXTRA_INFORMATION))[1];
                                 }
 
                                 let channel = "";
                                 if (/CHANNEL/i.test(edr.EXTRA_INFORMATION)) {
-                                    channel = (/CHANNEL=(.+?)\|/.exec(edr.EXTRA_INFORMATION))[1];
+                                    channel = (/CHANNEL=(.+?)\|/i.exec(edr.EXTRA_INFORMATION))[1];
                                 }
 
 
@@ -1878,12 +1878,12 @@ module.exports = {
 
                             let transaction_id = "";
                             if (/TRANSACTION/i.test(edr.EXTRA_INFORMATION)) {
-                                transaction_id = (/TRANSACTION_ID=(.+?)\|/.exec(edr.EXTRA_INFORMATION))[1];
+                                transaction_id = (/TRANSACTION_ID=(.+?)\|/i.exec(edr.EXTRA_INFORMATION))[1];
                             }
 
                             let channel = "";
                             if (/CHANNEL/i.test(edr.EXTRA_INFORMATION)) {
-                                channel = (/CHANNEL=(.+?)\|/.exec(edr.EXTRA_INFORMATION))[1];
+                                channel = (/CHANNEL=(.+?)\|/i.exec(edr.EXTRA_INFORMATION))[1];
                             }
 
 
@@ -1985,6 +1985,7 @@ module.exports = {
 
 
         } catch (error) {
+            console.log(error)
             console.log(error.toString())
 
             res.json({error: "IN not reachable, Please contact IN SysAdmin"})
@@ -2278,9 +2279,8 @@ module.exports = {
                 let balance_types = (/BALANCE_TYPES=(.*?)\|/.exec(extra_info))[1];
                 let cost = (/COSTS=(.*?)\|/.exec(extra_info))[1];
 
-                console.log(balance_types, balance_before,cost)
 
-                if (balance_types){
+                if (balance_types) {
                     if (balance_types.includes(",")) {
                         let balance_type_items = balance_types.split(",");
                         let cost_items = cost.split(",");
@@ -2338,7 +2338,7 @@ module.exports = {
 
                     }
 
-                }else {
+                } else {
                     let edr_info = {};
                     let edrType = utils.getEdrType(edr.EDR_TYPE);
                     let record_date = utils.formateDate(edr.RECORD_DATE);
@@ -2351,9 +2351,6 @@ module.exports = {
                     edr_info.balance_after = "---";
                     finalResult.push(edr_info);
                 }
-
-
-
 
 
             } else if (!extra_info.includes("NACK=INS")) {
@@ -2404,12 +2401,10 @@ module.exports = {
 
                         }
 
-                        console.log(finalResult)
 
                         return res.json({success: finalResult})
 
                     } else {
-                        console.log(finalResult)
                         return res.json({success: finalResult})
                     }
 
@@ -3074,12 +3069,46 @@ module.exports = {
 </soapenv:Envelope>`;
 
         try {
+            if (balancetype === 'Bundle ExpiryTrack Status') {
+                const xmlCreateBalance = `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:pi="http://xmlns.oracle.com/communications/ncc/2009/05/15/pi">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <pi:CCSCD3_RCH>
+         <pi:username>admin</pi:username>
+         <pi:password>admin</pi:password>
+         <pi:RECHARGE_TYPE>Custom</pi:RECHARGE_TYPE>
+         <pi:REFERENCE>Setting Expiry</pi:REFERENCE>
+         <pi:MSISDN>${msisdn}</pi:MSISDN>
+         <pi:AMOUNT>1</pi:AMOUNT>
+         <pi:MODE>3</pi:MODE>
+         <pi:WALLET_TYPE>Primary</pi:WALLET_TYPE>
+         <pi:BALANCE_TYPE>Bundle ExpiryTrack Status</pi:BALANCE_TYPE>
+         <pi:EXTRA_EDR>TRANSACTION_ID=${txn_id}|CHANNEL=IN_Web|USER=${user}</pi:EXTRA_EDR>
+      </pi:CCSCD3_RCH>
+   </soapenv:Body>
+</soapenv:Envelope>`;
+                const {response} = await soapRequest({
+                    url: url,
+                    headers: sampleHeaders,
+                    xml: xmlCreateBalance,
+                    timeout: 6000
+                });
+                const {body} = response;
+
+                let jsonObj = parser.parse(body, options);
+                if (jsonObj.Envelope.Body.CCSCD3_RCHResponse && jsonObj.Envelope.Body.CCSCD3_RCHResponse.AUTH){
+                    console.log('Successfully created Bundle ExpiryTrack Status')
+                }
+
+
+            }
+
 
             const {response} = await soapRequest({
                 url: url,
                 headers: sampleHeaders,
                 xml: xmlRequest,
-                timeout: 4000
+                timeout: 6000
             });
             const {body} = response;
 
@@ -3603,15 +3632,15 @@ module.exports = {
         const url = "http://localhost:5200/code";
         axios.get(url,
             {
-                params:{
+                params: {
                     subscriberNumber: subscriberNumber,
                     channel: "inweb"
 
                 },
 
-                auth:{
-                    username:"inweb",
-                    password:"inweb1234"
+                auth: {
+                    username: "inweb",
+                    password: "inweb1234"
                 }
             }).then(function (response) {
             let result = response.data;
@@ -3652,34 +3681,32 @@ module.exports = {
         const messageBody = {
             subscriberNumber: msisdn,
             code: code,
-            channel:"inweb"
+            channel: "inweb"
         }
 
 
         axios.post(url, messageBody, {
-            headers:{
-                "Content-Type":"application/json; charset=UTF-8",
+            headers: {
+                "Content-Type": "application/json; charset=UTF-8",
                 Authorization: "Basic aW53ZWI6aW53ZWIxMjM0"
 
             }
         })
-            .then(response =>{
+            .then(response => {
                 console.log(response);
                 const result = response.data;
-                if (result.status ===0){
-                    res.json({success:"success", message:"Code successfully activated"})
-                }else {
-                    res.json({error:"error", message:result.reason})
+                if (result.status === 0) {
+                    res.json({success: "success", message: "Code successfully activated"})
+                } else {
+                    res.json({error: "error", message: result.reason})
 
                 }
             })
-            .catch(error=>{
+            .catch(error => {
                 console.log(error.response);
-                res.json({error:"error", message:"System Failure"})
+                res.json({error: "error", message: "System Failure"})
 
             })
-
-
 
 
     },
@@ -3691,13 +3718,13 @@ module.exports = {
         const url = "http://localhost:5200/codeinfo";
         axios.get(url,
             {
-                params:{
-                    code:codeReq
+                params: {
+                    code: codeReq
                 },
 
-                auth:{
-                    username:"inweb",
-                    password:"inweb1234"
+                auth: {
+                    username: "inweb",
+                    password: "inweb1234"
                 }
             }).then(function (response) {
             let result = response.data;
@@ -3705,7 +3732,7 @@ module.exports = {
 
                 res.json({
                     success: "success",
-                    codeInfo : result.data
+                    codeInfo: result.data
                 })
 
             } else {
@@ -3723,7 +3750,6 @@ module.exports = {
         })
 
 
-
     },
 
     postsubRef: async (req, res) => {
@@ -3732,13 +3758,13 @@ module.exports = {
         const url = "http://localhost:5200/subref";
         axios.get(url,
             {
-                params:{
+                params: {
                     subscriberNumber
                 },
 
-                auth:{
-                    username:"inweb",
-                    password:"inweb1234"
+                auth: {
+                    username: "inweb",
+                    password: "inweb1234"
                 }
             }).then(function (response) {
             let result = response.data;
@@ -3746,7 +3772,7 @@ module.exports = {
 
                 res.json({
                     success: "success",
-                    dataSet : result.data
+                    dataSet: result.data
                 })
 
             } else {

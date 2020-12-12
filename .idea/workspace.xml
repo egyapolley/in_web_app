@@ -4,7 +4,6 @@
     <list default="true" id="d7090296-b8ad-4fc9-9d2d-f0cc66b10d9f" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/controllers/controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/appdata.js" beforeDir="false" afterPath="$PROJECT_DIR$/utils/appdata.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -126,7 +125,8 @@
       <workItem from="1607413125940" duration="335000" />
       <workItem from="1607413520399" duration="9449000" />
       <workItem from="1607594185384" duration="95000" />
-      <workItem from="1607594953511" duration="4469000" />
+      <workItem from="1607594953511" duration="4876000" />
+      <workItem from="1607813548363" duration="2167000" />
     </task>
     <task id="LOCAL-00001" summary="first release">
       <created>1604920817209</created>
@@ -226,7 +226,14 @@
       <option name="project" value="LOCAL" />
       <updated>1607594059040</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="Update the ViewAll history for null charging balance types">
+      <created>1607641771884</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1607641771884</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -249,6 +256,7 @@
     <MESSAGE value="Updated the balance types with AlwaysON Maxi" />
     <MESSAGE value="Updated the main.js to balance query fail ajax" />
     <MESSAGE value="Member Get Member" />
-    <option name="LAST_COMMIT_MESSAGE" value="Member Get Member" />
+    <MESSAGE value="Update the ViewAll history for null charging balance types" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update the ViewAll history for null charging balance types" />
   </component>
 </project>
