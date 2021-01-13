@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d7090296-b8ad-4fc9-9d2d-f0cc66b10d9f" name="Default Changelist" comment="">
+    <list default="true" id="d7090296-b8ad-4fc9-9d2d-f0cc66b10d9f" name="Default Changelist" comment="Update the Adjust Expiry Date to create for Bundle ExpiryTrack Status">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controllers/controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/controller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/valiators.js" beforeDir="false" afterPath="$PROJECT_DIR$/utils/valiators.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -126,7 +126,10 @@
       <workItem from="1607413520399" duration="9449000" />
       <workItem from="1607594185384" duration="95000" />
       <workItem from="1607594953511" duration="4876000" />
-      <workItem from="1607813548363" duration="2167000" />
+      <workItem from="1607813548363" duration="2288000" />
+      <workItem from="1610398798027" duration="5501000" />
+      <workItem from="1610464490338" duration="79000" />
+      <workItem from="1610525192918" duration="672000" />
     </task>
     <task id="LOCAL-00001" summary="first release">
       <created>1604920817209</created>
@@ -233,7 +236,14 @@
       <option name="project" value="LOCAL" />
       <updated>1607641771884</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="Update the Adjust Expiry Date to create for Bundle ExpiryTrack Status">
+      <created>1607815828474</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1607815828474</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -257,6 +267,7 @@
     <MESSAGE value="Updated the main.js to balance query fail ajax" />
     <MESSAGE value="Member Get Member" />
     <MESSAGE value="Update the ViewAll history for null charging balance types" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update the ViewAll history for null charging balance types" />
+    <MESSAGE value="Update the Adjust Expiry Date to create for Bundle ExpiryTrack Status" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update the Adjust Expiry Date to create for Bundle ExpiryTrack Status" />
   </component>
 </project>

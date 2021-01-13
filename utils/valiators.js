@@ -71,7 +71,7 @@ module.exports = {
 
             amount: Joi.number()
                 .min(0.1)
-                .max(100)
+                .max(500)
                 .required(),
             from_bundle: Joi.string()
                 .min(3)
