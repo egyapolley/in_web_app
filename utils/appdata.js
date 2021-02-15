@@ -144,6 +144,9 @@ module.exports = {
         1185:"UL_AlwaysON_Maxi Status",
         1186:"MGMRferredBonusTrack Count",
         1187:"MGMRferralBonusTrack Count",
+        1202 :"internalBdlId Count",
+        1203: "Free Cash",
+        1204 :"bdlPurchaseCounter Count"
 
     },
 
