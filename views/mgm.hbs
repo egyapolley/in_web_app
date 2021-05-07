@@ -13,13 +13,16 @@
             <div class="main-content-manage-acct">
                 <header>
                     <nav>
-                        <ul>
-                            <li><a href="" class="mgm-links" data-id="gen-code">Generate Code</a></li>
-                            <li><a href="" class="mgm-links" data-id="act-code">Activate Code</a></li>
-                            <li><a href="" class="mgm-links" data-id="get-code">Get Code Details</a></li>
-                            <li><a href="" class="mgm-links" data-id="sub-ref">Subscriber Referred</a></li>
+                        <ul class="mgm-ul">
+                            <li><a href="" class="mgm-links" data-id="gen-code">Generate MGM Code</a></li>
+                            <li><a href="" class="mgm-links" data-id="act-code">Activate MGM Code</a></li>
+                            <li><a href="" class="mgm-links" data-id="get-code">Get MGM Code Details</a></li>
+                            <li><a href="" class="mgm-links" data-id="sub-ref">MGM Subscribers Referred</a></li>
                         </ul>
-
+                        <ul id="infleuncer-ul">
+                            <li><a href="" class="mgm-links" data-id="assign-code">Assign Code To Affiliate</a></li>
+                            <li><a href="" class="mgm-links" data-id="show-infs">Get All Affiliates</a></li>
+                        </ul>
                     </nav>
                 </header>
 
@@ -56,7 +59,6 @@
 
 
                     </div>
-
                     <div class="task-container-mgm act-code">
                         <div class="form-wrapper-mgm">
                             <div class="manageVoucher-error mgm-error" id="mgm-error-actcode">
@@ -80,7 +82,7 @@
                                 <div class="form-control">
                                     <label for="code-actcode">Code:</label>
                                     <input type="text" id="code-actcode" name="code-act" placeholder="Enter code ..."
-                                           required minlength="6" maxlength="6" pattern="[0-9A-Z]+">
+                                           required minlength="6">
                                 </div>
 
 
@@ -97,8 +99,6 @@
 
 
                     </div>
-
-
                     <div class="task-container-mgm get-code">
                         <div class="form-wrapper-mgm">
                             <div class="manageVoucher-error mgm-error" id="mgm-error-getcode">
@@ -141,8 +141,6 @@
 
 
                     </div>
-
-
                     <div class="task-container-mgm sub-ref">
                         <div class="form-wrapper-mgm">
                             <div class="manageVoucher-error mgm-error" id="mgm-error-subref">
@@ -176,6 +174,92 @@
                         <div class="sub-ref-tableWrapper" id="sub-ref-tableWrapper">
                             <table id="sub-ref-table" class="sub-ref-table">
                                 <tbody id="sub-ref-table-tbody">
+
+                                </tbody>
+
+                            </table>
+                        </div>
+
+
+                    </div>
+
+
+                    <div class="task-container-mgm assign-code">
+                        <div class="form-wrapper-mgm">
+                            <div class="manageVoucher-error mgm-error" id="mgm-error-assignCode">
+                                <button class="times-button times-button-mgm">&times;</button>
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <small></small>
+                            </div>
+
+                            <div class="manageVoucher-success mgm-success" id="mgm-success-assignCode">
+                                <button  class="times-button times-button-mgm">&times;</button>
+                                <i class="fas fa-thumbs-up"></i>
+                                <small></small>
+                            </div>
+                            <form action="" id="assign-code-form">
+                                <div class="form-control">
+                                    <label for="inf-firstname">First Name:</label>
+                                    <input type="text" id="inf-firstname" name="inf-firstname" placeholder="Edja..."
+                                           required autofocus autocomplete="true">
+                                </div>
+                                <div class="form-control">
+                                    <label for="inf-lasttname">Last Name:</label>
+                                    <input type="text" id="inf-lastname" name="inf-lastname" placeholder="Polley..."
+                                           required autofocus autocomplete="true">
+                                </div>
+                                <div class="form-control">
+                                    <label for="inf-code">Code:</label>
+                                    <input type="text" id="inf-code" name="inf-code" placeholder="Enter code ..."
+                                           required minlength="6">
+                                </div>
+                                <div class="form-control">
+                                    <label for="inf-msisdn">Surfline Number:</label>
+                                    <input type="text" id="inf-msisdn" name="inf-msisdn" placeholder="233255..."
+                                           autofocus autocomplete="true" minlength="12" pattern="^233255.+">
+                                </div>
+                                <div id="progressIndicator-assignCode" class="progressIndicator mgm-progress">
+                                    <img src="/images/ajax-loader.gif" alt="Loading Bundles...">
+                                </div>
+
+                                <div class="form-control form-control-btn">
+                                    <button class="proceed-btn" type="submit">Submit</button>
+                                </div>
+                            </form>
+
+                        </div>
+
+
+
+                    </div>
+                    <div class="task-container-mgm show-infs">
+                        <div class="form-wrapper-mgm" id="form-wrapper-show-infs">
+                            <div class="manageVoucher-error mgm-error" id="mgm-error-show-infs">
+                                <button class="times-button times-button-mgm">&times;</button>
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <small></small>
+                            </div>
+
+                            <div class="manageVoucher-success mgm-success" id="mgm-success-show-infs">
+                                <button  class="times-button times-button-mgm">&times;</button>
+                                <i class="fas fa-thumbs-up"></i>
+                                <small></small>
+                            </div>
+                            <form action="" id="show-infs-form">
+                                <div id="progressIndicator-show-infs" class="progressIndicator mgm-progress">
+                                    <img src="/images/ajax-loader.gif" alt="Loading Bundles...">
+                                </div>
+
+                                <div class="form-control form-control-btn">
+                                    <button class="proceed-btn" type="submit" id="show-ifs-btn">Click to Fetch Data</button>
+                                </div>
+                            </form>
+
+                        </div>
+
+                        <div class="show-infs-tableWrapper" id="show-infs-tableWrapper">
+                            <table id="show-infs-table" class="show-infs-table">
+                                <tbody id="show-infs-table-tbody">
 
                                 </tbody>
 

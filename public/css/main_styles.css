@@ -150,7 +150,7 @@
 }
 #acct-info-table tr:first-child td:nth-child(2){
     font-weight: bolder;
-    
+
 
 }
 
@@ -1017,7 +1017,7 @@ legend {
 }
 
 .main-content-manage-acct nav ul  li {
-    padding: 3px 5px;
+    padding: 8px 5px;
 }
 
 .main-content-manage-acct nav ul  li a {
@@ -1203,6 +1203,47 @@ legend {
 
 }
 
+.mgm-ul {
+    list-style: square;
+}
+
+#infleuncer-ul {
+    align-self: flex-start;
+    position: relative;
+    background: #D4EAFF;
+    box-shadow: 0 0 0 8px #eee;
+    color: #303841;
+    margin: auto 0 auto 40px;
+    border-radius: 10px;
+    list-style: square;
+}
+#infleuncer-ul a {
+  font-weight: bold;
+}
+
+#infleuncer-ul .mgm-links-active {
+    color: #fff;
+}
+
+#show-infs-table {
+    border-collapse: collapse;
+    margin: 0 auto;
+}
+#show-infs-table td {
+    border: 1px solid #ffffff;
+    padding: 4px 10px;
+    text-align: center;
+}
+
+#show-infs-table tr:first-child {
+    color: #00BCD4;
+
+}
+
+#form-wrapper-show-infs {
+    background: none;
+
+}
 
 
 

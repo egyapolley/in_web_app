@@ -66,6 +66,10 @@ router.post("/getcode",middleware.checkAuthenticated,controller.postgetCode);
 router.post("/subref",middleware.checkAuthenticated,controller.postsubRef);
 
 
+router.post("/assign_aff",middleware.checkAuthenticated,controller.postAssignAff);
+router.get("/all_aff",middleware.checkAuthenticated,controller.getAllAffiliates);
+
+
 router.get("/login", controller.renderlogin);
 router.post("/login", passport.authenticate("local", {
     successRedirect: "/",

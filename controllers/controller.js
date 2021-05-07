@@ -3629,7 +3629,7 @@ module.exports = {
 
         let subscriberNumber = req.body.msisdn.toString().trim();
 
-        const url = "http://localhost:5200/code";
+        const url = "http://localhost:5201/code";
         axios.get(url,
             {
                 params: {
@@ -3671,7 +3671,7 @@ module.exports = {
 
     postactCode: async (req, res) => {
 
-        const url = "http://localhost:5200/code";
+        const url = "http://localhost:5201/code";
 
         let {msisdn, code} = req.body;
 
@@ -3715,7 +3715,7 @@ module.exports = {
 
         let codeReq = req.body.code.toString().trim();
 
-        const url = "http://localhost:5200/codeinfo";
+        const url = "http://localhost:5201/codeinfo";
         axios.get(url,
             {
                 params: {
@@ -3755,13 +3755,89 @@ module.exports = {
     postsubRef: async (req, res) => {
         let subscriberNumber = req.body.msisdn.toString().trim();
 
-        const url = "http://localhost:5200/subref";
+        const url = "http://localhost:5201/subref";
         axios.get(url,
             {
                 params: {
                     subscriberNumber
                 },
 
+                auth: {
+                    username: "inweb",
+                    password: "inweb1234"
+                }
+            }).then(function (response) {
+            let result = response.data;
+            if (result.status === 0) {
+
+                res.json({
+                    success: "success",
+                    dataSet: result.data
+                })
+
+            } else {
+                res.json({
+                    error: "error",
+                    message: result.reason.toString()
+                })
+
+            }
+
+        }).catch(function (error) {
+            console.log(error.response)
+            res.json({error: "error", message: "System Failure"})
+
+        })
+
+
+    },
+
+
+    postAssignAff: async (req, res) => {
+
+        const url = "http://localhost:5201/code_inf";
+
+        let {firstName,lastName,code,subscriberNumber} = req.body;
+
+
+        const messageBody = {
+            firstName,
+            lastName,
+            code,
+            subscriberNumber,
+            channel: "inweb"
+        }
+
+
+        axios.post(url, messageBody, {
+            headers: {
+                "Content-Type": "application/json; charset=UTF-8",
+                Authorization: "Basic aW53ZWI6aW53ZWIxMjM0"
+
+            }
+        })
+            .then(response => {
+                console.log(response);
+                const result = response.data;
+                if (result.status === 0) {
+                    res.json({success: "success", message: "Code successfully assigned"})
+                } else {
+                    res.json({error: "error", message: result.reason})
+
+                }
+            })
+            .catch(error => {
+                console.log(error.response);
+                res.json({error: "error", message: "System Failure"})
+
+            })
+
+
+    },
+    getAllAffiliates: async (req, res) => {
+        const url = "http://localhost:5201/all_inf";
+        axios.get(url,
+            {
                 auth: {
                     username: "inweb",
                     password: "inweb1234"

@@ -93,8 +93,8 @@ module.exports = {
         869:"30GBSurfplus Data",
         870:"45GBSurfplus Data",
         871:"65GBSurfplus Data",
-        872:"120GBSurfplus Data",
-        873:"180GBSurfplus Data",
+        872:"125GBSurfplus Data",
+        873:"185GBSurfplus Data",
         874:"Surfplus_new Count",
         875:"SaturdayVibe Count",
         876:"Free Saturday Data",
@@ -168,8 +168,8 @@ module.exports = {
         '30GBSurfplus Data',
         '45GBSurfplus Data',
         '65GBSurfplus Data',
-        '120GBSurfplus Data',
-        '180GBSurfplus Data',
+        '125GBSurfplus Data',
+        '185GBSurfplus Data',
         'Free Saturday Data',
         'Taxify Data',
         'ExtraTime Bonus Data',
@@ -200,7 +200,6 @@ module.exports = {
     ]
 
     ,
-
     productTypes: [
         'Individual',
         'NewPrepaidOffer',
