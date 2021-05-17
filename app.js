@@ -29,7 +29,7 @@ mongoose.connect("mongodb://localhost/in_web", {
     app.use(router);
 
     app.listen(PORT,() =>{
-        console.log(`Server running in ${process.env.NODE_ENV} on url : http://${HOST}:${PORT}`)
+        console.log(`Server running in ${process.env.NODE_ENV} on url : http://localhost:${PORT}`)
     } )
 
 }).catch(err => {
