@@ -959,8 +959,8 @@ module.exports = {
             "30GBSurfplus Data",
             "45GBSurfplus Data",
             "65GBSurfplus Data",
-            "120GBSurfplus Data",
-            "180GBSurfplus Data",
+            "125GBSurfplus Data",
+            "185GBSurfplus Data",
             "Promotional Data",
             "Data",
             "Bonus Data",
@@ -3629,7 +3629,7 @@ module.exports = {
 
         let subscriberNumber = req.body.msisdn.toString().trim();
 
-        const url = "http://localhost:5201/code";
+        const url = "http://localhost:5200/code";
         axios.get(url,
             {
                 params: {
@@ -3671,7 +3671,7 @@ module.exports = {
 
     postactCode: async (req, res) => {
 
-        const url = "http://localhost:5201/code";
+        const url = "http://localhost:5200/code";
 
         let {msisdn, code} = req.body;
 
@@ -3715,7 +3715,7 @@ module.exports = {
 
         let codeReq = req.body.code.toString().trim();
 
-        const url = "http://localhost:5201/codeinfo";
+        const url = "http://localhost:5200/codeinfo";
         axios.get(url,
             {
                 params: {
@@ -3755,7 +3755,7 @@ module.exports = {
     postsubRef: async (req, res) => {
         let subscriberNumber = req.body.msisdn.toString().trim();
 
-        const url = "http://localhost:5201/subref";
+        const url = "http://localhost:5200/subref";
         axios.get(url,
             {
                 params: {
@@ -3795,7 +3795,7 @@ module.exports = {
 
     postAssignAff: async (req, res) => {
 
-        const url = "http://localhost:5201/code_inf";
+        const url = "http://localhost:5200/code_inf";
 
         let {firstName,lastName,code,subscriberNumber} = req.body;
 
@@ -3835,7 +3835,7 @@ module.exports = {
 
     },
     getAllAffiliates: async (req, res) => {
-        const url = "http://localhost:5201/all_inf";
+        const url = "http://localhost:5200/all_inf";
         axios.get(url,
             {
                 auth: {

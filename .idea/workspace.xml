@@ -2,20 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d7090296-b8ad-4fc9-9d2d-f0cc66b10d9f" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/public/js/affiliate.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.env" beforeDir="false" afterPath="$PROJECT_DIR$/config.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/controllers/controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/css/main_styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/css/main_styles.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/css/shared_css.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/css/shared_css.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/routes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/appdata.js" beforeDir="false" afterPath="$PROJECT_DIR$/utils/appdata.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/main_utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/utils/main_utils.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/layouts/main.hbs" beforeDir="false" afterPath="$PROJECT_DIR$/views/layouts/main.hbs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/mgm.hbs" beforeDir="false" afterPath="$PROJECT_DIR$/views/mgm.hbs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -172,7 +163,10 @@
       <workItem from="1617269290125" duration="664000" />
       <workItem from="1620228626532" duration="1761000" />
       <workItem from="1620299417969" duration="30111000" />
-      <workItem from="1620377899312" duration="1513000" />
+      <workItem from="1620377899312" duration="3669000" />
+      <workItem from="1620398827157" duration="362000" />
+      <workItem from="1620925919736" duration="1884000" />
+      <workItem from="1621273513479" duration="3209000" />
     </task>
     <task id="LOCAL-00001" summary="first release">
       <created>1604920817209</created>
@@ -300,7 +294,14 @@
       <option name="project" value="LOCAL" />
       <updated>1613399807479</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="MGM Tweak and Affiliate">
+      <created>1620383900786</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1620383900786</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -326,7 +327,8 @@
     <MESSAGE value="Update the ViewAll history for null charging balance types" />
     <MESSAGE value="Update the Adjust Expiry Date to create for Bundle ExpiryTrack Status" />
     <MESSAGE value="updated the transfer amount" />
-    <option name="LAST_COMMIT_MESSAGE" value="updated the transfer amount" />
+    <MESSAGE value="MGM Tweak and Affiliate" />
+    <option name="LAST_COMMIT_MESSAGE" value="MGM Tweak and Affiliate" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

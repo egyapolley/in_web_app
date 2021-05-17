@@ -1225,9 +1225,16 @@ legend {
     color: #fff;
 }
 
+#show-infs-tableWrapper {
+    padding-bottom: 20px;
+}
+
 #show-infs-table {
     border-collapse: collapse;
     margin: 0 auto;
+    background: #06224A;
+    color: #ccc;
+
 }
 #show-infs-table td {
     border: 1px solid #ffffff;
