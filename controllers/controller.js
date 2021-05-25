@@ -1539,7 +1539,7 @@ module.exports = {
 `;
 
         try {
-            const {response} = await soapRequest({url: url, headers: sampleHeaders, xml: xmlRequest, timeout: 5000}); // Optional timeout parameter(milliseconds)
+            const {response} = await soapRequest({url: url, headers: sampleHeaders, xml: xmlRequest, timeout: 10000}); // Optional timeout parameter(milliseconds)
 
             const {body} = response;
 
@@ -1767,7 +1767,7 @@ module.exports = {
 `;
 
         try {
-            const {response} = await soapRequest({url: url, headers: sampleHeaders, xml: xmlRequest, timeout: 5000}); // Optional timeout parameter(milliseconds)
+            const {response} = await soapRequest({url: url, headers: sampleHeaders, xml: xmlRequest, timeout: 10000}); // Optional timeout parameter(milliseconds)
 
             const {body} = response;
 
@@ -2030,7 +2030,7 @@ module.exports = {
 `;
 
         try {
-            const {response} = await soapRequest({url: url, headers: sampleHeaders, xml: xmlRequest, timeout: 5000}); // Optional timeout parameter(milliseconds)
+            const {response} = await soapRequest({url: url, headers: sampleHeaders, xml: xmlRequest, timeout: 10000}); // Optional timeout parameter(milliseconds)
 
             const {body} = response;
 
@@ -2372,7 +2372,7 @@ module.exports = {
         }
 
         try {
-            const {response} = await soapRequest({url: url, headers: sampleHeaders, xml: xmlRequest, timeout: 5000}); // Optional timeout parameter(milliseconds)
+            const {response} = await soapRequest({url: url, headers: sampleHeaders, xml: xmlRequest, timeout: 10000}); // Optional timeout parameter(milliseconds)
 
             const {body} = response;
 
