@@ -961,6 +961,7 @@ module.exports = {
             "65GBSurfplus Data",
             "125GBSurfplus Data",
             "185GBSurfplus Data",
+            "Pay Weekly Data",
             "Promotional Data",
             "Data",
             "Bonus Data",

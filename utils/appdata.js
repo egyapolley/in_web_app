@@ -146,7 +146,8 @@ module.exports = {
         1187:"MGMRferralBonusTrack Count",
         1202 :"internalBdlId Count",
         1203: "Free Cash",
-        1204 :"bdlPurchaseCounter Count"
+        1204 :"bdlPurchaseCounter Count",
+        1242: "Pay Weekly Data"
 
     },
 
@@ -171,6 +172,7 @@ module.exports = {
         '125GBSurfplus Data',
         '185GBSurfplus Data',
         'Free Saturday Data',
+        'Pay Weekly Data',
         'Taxify Data',
         'ExtraTime Bonus Data',
         'ULBusiness2 Data',
@@ -212,6 +214,8 @@ module.exports = {
         'Always ON Business',
         'Always ON Group',
         'Business Corporate',
+        'Pay Weekly',
+        'Test Drive',
         'Business Individual'
     ]
 

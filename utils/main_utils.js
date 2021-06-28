@@ -94,6 +94,7 @@ module.exports = {
         else if (bundleId === "101" || bundleId === "Autorecovery") return "Autorecovery";
         else if (bundleId === "1102" || bundleId === "Bundle ExpiryTrack Status") return "Bundle Expiry Tracker";
         else if (bundleId === "32" || bundleId === "CTAllowLastDate") return "CTAllowLastDate";
+        else if (bundleId === "1242" || bundleId === "Pay Weekly Data") return "Pay Weekly Data";
 
 
     },
