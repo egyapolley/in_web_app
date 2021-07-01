@@ -2223,6 +2223,61 @@ $(function () {
     }
 
 
+    function payWeeklyOptRec_Event_Listener(event) {
+        event.preventDefault();
+
+        successWrapperManageAcct.style.display = "none";
+        errorWrapperManageAcct.style.display = "none";
+        progressIndicatorManageAcct.style.display = "block";
+
+        const msisdn = document.getElementById("msisdn").value;
+        const request_type = document.getElementById("msisdn").dataset.request_type
+
+        const postbody = {msisdn, request_type};
+
+
+        $.post("/payweeklyOptRec", postbody)
+            .done(function (data) {
+                if (data) {
+                    progressIndicatorManageAcct.style.display = "none";
+                    if (data.success) {
+
+                        errorWrapperManageAcct.style.display = "none";
+                        successMessageManageAcct.innerText = "Success";
+                        successWrapperManageAcct.style.display = "block";
+
+
+                    } else {
+                        errorMessageManageAcct.innerText = data.error;
+                        successWrapperManageAcct.style.display = "none";
+                        errorWrapperManageAcct.style.display = "block";
+
+
+                    }
+
+
+                }
+
+
+            }).fail(function (error) {
+            progressIndicatorManageAcct.style.display = "none";
+            errorMessageManageAcct.innerText = error.toString();
+            successWrapperManageAcct.style.display = "none";
+            errorWrapperManageAcct.style.display = "block";
+
+
+        })
+
+
+    }
+
+    const payweeklyOptForm = document.getElementById("payWeekly-OptOut-Form")
+    if (payweeklyOptForm) payweeklyOptForm.addEventListener("submit",payWeeklyOptRec_Event_Listener)
+
+    const payweeklyRecForm = document.getElementById("payweekly-Rec-Form")
+    if (payweeklyRecForm) payweeklyRecForm.addEventListener("submit",payWeeklyOptRec_Event_Listener)
+
+
 
 
 

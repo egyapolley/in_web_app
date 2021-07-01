@@ -51,6 +51,8 @@ router.get("/adjustexpiry",middleware.checkAuthenticated,middleware.checkForLeve
 router.get("/managerecurrent",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three, controller.rendermanagerecurrent);
 router.get("/getrecurrent",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three,controller.getmanagerecurrent);
 router.get("/cashtransfer",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three,controller.rendercashtransfer);
+router.get("/payweekly-optout",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three,controller.renderpayweeklyOpt);
+router.get("/payweekly-reconnect",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three,controller.renderpayweeklyReconnect);
 
 router.post("/expiredata", middleware.checkAuthenticated,middleware.checkForLevel_Two_Three,controller.postexpiredata);
 router.post("/changeacctstate",middleware.checkAuthenticated, middleware.checkForLevel_Two_Three,controller.postchangestate);
@@ -59,6 +61,7 @@ router.post("/changeproduct",middleware.checkAuthenticated,middleware.checkForLe
 router.post("/adjustexpiry",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three,controller.postadjustexpiry);
 router.post("/managerecurrent",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three, controller.postterminaterecurrent);
 router.post("/cashtransfer",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three,controller.postcashtransfer);
+router.post("/payweeklyOptRec",controller.postPayWeeklyOptRec);
 
 router.post("/gencode",middleware.checkAuthenticated,controller.postgenCode);
 router.post("/actcode",middleware.checkAuthenticated,controller.postactCode);

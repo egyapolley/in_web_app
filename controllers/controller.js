@@ -805,7 +805,7 @@ module.exports = {
             changephonecontact: "",
             managerecurrent: "",
             changeproduct: "",
-            adjustexpiry: ""
+            adjustexpiry: "",
         };
         const role = utils.getUserRole(req.user);
         res.render("manageaccount", {status, topNav, ...role})
@@ -2455,6 +2455,8 @@ module.exports = {
             changeproduct: "",
             adjustexpiry: "",
             cashtransfer: "",
+            payweeklyopt: "",
+            payweeklyrec: "",
         };
 
         const role = utils.getUserRole(req.user)
@@ -2483,6 +2485,8 @@ module.exports = {
             changeproduct: "",
             adjustexpiry: "",
             cashtransfer: "",
+            payweeklyopt: "",
+            payweeklyrec: ""
         };
         const role = utils.getUserRole(req.user)
 
@@ -2509,6 +2513,8 @@ module.exports = {
             changeproduct: "",
             adjustexpiry: "",
             cashtransfer: "",
+            payweeklyopt: "",
+            payweeklyrec: ""
 
         };
         const role = utils.getUserRole(req.user)
@@ -2537,6 +2543,8 @@ module.exports = {
             changeproduct: "active",
             adjustexpiry: "",
             cashtransfer: "",
+            payweeklyopt: "",
+            payweeklyrec: ""
         };
         const role = utils.getUserRole(req.user)
         res.render("changeproduct", {products: appData.productTypes, status, topNav, ...role});
@@ -2562,6 +2570,8 @@ module.exports = {
             changeproduct: "",
             adjustexpiry: "active",
             cashtransfer: "",
+            payweeklyopt: "",
+            payweeklyrec: ""
         };
         const role = utils.getUserRole(req.user)
         res.render("adjustexpirydate", {balanceTypes: appData.balanceTypesArrays, status, topNav, ...role});
@@ -2588,6 +2598,9 @@ module.exports = {
             changeproduct: "",
             adjustexpiry: "",
             cashtransfer: "active",
+            payweeklyopt: "",
+            payweeklyrec: ""
+
         };
         const role = utils.getUserRole(req.user)
         res.render("transfercash", {status, topNav, ...role});
@@ -2614,12 +2627,127 @@ module.exports = {
             changeproduct: "",
             adjustexpiry: "",
             cashtransfer: "",
+            payweeklyopt: "",
+            payweeklyrec: ""
         };
         const role = utils.getUserRole(req.user)
         res.render("managerecurrentplan", {status, topNav, ...role})
 
 
     },
+    renderpayweeklyOpt: async (req, res) => {
+        const status = {
+            sub: "",
+            maccount: "active",
+            top: "",
+            load: "",
+            manage: "",
+            overscratch: "",
+            hist: "",
+            act: "",
+            tra: "",
+            mgm: "",
+        };
+        const topNav = {
+            expiredata: "",
+            changeacctstate: "",
+            changephonecontact: "",
+            managerecurrent: "",
+            changeproduct: "",
+            adjustexpiry: "",
+            cashtransfer: "",
+            payweeklyopt: "active",
+            payweeklyrec: ""
+        };
+        const role = utils.getUserRole(req.user)
+        res.render("payweeklyOptOut", {status, topNav, ...role})
+
+
+    },
+    renderpayweeklyReconnect: async (req, res) => {
+        const status = {
+            sub: "",
+            maccount: "active",
+            top: "",
+            load: "",
+            manage: "",
+            overscratch: "",
+            hist: "",
+            act: "",
+            tra: "",
+            mgm: "",
+        };
+        const topNav = {
+            expiredata: "",
+            changeacctstate: "",
+            changephonecontact: "",
+            managerecurrent: "",
+            changeproduct: "",
+            adjustexpiry: "",
+            cashtransfer: "",
+            payweeklyopt: "",
+            payweeklyrec: "active"
+        };
+        const role = utils.getUserRole(req.user)
+        res.render("payweeklyReconnect", {status, topNav, ...role})
+
+
+    },
+
+    postPayWeeklyOptRec: async (req, res) => {
+
+        const {msisdn, request_type} = req.body;
+
+
+        const url = OSD_ENDPOINT;
+        const sampleHeaders = {
+            'User-Agent': 'NodeApp',
+            'Content-Type': 'text/xml;charset=UTF-8',
+            'SOAPAction': 'http://SCLINSMSVM01P/wsdls/Surfline/PayWeeklyOptRec/PayWeeklyOptRec',
+            'Authorization': 'Basic YWlhb3NkMDE6YWlhb3NkMDE='
+        };
+
+
+        let xmlRequest = `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:pay="http://SCLINSMSVM01P/wsdls/Surfline/PayWeeklyOptRec.wsdl">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <pay:PayWeeklyOptRecRequest>
+         <CC_Calling_Party_Id>${msisdn}</CC_Calling_Party_Id>
+         <Request_type>${request_type}</Request_type>
+      </pay:PayWeeklyOptRecRequest>
+   </soapenv:Body>
+</soapenv:Envelope>`;
+
+        try {
+
+            const {response} = await soapRequest({
+                url: url,
+                headers: sampleHeaders,
+                xml: xmlRequest,
+                timeout: 6000
+            });
+            const {body} = response;
+
+            let jsonObj = parser.parse(body, options);
+            const result = jsonObj.Envelope.Body.PayWeeklyOptRecResult.Result
+            if (result === 'Success') {
+                res.json({
+                    success: "success"
+                })
+            } else {
+                res.json({
+                    error: result.toString()
+                })
+            }
+
+        } catch (error) {
+            console.log(error.toString());
+            res.json({error: "IN System Failure"})
+
+        }
+
+    },
+
 
     getmanagerecurrent: async (req, res) => {
         let msisdn = req.query.msisdn;
@@ -3097,7 +3225,7 @@ module.exports = {
                 const {body} = response;
 
                 let jsonObj = parser.parse(body, options);
-                if (jsonObj.Envelope.Body.CCSCD3_RCHResponse && jsonObj.Envelope.Body.CCSCD3_RCHResponse.AUTH){
+                if (jsonObj.Envelope.Body.CCSCD3_RCHResponse && jsonObj.Envelope.Body.CCSCD3_RCHResponse.AUTH) {
                     console.log('Successfully created Bundle ExpiryTrack Status')
                 }
 
@@ -3798,7 +3926,7 @@ module.exports = {
 
         const url = "http://localhost:5200/code_inf";
 
-        let {firstName,lastName,code,subscriberNumber} = req.body;
+        let {firstName, lastName, code, subscriberNumber} = req.body;
 
 
         const messageBody = {
