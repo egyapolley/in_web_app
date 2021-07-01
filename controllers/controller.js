@@ -461,125 +461,208 @@ module.exports = {
     getbundles: async (req, res) => {
         const msisdn = req.query.msisdn
 
-        const url = OSD_ENDPOINT;
-        const sampleHeaders = {
-            'User-Agent': 'NodeApp',
-            'Content-Type': 'text/xml;charset=UTF-8',
-            'SOAPAction': 'http://SCLINSMSVM01P/wsdls/Surfline/VoucherRecharge_USSD/VoucherRecharge_USSD',
-            'Authorization': 'Basic YWlhb3NkMDE6YWlhb3NkMDE='
-        };
 
-        let xmlRequest = `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:pac="http://SCLINSMSVM01P/wsdls/Surfline/Package_Query_USSD.wsdl">
-   <soapenv:Header/>
-   <soapenv:Body>
-      <pac:PackageQueryUSSDRequest>
-         <CC_Calling_Party_Id>${msisdn}</CC_Calling_Party_Id>
-      </pac:PackageQueryUSSDRequest>
-   </soapenv:Body>
-</soapenv:Envelope>`;
-        try {
-            const {response} = await soapRequest({url: url, headers: sampleHeaders, xml: xmlRequest, timeout: 3000}); // Optional timeout parameter(milliseconds)
+        /*     const url = OSD_ENDPOINT;
+             const sampleHeaders = {
+                 'User-Agent': 'NodeApp',
+                 'Content-Type': 'text/xml;charset=UTF-8',
+                 'SOAPAction': 'http://SCLINSMSVM01P/wsdls/Surfline/VoucherRecharge_USSD/VoucherRecharge_USSD',
+                 'Authorization': 'Basic YWlhb3NkMDE6YWlhb3NkMDE='
+             };
 
-            const {body} = response;
+             let xmlRequest = `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:pac="http://SCLINSMSVM01P/wsdls/Surfline/Package_Query_USSD.wsdl">
+        <soapenv:Header/>
+        <soapenv:Body>
+           <pac:PackageQueryUSSDRequest>
+              <CC_Calling_Party_Id>${msisdn}</CC_Calling_Party_Id>
+           </pac:PackageQueryUSSDRequest>
+        </soapenv:Body>
+     </soapenv:Envelope>`;
+             try {
+                 const {response} = await soapRequest({url: url, headers: sampleHeaders, xml: xmlRequest, timeout: 3000}); // Optional timeout parameter(milliseconds)
 
-            if (body.includes("faultcode")) {
-                const errorInfo = {};
-                let regex = /errorCode>(.+)<\//
-                let match = regex.exec(body);
+                 const {body} = response;
 
-
-            } else if (parser.validate(body) === true) {
-                let jsonObj = parser.parse(body, options);
-                let result = jsonObj.Envelope.Body;
-                let packages = result.PackageQueryUSSDResult;
+                 if (body.includes("faultcode")) {
+                     const errorInfo = {};
+                     let regex = /errorCode>(.+)<\//
+                     let match = regex.exec(body);
 
 
-                const categoriesSet = new Set();
-                const bundleEl_Value_Array = [];
-
-                let resultEl_value;
-
-                for (const [k, v] of Object.entries(packages)) {
-
-                    if (k.startsWith("bundle")) {
-                        let regex = /(.+?)\|/
-                        let match = regex.exec(v.toString());
-                        categoriesSet.add(match[1]);
-                        bundleEl_Value_Array.push(v.toString())
-
-                    } else if (k.startsWith("Result")) {
-                        resultEl_value = v.toString();
-
-                    }
+                 } else if (parser.validate(body) === true) {
+                     let jsonObj = parser.parse(body, options);
+                     let result = jsonObj.Envelope.Body;
+                     let packages = result.PackageQueryUSSDResult;
 
 
+                     const categoriesSet = new Set();
+                     const bundleEl_Value_Array = [];
+
+                     let resultEl_value;
+
+                     for (const [k, v] of Object.entries(packages)) {
+
+                         if (k.startsWith("bundle")) {
+                             let regex = /(.+?)\|/
+                             let match = regex.exec(v.toString());
+                             categoriesSet.add(match[1]);
+                             bundleEl_Value_Array.push(v.toString())
+
+                         } else if (k.startsWith("Result")) {
+                             resultEl_value = v.toString();
+
+                         }
+
+
+                     }
+
+                     if (categoriesSet.size > 0 && bundleEl_Value_Array.length > 0) {
+                         const final_bundles = [];
+                         let catArray = [...categoriesSet];
+                         for (let i = 0; i < catArray.length; i++) {
+                             let catValue = catArray[i];
+                             let catObject = {};
+                             catObject.name = catValue;
+                             catObject.active = i === 0 ? "active" : "";
+                             catObject.id = "cat-" + i;
+                             catObject.bundles = [];
+                             for (let j = 0; j < bundleEl_Value_Array.length; j++) {
+                                 if (bundleEl_Value_Array[j].startsWith(catValue)) {
+                                     let tempStringArray = bundleEl_Value_Array[j].split("|");
+                                     let bundleDetails = tempStringArray[1];
+                                     let bundleId = tempStringArray[2];
+                                     let periodicity = tempStringArray[3];
+                                     let bundleDetailtemp = bundleDetails.split(/\s@|\s\//g);
+                                     let dataValue = bundleDetailtemp[0];
+                                     let price = bundleDetailtemp[1];
+                                     price = price.substring(3)
+                                     let period = bundleDetailtemp[2];
+                                     let validity = parseInt(bundleDetailtemp[2]);
+                                     let validity_period;
+                                     if (/hrs/ig.test(period.toString())) {
+                                         validity_period = "hrs";
+                                     } else {
+                                         validity_period = "days";
+                                     }
+                                     validity = `${validity} ${validity_period}`;
+
+                                     catObject.bundles.push(
+                                         {
+                                             bundle_name: dataValue,
+                                             price: price,
+                                             validity: validity,
+                                             bundleId: bundleId,
+                                             one_off: "One-Off",
+                                             recurrent: periodicity > 1 ? "Recurrent" : ""
+                                         });
+                                 }
+
+                             }
+                             final_bundles.push({
+                                 category: catObject
+                             })
+
+                         }
+
+                         res.json({dataSet: final_bundles})
+
+
+                     } else {
+                         res.json({error: resultEl_value})
+                     }
+
+                 } else {
+                     res.json({error: "System Error"})
+                 }
+
+             } catch (e) {
+                 console.log(e);
+                 res.json({error: "System Error"})
+
+             }*/
+
+        const url = "http://localhost:7002/bundles";
+        axios.get(url,
+            {
+                params: {
+                    subscriberNumber: msisdn,
+                    channel: "USSD"
+                },
+
+                auth: {
+                    username: "ussd",
+                    password: "ussdPassw0rd"
                 }
+            }).then(function (response) {
+            let result = response.data;
+            console.log(result)
+            if (result.status === 0 && result.reason === 'success') {
 
-                if (categoriesSet.size > 0 && bundleEl_Value_Array.length > 0) {
-                    const final_bundles = [];
-                    let catArray = [...categoriesSet];
-                    for (let i = 0; i < catArray.length; i++) {
-                        let catValue = catArray[i];
-                        let catObject = {};
-                        catObject.name = catValue;
-                        catObject.active = i === 0 ? "active" : "";
-                        catObject.id = "cat-" + i;
-                        catObject.bundles = [];
-                        for (let j = 0; j < bundleEl_Value_Array.length; j++) {
-                            if (bundleEl_Value_Array[j].startsWith(catValue)) {
-                                let tempStringArray = bundleEl_Value_Array[j].split("|");
-                                let bundleDetails = tempStringArray[1];
-                                let bundleId = tempStringArray[2];
-                                let periodicity = tempStringArray[3];
-                                let bundleDetailtemp = bundleDetails.split(/\s@|\s\//g);
-                                let dataValue = bundleDetailtemp[0];
-                                let price = bundleDetailtemp[1];
-                                price = price.substring(3)
-                                let period = bundleDetailtemp[2];
-                                let validity = parseInt(bundleDetailtemp[2]);
-                                let validity_period;
-                                if (/hrs/ig.test(period.toString())) {
-                                    validity_period = "hrs";
-                                } else {
-                                    validity_period = "days";
-                                }
-                                validity = `${validity} ${validity_period}`;
+                const internetBundles = result.internetBundles;
 
-                                catObject.bundles.push(
-                                    {
-                                        bundle_name: dataValue,
-                                        price: price,
-                                        validity: validity,
-                                        bundleId: bundleId,
-                                        one_off: "One-Off",
-                                        recurrent: periodicity > 1 ? "Recurrent" : ""
-                                    });
+
+                const dataSet = []
+                if (internetBundles && internetBundles.length > 0) {
+
+                    internetBundles.forEach((item, index) => {
+                        let catObj = {}
+
+                        catObj.active = (index === 0) ? "active" : ""
+                        catObj.name = item.name
+                        catObj.id = `cat-${index}`
+                        catObj.bundles = []
+
+                        const bundles = item.bundles;
+                        if (bundles && bundles.length > 0) {
+
+                            for (const bundle of bundles) {
+                                let {
+                                    bundle_value: bundle_name,
+                                    bundle_price: price,
+                                    bundle_validity: validity,
+                                    bundle_id: bundleId,
+                                    bundle_subscriptionType
+                                } = bundle
+
+
+                                catObj.bundles.push({
+                                    bundle_name,
+                                    price,
+                                    one_off: "One-Off",
+                                    recurrent: bundle_subscriptionType.includes("Auto-Renewal") ? "Recurrent" : "",
+                                    validity,
+                                    bundleId
+
+                                })
                             }
 
+
                         }
-                        final_bundles.push({
-                            category: catObject
+
+                        dataSet.push({
+                            category: catObj
                         })
 
-                    }
 
-                    res.json({dataSet: final_bundles})
+                    })
 
-
-                } else {
-                    res.json({error: resultEl_value})
                 }
+                res.json({
+                    dataSet
+                })
+
 
             } else {
-                res.json({error: "System Error"})
+                res.json({
+                    error: result.reason.toString(),
+                })
+
             }
 
-        } catch (e) {
-            console.log(e);
-            res.json({error: "System Error"})
+        }).catch(function (error) {
+            res.json({error: "error", message: "System Failure"})
 
-        }
-
+        })
 
     },
 

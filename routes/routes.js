@@ -61,7 +61,7 @@ router.post("/changeproduct",middleware.checkAuthenticated,middleware.checkForLe
 router.post("/adjustexpiry",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three,controller.postadjustexpiry);
 router.post("/managerecurrent",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three, controller.postterminaterecurrent);
 router.post("/cashtransfer",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three,controller.postcashtransfer);
-router.post("/payweeklyOptRec",controller.postPayWeeklyOptRec);
+router.post("/payweeklyOptRec",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three,controller.postPayWeeklyOptRec);
 
 router.post("/gencode",middleware.checkAuthenticated,controller.postgenCode);
 router.post("/actcode",middleware.checkAuthenticated,controller.postactCode);
