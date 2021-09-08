@@ -1,0 +1,86 @@
+{{#if l3}}
+    {{> sideNav }}
+{{else if l2}}
+    {{> sideNavlevel_two }}
+{{else }}
+    {{> sideNavlevel_one }}
+{{/if}}
+
+<div class="all-container">
+
+    <div class="all-main-content">
+        <div class="all-main-content-wrapper">
+            <div class="main-content-manage-acct">
+
+                {{> topNav }}
+
+
+
+                <main>
+                    <div class="task-container">
+
+                        <h3>Transfer Unlimited</h3>
+
+                        <div class="form-wrapper-task">
+                            <div class="manageVoucher-error" id="manage-acct-error">
+                                <button id="times-button-error" class="times-button">&times;</button>
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <small></small>
+                            </div>
+
+                            <div class="manageVoucher-success" id="manage-acct-success">
+                                <button id="times-button-success" class="times-button">&times;</button>
+                                <i class="fas fa-thumbs-up"></i>
+                                <small></small>
+                            </div>
+
+
+
+
+                            <form action="/unlimitedtransfer" method="post" id="transfer-unlimited-form">
+
+                                <div class="form-control">
+                                    <label for="from-msisdn-cash">From msisdn:</label>
+                                    <input type="text" placeholder="233255..." id="from-msisdn-cash" name="from_msisdn" autocomplete="true" autofocus required minlength="12" pattern="^233255.+">
+                                </div>
+
+                                <div class="form-control">
+                                    <label for="to-msisdn-cash">To msisdn:</label>
+                                    <input type="text" placeholder="233255..." id="to-msisdn-cash" name="to_msisdn" autocomplete="true"  required minlength="12" pattern="^233255.+">
+                                </div>
+                                <div class="form-control">
+                                    <label for="balanceTypes">Balance Type:</label>
+                                    <select name="balanceTypes" id="balanceTypes" required>
+                                        {{#each balanceTypes}}
+                                            <option value="{{this}}">{{this}}</option>
+                                        {{/each}}
+                                    </select>
+                                </div>
+
+                                <div id="progressIndicator-manage-acct" class="progressIndicator">
+                                    <img src="/images/ajax-loader.gif" alt="Loading Bundles...">
+                                </div>
+                                <div class="form-control form-control-btn">
+                                    <button class="proceed-btn" type="submit">Submit</button>
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                </main>
+
+            </div>
+
+        </div>
+    </div>
+
+
+</div>
+
+
+
+
+

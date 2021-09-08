@@ -2279,6 +2279,63 @@ $(function () {
 
 
 
+    function processTransferUnlimited(event) {
+        event.preventDefault();
+
+        successWrapperManageAcct.style.display = "none";
+        errorWrapperManageAcct.style.display = "none";
+        progressIndicatorManageAcct.style.display = "block";
+
+        const from_msisdn = document.getElementById("from-msisdn-cash").value;
+        const to_msisdn = document.getElementById("to-msisdn-cash").value;
+        const balancetype = document.getElementById("balanceTypes").value;
+
+        const postbody = {from_msisdn, to_msisdn, balancetype};
+
+
+        $.post("/unlimitedtransfer", postbody)
+            .done(function (data) {
+                if (data) {
+                    progressIndicatorManageAcct.style.display = "none";
+                    if (data.success) {
+
+                        errorWrapperManageAcct.style.display = "none";
+                        successMessageManageAcct.innerText = "Success";
+                        successWrapperManageAcct.style.display = "block";
+
+
+                    } else {
+                        errorMessageManageAcct.innerText = data.error;
+                        successWrapperManageAcct.style.display = "none";
+                        errorWrapperManageAcct.style.display = "block";
+
+
+                    }
+
+
+                }
+
+
+            }).fail(function (error) {
+            progressIndicatorManageAcct.style.display = "none";
+            errorMessageManageAcct.innerText = error.toString();
+            successWrapperManageAcct.style.display = "none";
+            errorWrapperManageAcct.style.display = "block";
+
+
+        })
+
+
+    }
+
+
+    const transferUnlimited = document.getElementById("transfer-unlimited-form");
+    if (transferUnlimited) {
+        transferUnlimited.addEventListener("submit", processTransferUnlimited);
+    }
+
+
+
 
 
 })

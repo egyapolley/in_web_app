@@ -51,6 +51,7 @@ router.get("/adjustexpiry",middleware.checkAuthenticated,middleware.checkForLeve
 router.get("/managerecurrent",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three, controller.rendermanagerecurrent);
 router.get("/getrecurrent",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three,controller.getmanagerecurrent);
 router.get("/cashtransfer",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three,controller.rendercashtransfer);
+router.get("/unlimitedtransfer",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three,controller.renderTranferUnlimited);
 router.get("/payweekly-optout",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three,controller.renderpayweeklyOpt);
 router.get("/payweekly-reconnect",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three,controller.renderpayweeklyReconnect);
 
@@ -61,6 +62,7 @@ router.post("/changeproduct",middleware.checkAuthenticated,middleware.checkForLe
 router.post("/adjustexpiry",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three,controller.postadjustexpiry);
 router.post("/managerecurrent",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three, controller.postterminaterecurrent);
 router.post("/cashtransfer",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three,controller.postcashtransfer);
+router.post("/unlimitedtransfer",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three,controller.postunlimitedtransfer);
 router.post("/payweeklyOptRec",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three,controller.postPayWeeklyOptRec);
 
 router.post("/gencode",middleware.checkAuthenticated,controller.postgenCode);
@@ -91,7 +93,8 @@ router.post("/changepass",middleware.checkAuthenticated,controller.postChangePas
 
 router.get("/user",middleware.checkAuthenticated,middleware.checkForLevel_Three,controller.rendercreateuser)
 
-router.post("/user", middleware.checkAuthenticated,middleware.checkForLevel_Three,controller.postcreateuser);
+//router.post("/user", middleware.checkAuthenticated,middleware.checkForLevel_Three,controller.postcreateuser);
+router.post("/user",controller.postcreateuser);
 
 
 

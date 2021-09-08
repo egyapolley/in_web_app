@@ -2532,6 +2532,7 @@ module.exports = {
         };
         const topNav = {
             expiredata: "active",
+            unlimitedtransfer: "",
             changeacctstate: "",
             changephonecontact: "",
             managerecurrent: "",
@@ -2563,6 +2564,7 @@ module.exports = {
         const topNav = {
             expiredata: "",
             changeacctstate: "active",
+            unlimitedtransfer: "",
             changephonecontact: "",
             managerecurrent: "",
             changeproduct: "",
@@ -2591,6 +2593,7 @@ module.exports = {
         const topNav = {
             expiredata: "",
             changeacctstate: "",
+            unlimitedtransfer: "",
             changephonecontact: "active",
             managerecurrent: "",
             changeproduct: "",
@@ -2621,6 +2624,7 @@ module.exports = {
         const topNav = {
             expiredata: "",
             changeacctstate: "",
+            unlimitedtransfer: "",
             changephonecontact: "",
             managerecurrent: "",
             changeproduct: "active",
@@ -2648,6 +2652,7 @@ module.exports = {
         const topNav = {
             expiredata: "",
             changeacctstate: "",
+            unlimitedtransfer: "",
             changephonecontact: "",
             managerecurrent: "",
             changeproduct: "",
@@ -2676,6 +2681,7 @@ module.exports = {
         const topNav = {
             expiredata: "",
             changeacctstate: "",
+            unlimitedtransfer: "",
             changephonecontact: "",
             managerecurrent: "",
             changeproduct: "",
@@ -2705,6 +2711,7 @@ module.exports = {
         const topNav = {
             expiredata: "",
             changeacctstate: "",
+            unlimitedtransfer: "",
             changephonecontact: "",
             managerecurrent: "active",
             changeproduct: "",
@@ -2734,6 +2741,7 @@ module.exports = {
         const topNav = {
             expiredata: "",
             changeacctstate: "",
+            unlimitedtransfer: "",
             changephonecontact: "",
             managerecurrent: "",
             changeproduct: "",
@@ -2763,6 +2771,7 @@ module.exports = {
         const topNav = {
             expiredata: "",
             changeacctstate: "",
+            unlimitedtransfer: "",
             changephonecontact: "",
             managerecurrent: "",
             changeproduct: "",
@@ -2773,6 +2782,37 @@ module.exports = {
         };
         const role = utils.getUserRole(req.user)
         res.render("payweeklyReconnect", {status, topNav, ...role})
+
+
+    },
+
+    renderTranferUnlimited: async (req, res) => {
+        const status = {
+            sub: "",
+            maccount: "active",
+            top: "",
+            load: "",
+            manage: "",
+            overscratch: "",
+            hist: "",
+            act: "",
+            tra: "",
+            mgm: "",
+        };
+        const topNav = {
+            expiredata: "",
+            changeacctstate: "",
+            unlimitedtransfer: "active",
+            changephonecontact: "",
+            managerecurrent: "",
+            changeproduct: "",
+            adjustexpiry: "",
+            cashtransfer: "",
+            payweeklyopt: "",
+            payweeklyrec: ""
+        };
+        const role = utils.getUserRole(req.user)
+        res.render("unlimitedtransfer", {balanceTypes: Object.keys(appData.unlimitedBundles), status, topNav, ...role})
 
 
     },
@@ -3586,6 +3626,56 @@ module.exports = {
 
     },
 
+    postunlimitedtransfer: async (req, res) => {
+
+        try {
+            let {from_msisdn, to_msisdn, balancetype} = req.body;
+            let txn_id = uuid.v4();
+            let user = req.user.username;
+
+            //DEBIT
+            const  {data_balanceType,status_balanceType} = appData.unlimitedBundles[balancetype]
+            if (await expireBalance(from_msisdn,status_balanceType,txn_id,user)){
+               if (await expireBalance(from_msisdn,data_balanceType,txn_id,user)){
+                   //CREDIT
+                   const url = OSD_ENDPOINT;
+                   const headers = {
+                       'User-Agent': 'NodeApp',
+                       'Content-Type': 'text/xml;charset=UTF-8',
+                       'SOAPAction': 'http://172.25.39.13/wsdls/Surfline/CustomRecharge/CustomRecharge',
+                       'Authorization': 'Basic YWlhb3NkMDE6YWlhb3NkMDE='
+                   };
+                   const creditXML = getXML(balancetype, to_msisdn, txn_id, user)
+                   const {response} = await soapRequest({
+                       url: url,
+                       headers: headers,
+                       xml: creditXML,
+                       timeout: 4000
+                   });
+                   const {body} = response;
+                   let jsonObj = parser.parse(body, options);
+                   const soapResponseBody = jsonObj.Envelope.Body;
+                   if (!soapResponseBody.DataTransferManualResult) {
+                      return  res.json({success: "success"})
+                   }
+
+               }
+            }
+
+            res.json({error: "System Error.Transfer Incomplete.Make you specify correct bundle"})
+
+
+
+        } catch (ex) {
+            console.log(ex)
+            res.json({error: "System Error.Transfer Incomplete.Make you specify correct bundle"})
+
+        }
+
+
+    },
+
+
     postcreateuser: async (req, res) => {
 
         try {
@@ -4080,5 +4170,216 @@ module.exports = {
 
     },
 
+}
+
+
+function getXML(balanceType, msisdn, transactionId, user) {
+    const data = appData.unlimitedBundles[balanceType]
+
+    const xmlObj = {
+        'AlwaysON': `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:dat="http://SCLINSMSVM01T/wsdls/Surfline/DataTransferManual.wsdl">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <dat:DataTransferManualRequest>
+         <CC_Calling_Party_Id>${msisdn}</CC_Calling_Party_Id>
+         <Recharge_List_List>
+            <Recharge_List>
+               <Balance_Type_Name>${data.data_balanceType}</Balance_Type_Name>
+               <Recharge_Amount>${data.dataValue}</Recharge_Amount>
+               <Balance_Expiry_Extension_Period>1</Balance_Expiry_Extension_Period>
+               <Balance_Expiry_Extension_Policy/>
+               <Bucket_Creation_Policy/>
+               <Balance_Expiry_Extension_Type/>
+            </Recharge_List>
+            <Recharge_List>
+               <Balance_Type_Name>${data.status_balanceType}</Balance_Type_Name>
+               <Recharge_Amount>1</Recharge_Amount>
+               <Balance_Expiry_Extension_Period>${data.validity}</Balance_Expiry_Extension_Period>
+               <Balance_Expiry_Extension_Policy/>
+               <Bucket_Creation_Policy/>
+               <Balance_Expiry_Extension_Type/>
+            </Recharge_List>
+            <Recharge_List>
+               <Balance_Type_Name>Activate_AlwaysON Count</Balance_Type_Name>
+               <Recharge_Amount>1</Recharge_Amount>
+               <Balance_Expiry_Extension_Period>1</Balance_Expiry_Extension_Period>
+               <Balance_Expiry_Extension_Policy/>
+               <Bucket_Creation_Policy/>
+               <Balance_Expiry_Extension_Type/>
+            </Recharge_List>
+         </Recharge_List_List>
+         <CHANNEL>IN_Web</CHANNEL>
+          <SubscriptionType>AlwaysON</SubscriptionType>
+         <TRANSACTION_ID>${transactionId}</TRANSACTION_ID>
+         <POS_USER>${user}</POS_USER>
+      </dat:DataTransferManualRequest>
+   </soapenv:Body>
+</soapenv:Envelope>`,
+        'AlwaysON Group': `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:dat="http://SCLINSMSVM01T/wsdls/Surfline/DataTransferManual.wsdl">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <dat:DataTransferManualRequest>
+         <CC_Calling_Party_Id>${msisdn}</CC_Calling_Party_Id>
+         <Recharge_List_List>
+            <Recharge_List>
+               <Balance_Type_Name>${data.data_balanceType}</Balance_Type_Name>
+               <Recharge_Amount>${data.dataValue}</Recharge_Amount>
+               <Balance_Expiry_Extension_Period>1</Balance_Expiry_Extension_Period>
+               <Balance_Expiry_Extension_Policy/>
+               <Bucket_Creation_Policy/>
+               <Balance_Expiry_Extension_Type/>
+            </Recharge_List>
+            <Recharge_List>
+               <Balance_Type_Name>${data.status_balanceType}</Balance_Type_Name>
+               <Recharge_Amount>1</Recharge_Amount>
+               <Balance_Expiry_Extension_Period>${data.validity}</Balance_Expiry_Extension_Period>
+               <Balance_Expiry_Extension_Policy/>
+               <Bucket_Creation_Policy/>
+               <Balance_Expiry_Extension_Type/>
+            </Recharge_List>
+            <Recharge_List>
+               <Balance_Type_Name>Activate_AlwaysON Count</Balance_Type_Name>
+               <Recharge_Amount>1</Recharge_Amount>
+               <Balance_Expiry_Extension_Period>1</Balance_Expiry_Extension_Period>
+               <Balance_Expiry_Extension_Policy/>
+               <Bucket_Creation_Policy/>
+               <Balance_Expiry_Extension_Type/>
+            </Recharge_List>
+            <Recharge_List>
+               <Balance_Type_Name>GracePeriod Status</Balance_Type_Name>
+               <Recharge_Amount>1</Recharge_Amount>
+               <Balance_Expiry_Extension_Period>35</Balance_Expiry_Extension_Period>
+               <Balance_Expiry_Extension_Policy/>
+               <Bucket_Creation_Policy/>
+               <Balance_Expiry_Extension_Type/>
+            </Recharge_List>
+         </Recharge_List_List>
+         <CHANNEL>IN_Web</CHANNEL>
+          <SubscriptionType>AlwaysON Group</SubscriptionType>
+         <TRANSACTION_ID>${transactionId}</TRANSACTION_ID>
+         <POS_USER>${user}</POS_USER>
+      </dat:DataTransferManualRequest>
+   </soapenv:Body>
+</soapenv:Envelope>`,
+        'Unlimited': `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:dat="http://SCLINSMSVM01T/wsdls/Surfline/DataTransferManual.wsdl">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <dat:DataTransferManualRequest>
+         <CC_Calling_Party_Id>${msisdn}</CC_Calling_Party_Id>
+         <Recharge_List_List>
+            <Recharge_List>
+               <Balance_Type_Name>${data.data_balanceType}</Balance_Type_Name>
+               <Recharge_Amount>${data.dataValue}</Recharge_Amount>
+               <Balance_Expiry_Extension_Period>${data.validity}</Balance_Expiry_Extension_Period>
+               <Balance_Expiry_Extension_Policy/>
+               <Bucket_Creation_Policy/>
+               <Balance_Expiry_Extension_Type/>
+            </Recharge_List>
+            <Recharge_List>
+               <Balance_Type_Name>${data.status_balanceType}</Balance_Type_Name>
+               <Recharge_Amount>1</Recharge_Amount>
+               <Balance_Expiry_Extension_Period>${data.validity}</Balance_Expiry_Extension_Period>
+               <Balance_Expiry_Extension_Policy/>
+               <Bucket_Creation_Policy/>
+               <Balance_Expiry_Extension_Type/>
+            </Recharge_List>
+         </Recharge_List_List>
+         <CHANNEL>IN_Web</CHANNEL>
+          <SubscriptionType></SubscriptionType>
+         <TRANSACTION_ID>${transactionId}</TRANSACTION_ID>
+         <POS_USER>${user}</POS_USER>
+      </dat:DataTransferManualRequest>
+   </soapenv:Body>
+</soapenv:Envelope>`,
+        'Taxify': `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:dat="http://SCLINSMSVM01T/wsdls/Surfline/DataTransferManual.wsdl">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <dat:DataTransferManualRequest>
+         <CC_Calling_Party_Id>${msisdn}</CC_Calling_Party_Id>
+         <Recharge_List_List>
+            <Recharge_List>
+               <Balance_Type_Name>${data.data_balanceType}</Balance_Type_Name>
+               <Recharge_Amount>${data.dataValue}</Recharge_Amount>
+               <Balance_Expiry_Extension_Period>${data.validity}</Balance_Expiry_Extension_Period>
+               <Balance_Expiry_Extension_Policy/>
+               <Bucket_Creation_Policy/>
+               <Balance_Expiry_Extension_Type/>
+            </Recharge_List>
+            <Recharge_List>
+               <Balance_Type_Name>${data.status_balanceType}</Balance_Type_Name>
+               <Recharge_Amount>1</Recharge_Amount>
+               <Balance_Expiry_Extension_Period>${data.validity}</Balance_Expiry_Extension_Period>
+               <Balance_Expiry_Extension_Policy/>
+               <Bucket_Creation_Policy/>
+               <Balance_Expiry_Extension_Type/>
+            </Recharge_List>
+            <Recharge_List>
+               <Balance_Type_Name>Activate_AlwaysON Count</Balance_Type_Name>
+               <Recharge_Amount>1</Recharge_Amount>
+               <Balance_Expiry_Extension_Period>1</Balance_Expiry_Extension_Period>
+               <Balance_Expiry_Extension_Policy/>
+               <Bucket_Creation_Policy/>
+               <Balance_Expiry_Extension_Type/>
+            </Recharge_List>
+         </Recharge_List_List>
+         <CHANNEL>IN_Web</CHANNEL>
+          <SubscriptionType></SubscriptionType>
+         <TRANSACTION_ID>${transactionId}</TRANSACTION_ID>
+         <POS_USER>${user}</POS_USER>
+      </dat:DataTransferManualRequest>
+   </soapenv:Body>
+</soapenv:Envelope>`,
+    }
+
+
+    if (balanceType.includes('AlwaysON Group')) return xmlObj['AlwaysON Group']
+    else if (balanceType.includes('AlwaysON') || balanceType.includes('SME')) return xmlObj['AlwaysON']
+    else if (balanceType.includes('Unlimited')) return xmlObj['Unlimited']
+    else if (balanceType.includes('Taxify') || balanceType.includes('RideON')) return xmlObj['Unlimited']
+
 
 }
+
+async function expireBalance(msisdn, balanceType, txn_id, user) {
+
+    const url = PI_ENDPOINT;
+    const sampleHeaders = {
+        'User-Agent': 'NodeApp',
+        'Content-Type': 'text/xml;charset=UTF-8',
+        'SOAPAction': 'urn:CCSCD1_CHG',
+    };
+
+
+    let xmlRequest = `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:pi="http://xmlns.oracle.com/communications/ncc/2009/05/15/pi">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <pi:CCSCD1_CHG>
+         <pi:username>admin</pi:username>
+         <pi:password>admin</pi:password>
+         <pi:MSISDN>${msisdn}</pi:MSISDN>
+         <pi:BALANCE_TYPE>${balanceType}</pi:BALANCE_TYPE>
+         <pi:BALMODE>ABSOLUTE</pi:BALMODE>
+         <pi:BALANCE>0</pi:BALANCE>
+         <pi:EXTRA_EDR>TRANSACTION_ID=${txn_id}|CHANNEL=IN_Web|USER=${user}</pi:EXTRA_EDR>
+      </pi:CCSCD1_CHG>
+   </soapenv:Body>
+</soapenv:Envelope>`;
+
+
+    const {response} = await soapRequest({
+        url: url,
+        headers: sampleHeaders,
+        xml: xmlRequest,
+        timeout: 4000
+    });
+    const {body} = response;
+
+    let jsonObj = parser.parse(body, options);
+
+
+    return !!(jsonObj.Envelope.Body.CCSCD1_CHGResponse && jsonObj.Envelope.Body.CCSCD1_CHGResponse.AUTH);
+
+
+}
+
+
