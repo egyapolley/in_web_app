@@ -1,4 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700&display=swap');
+/*@import url('https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700&display=swap');*/
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap');
 
 * {
     margin: 0;
@@ -14,7 +16,8 @@
 
 body {
 
-    font-family: 'PT Serif', serif;
+    /*font-family: 'PT Serif', serif;*/
+    font-family: 'Roboto', sans-serif;
     background: #c2c7ca61;
     font-size: 0.9rem;
 }
@@ -90,8 +93,8 @@ a:focus {
 .side-nav-main-wrapper a {
     display: block;
     color: white;
-    line-height: 35px;
-    font-size: 0.9rem;
+    line-height: 32px;
+    font-size: 0.8rem;
     font-weight: lighter;
 
 }
@@ -110,7 +113,7 @@ a:focus {
 
 .side-nav-footer a {
     display: block;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     color: white;
 
 }
@@ -518,7 +521,8 @@ a:focus {
 
 }
 .login-body-container .header {
-    font-family: 'PT Serif', serif;
+    /*font-family: 'PT Serif', serif;*/
+    font-family: inherit;
     padding: 70px 50px 50px;
     text-align: center;
     color: white;
@@ -581,7 +585,8 @@ a:focus {
     margin: 10px 0;
     border-radius: 5px;
     font-weight: bold;
-    font-family: 'PT Serif', serif;
+    /*font-family: 'PT Serif', serif;*/
+    font-family: inherit;
     cursor: pointer;
     outline: none;
 }
@@ -599,7 +604,8 @@ a:focus {
 .login-body-container .login-forgot-password {
     float: right;
     font-size: 12px;
-    font-family: 'PT Serif', serif;
+    /*font-family: 'PT Serif', serif;*/
+    font-family: inherit;
     text-decoration: none;
     color: #fff;
     font-weight: bold;
@@ -651,7 +657,8 @@ a:focus {
     outline: none;
     border-radius: 5px;
     text-align: center;
-    font-family: 'PT Serif', serif;
+    /*font-family: 'PT Serif', serif;*/
+    font-family: inherit;
 
 }
 
@@ -679,13 +686,15 @@ a:focus {
     margin-right: 40px;
     background: #e91e63;
     color: white;
-    font-family: 'PT Serif', serif;
+    /*font-family: 'PT Serif', serif;*/
+    font-family: inherit;
 }
 
 .login-body-container .forget-pass-btn-group button:nth-child(2){
     background: green;
     color: white;
-    font-family: 'PT Serif', serif;
+    /*font-family: 'PT Serif', serif;*/
+    font-family: inherit;
 
 }
 
@@ -747,7 +756,8 @@ a:focus {
     padding: 10px 20px;
     margin-top: 20px;
     font-weight: bolder;
-    font-family: 'PT Serif', serif;
+    /*font-family: 'PT Serif', serif;*/
+    font-family: inherit;
 }
 .login-body-container .change-password-form-container #reset-pass-group-1 a:hover{
     background: white;
@@ -783,7 +793,8 @@ a:focus {
     border: none;
     outline: none;
     border-radius: 5px;
-    font-family: 'PT Serif', serif;
+    /*font-family: 'PT Serif', serif;*/
+    font-family: inherit;
 }
 
 .login-body-container .change-password-form-container .form-control-changePass:last-child {
@@ -806,13 +817,15 @@ a:focus {
     margin-right: 40px;
     background: #e91e63;
     color: white;
-    font-family: 'PT Serif', serif;
+    /*font-family: 'PT Serif', serif;*/
+    font-family: inherit;
 }
 
 .login-body-container .change-password-form-container .form-control-changePass button:nth-child(2){
     background: green;
     color: white;
-    font-family: 'PT Serif', serif;
+    /*font-family: 'PT Serif', serif;*/
+    font-family: inherit;
 
 }
 
@@ -926,13 +939,15 @@ a:focus {
 .create-user-container .create-user-home-btn {
     background: #e91e63;
     color: white;
-    font-family: 'PT Serif', serif;
+    /*font-family: 'PT Serif', serif;*/
+    font-family: inherit;
 }
 
 .create-user-container .create-user-submit-btn {
     background: green;
     color: white;
-    font-family: 'PT Serif', serif;
+    /*font-family: 'PT Serif', serif;*/
+    font-family: inherit;
 }
 
 .message-box {
@@ -949,11 +964,13 @@ input:-webkit-autofill:active {
     -webkit-transition-delay: 9999s;
 }
 input {
-    font-family: 'PT Serif', serif;
+    /*font-family: 'PT Serif', serif;*/
+    font-family: inherit;
 }
 
 select {
-    font-family: 'PT Serif', serif;
+    /*font-family: 'PT Serif', serif;*/
+    font-family: inherit;
 }
 
 .hist-date {
@@ -1028,7 +1045,8 @@ select {
     cursor: pointer;
     border-radius: 5px;
     font-weight: bolder;
-    font-family: 'PT Serif', serif;
+    /*font-family: 'PT Serif', serif;*/
+    font-family: inherit;
 
 }
 

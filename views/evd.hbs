@@ -1,0 +1,236 @@
+{{#if l3}}
+    {{> sideNav }}
+{{else if l2}}
+    {{> sideNavlevel_two }}
+{{else }}
+    {{> sideNavlevel_one }}
+{{/if}}
+
+<div class="all-container">
+
+    <div class="all-main-content">
+     <div class="all-main-content-wrapper">
+         <div class="evd-main">
+             <header>
+                 <ul>
+                     <li><a href="" class="evd-links" data-id="evd-acctInfo">Get Account Info.</a></li>
+                     <li><a href="" class="evd-links" data-id="evd-hist">Get History</a></li>
+                 </ul>
+
+                 {{#if l3}}
+                     <ul>
+                         <li><a href="" class="evd-links" data-id="add-dist">Add New Distributor</a></li>
+                         <li><a href="" class="evd-links" data-id="add-retail">Add New Retailor</a></li>
+                     </ul>
+                     <ul>
+                         <li><a href="" class="evd-links" data-id="credit-dist">Credit Distributor Account</a></li>
+                     </ul>
+                 {{/if}}
+
+
+             </header>
+             <div class="content">
+
+                 <div class="task-container-evd evd-acctInfo">
+                     <div class="refreshBtnEvd" id="refreshBtnEvdInfo">
+                       <i class="fas fa-sync"></i>
+                     </div>
+                     <div class="manageVoucher-error mgm-error" id="mgm-error-evdinfo">
+                         <button  class="times-button times-button-mgm">&times;</button>
+                         <i class="fas fa-exclamation-triangle"></i>
+                         <small></small>
+                     </div>
+                     <div class="manageVoucher-success mgm-success" id="mgm-success-evdinfo">
+                         <button  class="times-button times-button-mgm">&times;</button>
+                         <i class="fas fa-thumbs-up"></i>
+                         <small></small>
+                     </div>
+                     <div class="input-container">
+                         <input type="text" placeholder="Search with contact 233..." id="acctInfo-contactId" minlength="12" maxlength="12" pattern="^233.+" autocomplete="true" required autofocus>
+                     </div>
+                     <div id="progressIndicator-evdInfo" class="progressIndicator mgm-progress">
+                         <img src="/images/ajax-loader.gif" alt="Loading Bundles...">
+                     </div>
+                     <div class="table-container">
+                         <table>
+                             <tbody id="evd-acctInfo-tbody">
+
+                             </tbody>
+                         </table>
+                     </div>
+                 </div>
+                 <div class="task-container-evd evd-hist">
+                     <div class="refreshBtnEvd" id="refreshBtnEvdHist">
+                         <i class="fas fa-sync"></i>
+                     </div>
+                     <div class="manageVoucher-error mgm-error" id="mgm-error-evdHist">
+                         <button  class="times-button times-button-mgm">&times;</button>
+                         <i class="fas fa-exclamation-triangle"></i>
+                         <small></small>
+                     </div>
+                     <div class="input-container">
+                         <input type="text" placeholder="Search with contact 233..." id="hist-contactId" minlength="12" maxlength="12" pattern="^233.+" autocomplete="true" autofocus>
+                     </div>
+                     <div id="progressIndicator-evdHist" class="progressIndicator mgm-progress">
+                         <img src="/images/ajax-loader.gif" alt="Loading Bundles...">
+                     </div>
+                     <div class="table-container-hist">
+                         <table id="evd-hist-table">
+                             <thead id="evd-hist-thead">
+                             <tr>
+                                 <th>TimeStamp</th>
+                                 <th>Contact Id</th>
+                                 <th>Transaction Type</th>
+                                 <th>Details</th>
+                             </tr>
+
+                             </thead>
+                             <tbody id="evd-hist-tbody">
+
+                             </tbody>
+                         </table>
+                     </div>
+                 </div>
+               {{#if l3}}
+                   <div class="task-container-evd add-dist">
+                       <div class="manageVoucher-error mgm-error" id="mgm-error-evdAddDist">
+                           <button  class="times-button times-button-mgm">&times;</button>
+                           <i class="fas fa-exclamation-triangle"></i>
+                           <small></small>
+                       </div>
+
+                       <div class="manageVoucher-success mgm-success" id="mgm-success-evdAddDist">
+                           <button  class="times-button times-button-mgm">&times;</button>
+                           <i class="fas fa-thumbs-up"></i>
+                           <small></small>
+                       </div>
+                      <div class="form-wrapper">
+                          <form action="" id="add-dist-form">
+                              <div class="form-control">
+                                  <label for="add-dist-contactId">Distributor Contact</label>
+                                  <input type="text" id="add-dist-contactId" name="add-dist-contactId" placeholder="233..."
+                                         required  autocomplete="true" minlength="12" maxlength="12" pattern="^233.+">
+                              </div>
+
+                              <div class="form-control">
+                                  <label for="add-dist-business">Business Name</label>
+                                  <input type="text" id="add-dist-business" name="add-dist-business" required autocomplete="true" >
+                              </div>
+
+                              <div class="form-control">
+                                  <label for="add-dist-area">Territory/Area</label>
+                                  <input type="text" id="add-dist-area" name="add-dist-area" required autocomplete="true" >
+                              </div>
+                              <div id="progressIndicator-evdAddDist" class="progressIndicator mgm-progress">
+                                  <img src="/images/ajax-loader.gif" alt="Loading Bundles...">
+                              </div>
+                              <div class="form-control-btn">
+                                  <button type="submit">Submit</button>
+                              </div>
+                          </form>
+                      </div>
+
+                   </div>
+                   <div class="task-container-evd add-retail">
+                       <div class="manageVoucher-error mgm-error" id="mgm-error-evdAddRetail">
+                           <button  class="times-button times-button-mgm">&times;</button>
+                           <i class="fas fa-exclamation-triangle"></i>
+                           <small></small>
+                       </div>
+
+                       <div class="manageVoucher-success mgm-success" id="mgm-success-evdAddRetail">
+                           <button  class="times-button times-button-mgm">&times;</button>
+                           <i class="fas fa-thumbs-up"></i>
+                           <small></small>
+                       </div>
+                       <div class="form-wrapper">
+                           <form action="" id="add-retail-form">
+                               <div class="form-control">
+                                   <label for="add-retail-contactId">Retailor Contact</label>
+                                   <input type="text" id="add-retail-contactId" name="add-retail-contactId" placeholder="233..." required autofocus autocomplete="true" minlength="12" maxlength="12" pattern="^233.+">
+                               </div>
+
+                               <div class="form-control">
+                                   <label for="add-retail-firstname">First Name</label>
+                                   <input type="text" id="add-retail-firstname" name="add-retail-firstname" required >
+                               </div>
+
+                               <div class="form-control">
+                                   <label for="add-retail-lastname">Last Name</label>
+                                   <input type="text" id="add-retail-lastname" name="add-retail-lastname" required   >
+                               </div>
+                               <div class="form-control">
+                                   <label for="add-retail-business">Business Name</label>
+                                   <input type="text" id="add-retail-business" name="add-retail-business" required  >
+                               </div>
+                               <div class="form-control">
+                                   <label for="add-retail-distributorId">Distributor ID</label>
+                                   <select name="add-retail-distributorId" id="add-retail-distributorId" required>
+                                       <option value=""></option>
+                                       {{#each distributors}}
+                                           <option value={{value}}>{{name}}</option>
+                                       {{/each}}
+                                   </select>
+                               </div>
+                               <div id="progressIndicator-evdAddRetail" class="progressIndicator mgm-progress">
+                                   <img src="/images/ajax-loader.gif" alt="Loading Bundles...">
+                               </div>
+                               <div class="form-control-btn">
+                                   <button type="submit">Submit</button>
+                               </div>
+                           </form>
+                       </div>
+
+                   </div>
+                   <div class="task-container-evd credit-dist">
+                       <div class="manageVoucher-error mgm-error" id="mgm-error-evdCreditDist">
+                           <button  class="times-button times-button-mgm">&times;</button>
+                           <i class="fas fa-exclamation-triangle"></i>
+                           <small></small>
+                       </div>
+
+                       <div class="manageVoucher-success mgm-success" id="mgm-success-evdCreditDist">
+                           <button  class="times-button times-button-mgm">&times;</button>
+                           <i class="fas fa-thumbs-up"></i>
+                           <small></small>
+                       </div>
+                       <div class="form-wrapper">
+                           <form action="" id="credit-dist-form">
+                               <div class="form-control">
+                                   <label for="credit-dist-distributorId">Distributor ID</label>
+                                   <select name="credit-dist-distributorId" id="credit-dist-distributorId" required>
+                                       <option value=""></option>
+                                       {{#each distributors}}
+                                           <option value={{value}}>{{name}}</option>
+                                       {{/each}}
+                                   </select>
+                               </div>
+
+                               <div class="form-control">
+                                   <label for="credit-dist-amount">Amount (GHC)</label>
+                                   <input type="number" id="credit-dist-amount" name="credit-dist-amount" required min="1">
+                               </div>
+                               <div id="progressIndicator-evdCreditDist" class="progressIndicator mgm-progress">
+                                   <img src="/images/ajax-loader.gif" alt="Loading Bundles...">
+                               </div>
+
+                               <div class="form-control-btn">
+                                   <button type="submit">Submit</button>
+                               </div>
+                           </form>
+                       </div>
+
+
+                   </div>
+               {{/if}}
+             </div>
+         </div>
+     </div>
+
+
+    </div>
+</div>
+
+
+
+

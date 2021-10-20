@@ -12,6 +12,7 @@ router.get("/",middleware.checkAuthenticated,controller.renderdashboard);
 router.get("/manageaccount",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three, controller.rendermanageAccount)
 router.get("/topup",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three, controller.rendertopup);
 router.get("/mgm",middleware.checkAuthenticated, controller.rendermgm);
+router.get("/evd",middleware.checkAuthenticated, controller.renderevd);
 
 router.get("/bundles",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three,controller.getbundles)
 
@@ -69,6 +70,17 @@ router.post("/gencode",middleware.checkAuthenticated,controller.postgenCode);
 router.post("/actcode",middleware.checkAuthenticated,controller.postactCode);
 router.post("/getcode",middleware.checkAuthenticated,controller.postgetCode);
 router.post("/subref",middleware.checkAuthenticated,controller.postsubRef);
+
+//EVD
+router.get("/evdinfo",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three,controller.getEvdInfo);
+router.get("/evdhist",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three,controller.getEvdHist);
+router.post("/evdadddist",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three,controller.addEvdDist);
+router.post("/evdaddretail",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three,controller.addEvdRetail);
+router.post("/evdcreditdist",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three,controller.creditEvdDist);
+router.post("/evdresetpin",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three,controller.resetEvdPIN);
+router.post("/evddisable",middleware.checkAuthenticated,middleware.checkForLevel_Two_Three,controller.disableEvd);
+
+
 
 
 router.post("/assign_aff",middleware.checkAuthenticated,controller.postAssignAff);

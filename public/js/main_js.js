@@ -1,5 +1,8 @@
 $(function () {
 
+
+
+
     const search_form = document.getElementById("search-form");
     const msisdn_input = document.getElementById("msisdn");
     const balanceTbody = document.getElementById("balance-table-tbody");
@@ -2090,7 +2093,6 @@ $(function () {
     }
 
 
-
     const getCodeSuccessWrapper = document.getElementById("mgm-success-getcode");
     const getCodeErrorWrapper = document.getElementById("mgm-error-getcode");
     const getCodeErrorMessage = document.querySelector("#mgm-error-getcode >small");
@@ -2118,12 +2120,12 @@ $(function () {
                         getCodeErrorWrapper.style.display = "none";
 
                         const codeInfo = data.codeInfo;
-                        tableBody.innerHTML=`<tr><td>Code</td> <td>${codeInfo.code}</td> </tr> <tr> <td>Status</td> <td>${codeInfo.status}</td> </tr> <tr> <td>Referral</td> <td>${codeInfo.referral}</td> </tr> <tr> <td>Date Generated</td> <td>${codeInfo.date_generated}</td> </tr> <tr> <td>Date Expiry</td> <td>${codeInfo.date_expiry}</td> </tr> <tr> <td>Referred</td><td>${codeInfo.referreds}</td></tr>`;
+                        tableBody.innerHTML = `<tr><td>Code</td> <td>${codeInfo.code}</td> </tr> <tr> <td>Status</td> <td>${codeInfo.status}</td> </tr> <tr> <td>Referral</td> <td>${codeInfo.referral}</td> </tr> <tr> <td>Date Generated</td> <td>${codeInfo.date_generated}</td> </tr> <tr> <td>Date Expiry</td> <td>${codeInfo.date_expiry}</td> </tr> <tr> <td>Referred</td><td>${codeInfo.referreds}</td></tr>`;
                     } else {
                         getCodeErrorMessage.innerHTML = data.message;
                         getCodeSuccessWrapper.style.display = "none";
                         getCodeErrorWrapper.style.display = "block";
-                        tableBody.innerHTML="";
+                        tableBody.innerHTML = "";
 
 
                     }
@@ -2138,7 +2140,7 @@ $(function () {
             getCodeErrorMessage.innerHTML += "Network Failure.Please check internet connection";
             getCodeSuccessWrapper.style.display = "none";
             getCodeErrorWrapper.style.display = "block";
-            tableBody.innerHTML="";
+            tableBody.innerHTML = "";
 
 
         })
@@ -2150,7 +2152,6 @@ $(function () {
     if (getCodeForm) {
         getCodeForm.addEventListener("submit", mgmGetCode)
     }
-
 
 
     const subRefSuccessWrapper = document.getElementById("mgm-success-subref");
@@ -2180,21 +2181,21 @@ $(function () {
                         subRefErrorWrapper.style.display = "none";
                         const dataSet = data.dataSet;
 
-                        let tableRows ='<tr><td>Referred msisdn</td><td>Activation Date</td><td>Code</td></tr>'
-                        if (dataSet.length >0){
+                        let tableRows = '<tr><td>Referred msisdn</td><td>Activation Date</td><td>Code</td></tr>'
+                        if (dataSet.length > 0) {
                             dataSet.forEach(function (item) {
-                                tableRows+=`<tr><td>${item.msisdn}</td><td>${item.activation_date}</td><td>${item.code}</td></tr>`
+                                tableRows += `<tr><td>${item.msisdn}</td><td>${item.activation_date}</td><td>${item.code}</td></tr>`
                             })
 
 
                         }
 
-                        tableBody.innerHTML=tableRows;
+                        tableBody.innerHTML = tableRows;
                     } else {
                         subRefErrorMessage.innerHTML = data.message;
                         subRefSuccessWrapper.style.display = "none";
                         subRefErrorWrapper.style.display = "block";
-                        tableBody.innerHTML="";
+                        tableBody.innerHTML = "";
 
 
                     }
@@ -2209,7 +2210,7 @@ $(function () {
             subRefErrorMessage.innerHTML += "Network Failure.Please check internet connection";
             subRefSuccessWrapper.style.display = "none";
             subRefErrorWrapper.style.display = "block";
-            tableBody.innerHTML="";
+            tableBody.innerHTML = "";
 
 
         })
@@ -2272,11 +2273,10 @@ $(function () {
     }
 
     const payweeklyOptForm = document.getElementById("payWeekly-OptOut-Form")
-    if (payweeklyOptForm) payweeklyOptForm.addEventListener("submit",payWeeklyOptRec_Event_Listener)
+    if (payweeklyOptForm) payweeklyOptForm.addEventListener("submit", payWeeklyOptRec_Event_Listener)
 
     const payweeklyRecForm = document.getElementById("payweekly-Rec-Form")
-    if (payweeklyRecForm) payweeklyRecForm.addEventListener("submit",payWeeklyOptRec_Event_Listener)
-
+    if (payweeklyRecForm) payweeklyRecForm.addEventListener("submit", payWeeklyOptRec_Event_Listener)
 
 
     function processTransferUnlimited(event) {
@@ -2333,6 +2333,599 @@ $(function () {
     if (transferUnlimited) {
         transferUnlimited.addEventListener("submit", processTransferUnlimited);
     }
+
+
+//EVD
+
+    //EVD GET INFO
+    const evdLinks = document.querySelectorAll(".evd-links");
+    evdLinks.forEach(function (evdLink) {
+        evdLink.addEventListener("click", function (event) {
+            event.preventDefault();
+            const targetLink = event.target;
+            targetLink.dataset.target = "active";
+            evdLinks.forEach(function (alink) {
+                if (alink === targetLink) {
+                    alink.closest("li").classList.add("mgm-links-active");
+                    alink.style.textDecoration = "none"
+                    let dataId = alink.dataset.id;
+                    document.querySelectorAll("." + dataId)[0].style.display = "flex"
+
+
+                } else {
+                    alink.closest("li").classList.remove("mgm-links-active");
+                    let dataId = alink.dataset.id;
+                    document.querySelectorAll("." + dataId)[0].style.display = "none"
+
+                }
+            })
+
+        })
+
+    })
+
+    const evdInfoContactId = document.getElementById("acctInfo-contactId")
+    const progressEvdInfo = document.getElementById("progressIndicator-evdInfo")
+    const evdInfoErrorWrapper = document.getElementById("mgm-error-evdinfo");
+    const evdErrorMessage = document.querySelector("#mgm-error-evdinfo >small");
+
+    const refreshBtnEvdInfo = document.getElementById("refreshBtnEvdInfo")
+
+    if (evdInfoContactId) {
+
+        evdInfoContactId.addEventListener("input", function (event) {
+            let contactId = event.target.value
+            if (contactId.length !== 12) return
+
+            const tbody = document.getElementById("evd-acctInfo-tbody")
+
+            evdInfoErrorWrapper.style.display = "none"
+            progressEvdInfo.style.display = "block";
+            $.get("/evdinfo", {contactId})
+                .done(function (data) {
+                    progressEvdInfo.style.display = "none";
+                    const {status} = data
+                    if (status === 0) {
+                        const result = data.data
+                        tbody.innerHTML = `
+                         <tr>
+                                 <td>Account ID</td>
+                                 <td>${result.acctId}</td>
+                             </tr>
+
+                             <tr>
+                                 <td>Status</td>
+                                 <td>${result.status}</td>
+                             </tr>
+                             <tr>
+                                 <td>Cash Balance (GHC)</td>
+                                 <td>${result.balance}</td>
+                             </tr>
+                             <tr>
+                                 <td>Business Name</td>
+                                 <td>${result.businessName}</td>
+                             </tr>
+                             ${result.name ? `<tr>
+                                 <td>Name</td>
+                                 <td>${result.name}</td>
+                             </tr>` : ""}
+
+                             <tr>
+                                 <td>EVD Class</td>
+                                 <td>${result.evdClass}</td>
+                             </tr>
+                             
+                              ${result.distributorId ? `<tr>
+                                 <td>Distributor Assigned</td>
+                                 <td>${result.distributorId}</td>
+                             </tr>` : ""}
+
+                             <tr>
+                                 <td>Contact Id</td>
+                                 <td>${result.contactId}</td>
+                             </tr>
+
+                           <tr class="actionBtn">
+                                 <td><button class="reset-pin" data-contactId="${result.contactId}" id="evd-reset-pin" data-type="${result.evdClass}">Reset PIN</button></td>
+                                 <td><button class="disable-acct" data-contactId="${result.contactId}" id="evd-disable" data-type="${result.evdClass}">Disable Account</button></td>
+                             </tr>
+                        `;
+                        refreshBtnEvdInfo.style.display ="block"
+                    } else {
+                        tbody.innerHTML = ""
+                        refreshBtnEvdInfo.style.display ="none"
+                        evdErrorMessage.textContent = data.reason
+                        evdInfoErrorWrapper.style.display = "block"
+                    }
+
+                })
+                .fail(function (error) {
+                    progressEvdInfo.style.display = "none";
+                    evdErrorMessage.textContent = "Network Failure"
+
+                })
+
+        })
+
+    }
+
+
+    if (refreshBtnEvdInfo){
+        refreshBtnEvdInfo.addEventListener("click", function (event) {
+            const contactId = document.getElementById("acctInfo-contactId").value
+
+            const progressEvdInfo = document.getElementById("progressIndicator-evdInfo")
+            const evdInfoErrorWrapper = document.getElementById("mgm-error-evdinfo");
+            const evdErrorMessage = document.querySelector("#mgm-error-evdinfo >small");
+            const tbody = document.getElementById("evd-acctInfo-tbody")
+
+            evdInfoErrorWrapper.style.display = "none"
+            progressEvdInfo.style.display = "block";
+            $.get("/evdinfo", {contactId})
+                .done(function (data) {
+                    progressEvdInfo.style.display = "none";
+                    const {status} = data
+                    if (status === 0) {
+                        const result = data.data
+                        tbody.innerHTML = `
+                         <tr>
+                                 <td>Account ID</td>
+                                 <td>${result.acctId}</td>
+                             </tr>
+
+                             <tr>
+                                 <td>Status</td>
+                                 <td>${result.status}</td>
+                             </tr>
+                             <tr>
+                                 <td>Cash Balance (GHC)</td>
+                                 <td>${result.balance}</td>
+                             </tr>
+                             <tr>
+                                 <td>Business Name</td>
+                                 <td>${result.businessName}</td>
+                             </tr>
+                             ${result.name ? `<tr>
+                                 <td>Name</td>
+                                 <td>${result.name}</td>
+                             </tr>` : ""}
+
+                             <tr>
+                                 <td>EVD Class</td>
+                                 <td>${result.evdClass}</td>
+                             </tr>
+                             
+                              ${result.distributorId ? `<tr>
+                                 <td>Distributor Assigned</td>
+                                 <td>${result.distributorId}</td>
+                             </tr>` : ""}
+
+                             <tr>
+                                 <td>Contact Id</td>
+                                 <td>${result.contactId}</td>
+                             </tr>
+
+                           <tr class="actionBtn">
+                                 <td><button class="reset-pin" data-contactId="${result.contactId}" id="evd-reset-pin" data-type="${result.evdClass}">Reset PIN</button></td>
+                                 <td><button class="disable-acct" data-contactId="${result.contactId}" id="evd-disable" data-type="${result.evdClass}">Disable Account</button></td>
+                             </tr>
+                        `;
+
+                        refreshBtnEvdInfo.style.display ="block"
+                    } else {
+                        tbody.innerHTML = ""
+                        refreshBtnEvdInfo.style.display ="none"
+                        evdErrorMessage.textContent = data.reason
+                        evdInfoErrorWrapper.style.display = "block"
+                    }
+
+                })
+                .fail(function (error) {
+                    progressEvdInfo.style.display = "none";
+                    evdErrorMessage.textContent = "Network Failure"
+
+                })
+
+
+        })
+    }
+
+
+
+//EVD GET HIST
+    const evdHistContactId = document.getElementById("hist-contactId")
+    const progressEvdHist = document.getElementById("progressIndicator-evdHist")
+    const evdHistErrorWrapper = document.getElementById("mgm-error-evdHist");
+    const evdHistErrorMessage = document.querySelector("#mgm-error-evdHist >small");
+
+    const refreshBtnEvdHist = document.getElementById("refreshBtnEvdHist")
+
+    if (evdHistContactId) {
+        evdHistContactId.addEventListener("input", function (event) {
+            let contactId = event.target.value
+            if (contactId.length !== 12) return
+
+            const tbody = document.getElementById("evd-hist-tbody")
+
+            evdHistErrorWrapper.style.display = "none"
+            progressEvdHist.style.display = "block";
+            $.get("/evdhist", {contactId})
+                .done(function (data) {
+                    progressEvdHist.style.display = "none";
+                    const {status} = data
+                    if (status === 0 ) {
+                        const result = data.data
+                        let tbodyInnerHTML =""
+                        result.forEach(item =>{
+                            tbodyInnerHTML += `
+                            <tr>
+                                 <td>${item.createdAt}</td>
+                                 <td>${item.contactId}</td>
+                                 <td>${item.transactionType}</td>
+                                 <td>${item.details}</td>
+                             </tr>
+                            `
+                        })
+
+                        tbody.innerHTML=tbodyInnerHTML
+                        refreshBtnEvdHist.style.display="block";
+
+                    } else {
+                        tbody.innerHTML=""
+                        refreshBtnEvdHist.style.display="none"
+                        refreshBtnEvdHist.style.display="none";
+                        evdHistErrorMessage.textContent = data.reason
+                        evdHistErrorWrapper.style.display = "block"
+                    }
+
+                })
+                .fail(function (error) {
+                    progressEvdHist.style.display = "none";
+                    evdHistErrorMessage.textContent = "Network Failure"
+                    evdHistErrorWrapper.style.display = "block"
+
+                })
+
+        })
+
+
+    }
+
+    if (refreshBtnEvdHist){
+        refreshBtnEvdHist.addEventListener("click", function (event) {
+            const contactId = document.getElementById("hist-contactId").value
+
+            const progressEvdHist = document.getElementById("progressIndicator-evdHist")
+            const evdHistErrorWrapper = document.getElementById("mgm-error-evdHist");
+            const evdHistErrorMessage = document.querySelector("#mgm-error-evdHist >small");
+
+            const tbody = document.getElementById("evd-hist-tbody")
+
+            evdHistErrorWrapper.style.display = "none"
+            progressEvdHist.style.display = "block";
+            $.get("/evdhist", {contactId})
+                .done(function (data) {
+                    progressEvdHist.style.display = "none";
+                    const {status} = data
+                    if (status === 0) {
+                        const result = data.data
+                        let tbodyInnerHTML =""
+                        result.forEach(item =>{
+                            tbodyInnerHTML += `
+                            <tr>
+                                 <td>${item.createdAt}</td>
+                                 <td>${item.contactId}</td>
+                                 <td>${item.transactionType}</td>
+                                 <td>${item.details}</td>
+                             </tr>
+                            `
+                        })
+
+                        tbody.innerHTML=tbodyInnerHTML
+                        refreshBtnEvdHist.style.display="block";
+
+                    } else {
+                        tbody.innerHTML = ""
+                        refreshBtnEvdHist.style.display="none"
+                        evdHistErrorMessage.textContent = data.reason
+                        evdHistErrorWrapper.style.display = "block"
+                    }
+
+                })
+                .fail(function (error) {
+                    progressEvdHist.style.display = "none";
+                    evdHistErrorMessage.textContent = "Network Failure"
+                    evdHistErrorWrapper.style.display = "block"
+
+                })
+
+
+        })
+    }
+
+
+    //EVD ADD DIST
+
+    const evdAddDistForm = document.getElementById("add-dist-form")
+    if (evdAddDistForm){
+        const progressEvdAddDist = document.getElementById("progressIndicator-evdAddDist")
+        const evdAddDistErrorWrapper = document.getElementById("mgm-error-evdAddDist");
+        const evdAddDistErrorMessage = document.querySelector("#mgm-error-evdAddDist >small");
+        const evdAddDistSuccessWrapper = document.getElementById("mgm-success-evdAddDist");
+        const evdAddDistSuccessMessage = document.querySelector("#mgm-success-evdAddDist >small");
+
+
+        evdAddDistForm.addEventListener("submit", function (event) {
+            event.preventDefault()
+            evdAddDistSuccessWrapper.style.display = "none";
+            evdAddDistErrorWrapper.style.display = "none";
+            progressEvdAddDist.style.display = "block";
+
+            const contactId = document.getElementById("add-dist-contactId").value;
+            const businessName = document.getElementById("add-dist-business").value;
+            const area = document.getElementById("add-dist-area").value;
+
+            const postbody = {contactId,businessName,area};
+
+
+            $.post("/evdadddist", postbody)
+                .done(function (data) {
+                    if (data) {
+                        progressEvdAddDist.style.display = "none";
+
+                        if (data.status ===0 ) {
+
+                            evdAddDistErrorWrapper.style.display = "none";
+                            evdAddDistSuccessMessage.innerText = "Success";
+                            evdAddDistSuccessWrapper.style.display = "block";
+
+
+                        } else {
+                            evdAddDistErrorMessage.innerText = data.reason;
+                            evdAddDistSuccessWrapper.style.display = "none";
+                            evdAddDistErrorWrapper.style.display = "block";
+
+
+                        }
+
+
+                    }
+
+
+                }).fail(function (error) {
+                progressEvdAddDist.style.display = "none";
+                evdAddDistErrorMessage.innerText = "Network Failure. Check internet";
+                evdAddDistSuccessWrapper.style.display = "none";
+                evdAddDistErrorWrapper.style.display = "block";
+
+
+            })
+
+
+        })
+    }
+
+
+    //EVD ADD RETAIL
+    const evdAddRetailForm = document.getElementById("add-retail-form")
+    if (evdAddRetailForm){
+        const progressEvdAddRetail = document.getElementById("progressIndicator-evdAddRetail")
+        const evdAddRetailErrorWrapper = document.getElementById("mgm-error-evdAddRetail");
+        const evdAddRetailErrorMessage = document.querySelector("#mgm-error-evdAddRetail >small");
+        const evdAddRetailSuccessWrapper = document.getElementById("mgm-success-evdAddRetail");
+        const evdAddRetailSuccessMessage = document.querySelector("#mgm-success-evdAddRetail >small");
+
+
+        evdAddRetailForm.addEventListener("submit", function (event) {
+            event.preventDefault()
+            evdAddRetailSuccessWrapper.style.display = "none";
+            evdAddRetailErrorWrapper.style.display = "none";
+            progressEvdAddRetail.style.display = "block";
+
+            const contactId = document.getElementById("add-retail-contactId").value;
+            const businessName = document.getElementById("add-retail-business").value;
+            const firstName = document.getElementById("add-retail-firstname").value;
+            const lastName = document.getElementById("add-retail-lastname").value;
+            const distributorId = document.getElementById("add-retail-distributorId").value;
+
+
+            const postbody = {contactId,businessName,firstName,lastName,distributorId};
+
+
+            $.post("/evdaddretail", postbody)
+                .done(function (data) {
+                    if (data) {
+                        progressEvdAddRetail.style.display = "none";
+
+                        if (data.status ===0 ) {
+
+                            evdAddRetailErrorWrapper.style.display = "none";
+                            evdAddRetailSuccessMessage.innerText = "Success";
+                            evdAddRetailSuccessWrapper.style.display = "block";
+
+
+                        } else {
+                            evdAddRetailErrorMessage.innerText = data.reason;
+                            evdAddRetailSuccessWrapper.style.display = "none";
+                            evdAddRetailErrorWrapper.style.display = "block";
+
+
+                        }
+
+
+                    }
+
+
+                }).fail(function (error) {
+                progressEvdAddRetail.style.display = "none";
+                evdAddRetailErrorMessage.innerText = "Network Failure. Check internet";
+                evdAddRetailSuccessWrapper.style.display = "none";
+                evdAddRetailErrorWrapper.style.display = "block";
+
+
+            })
+
+
+        })
+    }
+
+    //CREDIT DIST
+
+    const evdCreditDistForm = document.getElementById("credit-dist-form")
+    if (evdCreditDistForm){
+        const progressEvdCreditDist = document.getElementById("progressIndicator-evdCreditDist")
+        const evdCreditDistErrorWrapper = document.getElementById("mgm-error-evdCreditDist");
+        const evdCreditDistErrorMessage = document.querySelector("#mgm-error-evdCreditDist >small");
+        const evdCreditDistSuccessWrapper = document.getElementById("mgm-success-evdCreditDist");
+        const evdCreditDistSuccessMessage = document.querySelector("#mgm-success-evdCreditDist >small");
+
+
+        evdCreditDistForm.addEventListener("submit", function (event) {
+            event.preventDefault()
+            evdCreditDistSuccessWrapper.style.display = "none";
+            evdCreditDistErrorWrapper.style.display = "none";
+            progressEvdCreditDist.style.display = "block";
+
+            const contactId = document.getElementById("credit-dist-distributorId").value;
+            const amount = document.getElementById("credit-dist-amount").value;
+
+
+            const postbody = {contactId,amount};
+
+
+            $.post("/evdcreditdist", postbody)
+                .done(function (data) {
+                    if (data) {
+                        progressEvdCreditDist.style.display = "none";
+
+                        if (data.status ===0 ) {
+
+                            evdCreditDistErrorWrapper.style.display = "none";
+                            evdCreditDistSuccessMessage.innerText = "Success";
+                            evdCreditDistSuccessWrapper.style.display = "block";
+
+
+                        } else {
+                            evdCreditDistErrorMessage.innerText = data.reason;
+                            evdCreditDistSuccessWrapper.style.display = "none";
+                            evdCreditDistErrorWrapper.style.display = "block";
+
+
+                        }
+
+
+                    }
+
+
+                }).fail(function (error) {
+                progressEvdCreditDist.style.display = "none";
+                evdCreditDistErrorMessage.innerText = "Network Failure. Check internet";
+                evdCreditDistSuccessWrapper.style.display = "none";
+                evdCreditDistErrorWrapper.style.display = "block";
+
+
+            })
+
+
+        })
+    }
+
+
+    //RESET EVD PIN
+    function handleResetEvdPIN(event) {
+
+        const progressEvdInfo = document.getElementById("progressIndicator-evdInfo")
+        const evdInfoErrorWrapper = document.getElementById("mgm-error-evdinfo");
+        const evdErrorMessage = document.querySelector("#mgm-error-evdinfo >small");
+        const evdInfoSuccessWrapper = document.getElementById("mgm-success-evdinfo");
+        const evdInfoSuccessMessage = document.querySelector("#mgm-success-evdinfo >small");
+
+        const contactId = event.target.dataset.contactid
+        const type = event.target.dataset.type
+
+        evdInfoSuccessWrapper.style.display="none"
+        evdInfoErrorWrapper.style.display = "none"
+        progressEvdInfo.style.display = "block";
+
+        $.post("/evdresetpin", {contactId,type})
+            .done(function (data) {
+                progressEvdInfo.style.display = "none";
+
+                if (data.status === 0) {
+                    evdInfoErrorWrapper.style.display = "none";
+                    evdInfoSuccessMessage.innerText = "Reset PIN success: PIN sent";
+                    evdInfoSuccessWrapper.style.display = "block";
+
+                } else {
+                    evdInfoSuccessWrapper.style.display = "none";
+                    evdErrorMessage.textContent = data.reason
+                    evdInfoErrorWrapper.style.display = "block"
+                }
+
+            })
+            .fail(function (error) {
+                progressEvdInfo.style.display = "none";
+                evdInfoSuccessWrapper.style.display = "none";
+                evdErrorMessage.textContent = "Network Failure"
+                evdInfoErrorWrapper.style.display = "block"
+
+            })
+
+
+
+    }
+    $(document).on('click','#evd-reset-pin', handleResetEvdPIN)
+
+    //DISABLE EVD
+    function handleEvdDisable(event) {
+        const contactId = event.target.dataset.contactid
+        const type = event.target.dataset.type
+
+        const progressEvdInfo = document.getElementById("progressIndicator-evdInfo")
+        const evdInfoErrorWrapper = document.getElementById("mgm-error-evdinfo");
+        const evdErrorMessage = document.querySelector("#mgm-error-evdinfo >small");
+        const evdInfoSuccessWrapper = document.getElementById("mgm-success-evdinfo");
+        const evdInfoSuccessMessage = document.querySelector("#mgm-success-evdinfo >small");
+
+
+
+        evdInfoSuccessWrapper.style.display="none"
+        evdInfoErrorWrapper.style.display = "none"
+        progressEvdInfo.style.display = "block";
+
+        $.post("/evddisable", {contactId,type})
+            .done(function (data) {
+                progressEvdInfo.style.display = "none";
+
+                if (data.status === 0) {
+                    evdInfoErrorWrapper.style.display = "none";
+                    evdInfoSuccessMessage.innerText = "Success: Account Disabled";
+                    evdInfoSuccessWrapper.style.display = "block";
+
+                } else {
+                    evdInfoSuccessWrapper.style.display = "none";
+                    evdErrorMessage.textContent = data.reason
+                    evdInfoErrorWrapper.style.display = "block"
+                }
+
+            })
+            .fail(function (error) {
+                progressEvdInfo.style.display = "none";
+                evdInfoSuccessWrapper.style.display = "none";
+                evdErrorMessage.textContent = "Network Failure"
+                evdInfoErrorWrapper.style.display = "block"
+
+            })
+
+
+    }
+    $(document).on('click','#evd-disable', handleEvdDisable)
+
+
+
+
+
+
 
 
 

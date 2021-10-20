@@ -148,7 +148,8 @@
     text-align: left;
     font-weight: bold;
 }
-#acct-info-table tr:first-child td:nth-child(2){
+
+#acct-info-table tr:first-child td:nth-child(2) {
     font-weight: bolder;
 
 
@@ -319,7 +320,7 @@ legend {
     right: 0;
     background: #c2c7ca61;;
     color: #1b0202f0;
-    overflow:auto;
+    overflow: auto;
 }
 
 .all-main-content-wrapper {
@@ -385,12 +386,12 @@ legend {
 }
 
 .all-main-content-wrapper .form-group2 fieldset {
-    margin: 20px 50px ;
+    margin: 20px 50px;
     padding: 15px 0;
     width: 350px;
     border: none;
     border-radius: 20px;
-    background:  #3d3d56;
+    background: #3d3d56;
     color: white;
 }
 
@@ -405,8 +406,9 @@ legend {
 }
 
 .all-main-content-wrapper .form-group2 li {
-    padding: 5px ;
+    padding: 5px;
 }
+
 .all-main-content-wrapper .form-group2 input {
     margin-right: 5px;
 }
@@ -452,17 +454,17 @@ legend {
     background: white;
 
 
-
 }
 
 .bundle-table tr {
     border-bottom: 1px solid #180c0c;
 }
+
 .bundle-table td, .bundle-table th {
     padding: 10px 20px;
 }
 
-.bundle-table tbody td:nth-of-type(4){
+.bundle-table tbody td:nth-of-type(4) {
     padding: 0;
 
 }
@@ -486,18 +488,17 @@ legend {
     padding: 5px 20px;
     background: #e91e63;
     color: white;
-    border: 1px solid #e91e63; ;
+    border: 1px solid #e91e63;;
     border-radius: 5px;
     cursor: pointer;
     font-family: inherit;
     transition: all 0.5s;
 
 
-
 }
 
 .bundle-table button:hover,
-.bundle-table button:active{
+.bundle-table button:active {
     background: white;
     color: black;
     border: 1px solid black;
@@ -505,7 +506,7 @@ legend {
 
 }
 
-.bundle-table button:active{
+.bundle-table button:active {
 
 }
 
@@ -520,7 +521,8 @@ legend {
     margin: auto;
     display: none;
 }
-#progessIndicator span{
+
+#progessIndicator span {
     display: block;
     margin: 5px;
     font-weight: bolder;
@@ -552,10 +554,11 @@ legend {
     background: rgb(61 61 86);
     color: white;
     font-family: inherit;
-    box-shadow: 0 2px 2px 2px rgba(0,0,0,0.9);
+    box-shadow: 0 2px 2px 2px rgba(0, 0, 0, 0.9);
     cursor: pointer;
     outline: none;
 }
+
 .form-group-button .loadcard-btn:hover {
     background: transparent;
     color: black;
@@ -563,9 +566,8 @@ legend {
 }
 
 .form-group-button .loadcard-btn:active {
-    box-shadow: 0 2px 2px 5px rgba(0,0,0,0.9);
+    box-shadow: 0 2px 2px 5px rgba(0, 0, 0, 0.9);
 }
-
 
 
 /* ---- Manange Voucher ----- */
@@ -600,7 +602,7 @@ legend {
 
 .manage-voucher-info__item li .pvalue {
     display: inline-block;
-    padding-left:15px;
+    padding-left: 15px;
     font-weight: lighter;
     color: #dddada;
 }
@@ -633,6 +635,7 @@ legend {
     margin-top: 15px;
     text-align: center;
 }
+
 .update-voucher-status-wrapper a {
     display: inline-block;
     padding: 10px 30px;
@@ -646,7 +649,7 @@ legend {
 }
 
 .update-voucher-status-wrapper a:hover,
-.update-voucher-status-wrapper a:active{
+.update-voucher-status-wrapper a:active {
     background: white;
     color: black;
     border: 1px solid black;
@@ -658,10 +661,9 @@ legend {
 /* --------------View History---------------------*/
 
 
-
 .form-control-viewHist {
     display: flex;
-    justify-content:space-evenly;
+    justify-content: space-evenly;
     align-items: center;
     width: 90%;
     border: 1px solid #ccc;
@@ -748,7 +750,8 @@ legend {
 #history-table tr {
     border-bottom: 1px solid #1b0202;
 }
-#history-table tbody td:nth-child(3){
+
+#history-table tbody td:nth-child(3) {
     text-align: center;
 }
 
@@ -763,6 +766,7 @@ legend {
 #progressIndicator-History {
     margin-right: 15px;
 }
+
 /*------Activate Account ------------*/
 
 .form-wrapper-activateAcct {
@@ -770,7 +774,7 @@ legend {
 }
 
 .form-body-activateAcct {
-     width: 400px;
+    width: 400px;
     margin: 0 auto;
     background: #3d3d56;
     color: white;
@@ -794,7 +798,7 @@ legend {
     outline: none;
 }
 
-.form-body-activateAcct .form-control select{
+.form-body-activateAcct .form-control select {
     width: 100%;
     padding: 5px 10px;
     background: #f5f2f2;
@@ -810,7 +814,7 @@ legend {
 }
 
 .form-body-activateAcct .form-control input:focus,
-.form-body-activateAcct .form-control select:focus{
+.form-body-activateAcct .form-control select:focus {
     background: #ccc;
     outline: none;
 }
@@ -835,7 +839,7 @@ legend {
 
 }
 
-.form-control-activation-btn button:hover{
+.form-control-activation-btn button:hover {
     background: white;
     box-shadow: 0 2px 2px 5px #180c0c;
     color: #180c0c;
@@ -844,20 +848,17 @@ legend {
 
 }
 
-#activate-success, #activate-error{
+#activate-success, #activate-error {
     text-align: center;
     width: max-content;
     margin: 0 auto 20px auto;
 
 
-
 }
 
-.form-control-activation-btn button:active{
+.form-control-activation-btn button:active {
     outline: 2px solid #ffffff;
 }
-
-
 
 
 /*---------------Tranfer Page -----------*/
@@ -899,7 +900,7 @@ legend {
 
 }
 
-.form-wrapper-transfer .form-body-transfer .form-control fieldset legend{
+.form-wrapper-transfer .form-body-transfer .form-control fieldset legend {
     padding: 10px 40px;
     color: #180c0c;
     background: #c1c1a3;
@@ -907,7 +908,7 @@ legend {
 }
 
 .form-wrapper-transfer .form-body-transfer .form-control fieldset label input,
-.form-wrapper-transfer .form-body-transfer .form-control fieldset label select{
+.form-wrapper-transfer .form-body-transfer .form-control fieldset label select {
     flex: 2;
     padding: 5px 15px;
     font-family: inherit;
@@ -932,6 +933,7 @@ legend {
     margin-top: 20px;
     text-align: center;
 }
+
 .form-wrapper-transfer .form-control-transfer-button button {
     display: inline-block;
     padding: 10px 50px;
@@ -976,11 +978,13 @@ legend {
 #validiy-box label {
     font-weight: bolder;
 }
-#validiy-box .validity-checkbox >* {
+
+#validiy-box .validity-checkbox > * {
     padding: 5px;
     cursor: pointer;
 }
-#validiy-box .validity-checkbox input[type="checkbox"]{
+
+#validiy-box .validity-checkbox input[type="checkbox"] {
     display: inline-block;
     padding: 5px 20px;
 }
@@ -1016,24 +1020,24 @@ legend {
 
 }
 
-.main-content-manage-acct nav ul  li {
+.main-content-manage-acct nav ul li {
     padding: 8px 5px;
 }
 
-.main-content-manage-acct nav ul  li a {
+.main-content-manage-acct nav ul li a {
     color: inherit;
 }
 
-.main-content-manage-acct nav ul  li a:hover{
+.main-content-manage-acct nav ul li a:hover {
     text-decoration: underline;
 }
 
-.main-content-manage-acct nav ul  li.active {
-   background: #e91e63;
+.main-content-manage-acct nav ul li.active {
+    background: #e91e63;
 
 }
 
-.main-content-manage-acct nav ul  li.active a:hover {
+.main-content-manage-acct nav ul li.active a:hover {
 
     text-decoration: none;
 }
@@ -1043,6 +1047,7 @@ legend {
     justify-content: flex-end;
     padding-top: 10px;
 }
+
 .export-container button {
     padding: 5px 15px;
     background: #162641;
@@ -1055,14 +1060,13 @@ legend {
     border: none;
 }
 
-.export-container button:hover{
+.export-container button:hover {
     background: white;
     color: black;
     box-shadow: 0 0 2px 5px #999191;
 }
 
 /*  Memeber Get Member */
-
 
 
 .main-content-manage-acct nav ul li a.mgm-links {
@@ -1075,11 +1079,11 @@ legend {
 
 }
 
-.main-content-manage-acct nav ul li.mgm-links-active a:hover{
+.main-content-manage-acct nav ul li.mgm-links-active a:hover {
     text-decoration: none;
 }
 
-.task-container-mgm{
+.task-container-mgm {
     display: none;
 
 }
@@ -1103,17 +1107,17 @@ legend {
     border-radius: 15px
 }
 
-.task-container-mgm .form-wrapper-mgm .form-control{
+.task-container-mgm .form-wrapper-mgm .form-control {
     padding: 10px 0;
 
 }
 
 .task-container-mgm .form-wrapper-mgm .form-control label,
-.task-container-mgm .form-wrapper-mgm .form-control input{
+.task-container-mgm .form-wrapper-mgm .form-control input {
     display: block;
 }
 
-.task-container-mgm .form-wrapper-mgm .form-control input{
+.task-container-mgm .form-wrapper-mgm .form-control input {
     background: #3d3d56;
     padding: 10px 20px;
     width: 100%;
@@ -1122,18 +1126,18 @@ legend {
     border: none;
 }
 
-.task-container-mgm .form-wrapper-mgm .form-control label{
+.task-container-mgm .form-wrapper-mgm .form-control label {
     font-weight: bolder;
     padding-bottom: 3px;
 }
 
-.task-container-mgm .form-wrapper-mgm .form-control-btn{
+.task-container-mgm .form-wrapper-mgm .form-control-btn {
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.task-container-mgm .form-wrapper-mgm .form-control-btn button{
+.task-container-mgm .form-wrapper-mgm .form-control-btn button {
     background: green;
     color: white;
     font-family: inherit;
@@ -1148,7 +1152,7 @@ legend {
 
 }
 
-.task-container-mgm .form-wrapper-mgm .form-control-btn button:hover{
+.task-container-mgm .form-wrapper-mgm .form-control-btn button:hover {
     box-shadow: 0 2px 2px 5px #180c0c;
     background: #ccc;
     color: #1b0202;
@@ -1164,12 +1168,13 @@ legend {
 }
 
 .manageVoucher-success.mgm-success button {
-   color: #fff;
+    color: #fff;
 }
 
 .progressIndicator.mgm-progress {
     text-align: center;
 }
+
 .progressIndicator.mgm-progress img {
     width: 40px;
     height: 40px;
@@ -1182,23 +1187,25 @@ legend {
 
 }
 
-.getcode-tableWrapper table  {
+.getcode-tableWrapper table {
     border-collapse: collapse;
     width: 400px;
     font-size: smaller;
 }
 
-.sub-ref-tableWrapper  table {
+.sub-ref-tableWrapper table {
     border-collapse: collapse;
     width: 500px;
     font-size: smaller;
 
 }
-.getcode-tableWrapper table td,  .sub-ref-tableWrapper  table td{
+
+.getcode-tableWrapper table td, .sub-ref-tableWrapper table td {
     border: 2px solid #ffffff;
     padding: 5px 10px;
 }
-.getcode-tableWrapper table td:first-child, .sub-ref-tableWrapper  table tr:first-child {
+
+.getcode-tableWrapper table td:first-child, .sub-ref-tableWrapper table tr:first-child {
     color: #00BCD4;
 
 }
@@ -1217,8 +1224,9 @@ legend {
     border-radius: 10px;
     list-style: square;
 }
+
 #infleuncer-ul a {
-  font-weight: bold;
+    font-weight: bold;
 }
 
 #infleuncer-ul .mgm-links-active {
@@ -1236,6 +1244,7 @@ legend {
     color: #ccc;
 
 }
+
 #show-infs-table td {
     border: 1px solid #ffffff;
     padding: 4px 10px;
@@ -1251,6 +1260,218 @@ legend {
     background: none;
 
 }
+
+
+/* EVD */
+
+
+
+.evd-main {
+    width: 100%;
+    height: 100vh;
+    background: #222;
+    color: #fff
+}
+
+.evd-main header {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 0;
+    border-bottom: 2px solid #797171;;
+
+}
+
+.evd-main header > ul {
+    margin: 0 55px;
+}
+
+.evd-main header > ul > li {
+    line-height: 2;
+    padding: 3px 15px ;
+
+}
+
+.evd-main header > ul > li >a {
+    display: inline-block;
+    color: #fff;
+}
+
+.evd-main header > ul > li >a:hover {
+    text-decoration: underline;
+}
+
+.evd-main .content {
+    width: 100%;
+    height: 100%;
+    margin-top: 20px;
+    padding: 20px;
+    position: relative;
+}
+.evd-main .content .task-container-evd {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.evd-main .input-container input {
+    padding: 10px 30px;
+    width: 300px;
+    border: none;
+    outline: none;
+    text-align: center;
+    background: #ccc;
+    font-family: inherit;
+}
+.evd-main .content .table-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 40px;
+}
+
+.evd-main .content  table {
+    border-collapse: collapse;
+    font-size: smaller;
+}
+.evd-main .content table td {
+    padding: 8px 20px
+}
+
+.evd-main .content table tr:not(.actionBtn) {
+    border-bottom: 1px solid #ffffff;;
+}
+.evd-main .content .table-container table td:first-child {
+    color: #00BCD4;
+}
+
+.evd-main .content table  tr:not(.actionBtn) td:last-child {
+    text-align: center;
+}
+.evd-main .content table tr.actionBtn td {
+    padding-top: 20px;
+}
+.evd-main tr.actionBtn td button {
+    font-family: inherit;
+    display: inline-block;
+    padding: 5px 15px;
+    cursor: pointer;
+    transition: 0.4s;
+}
+.evd-main tr.actionBtn td button:hover {
+    background: #ccc;
+    color: #0a0a0a;
+}
+
+.evd-main button.reset-pin {
+    background: #453CC9;
+    color: #fff;
+    outline: none;
+}
+.evd-main button.disable-acct {
+    background: #F8425F;
+    color: #fff;
+}
+
+.evd-main .content .table-container-hist {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 40px;
+
+}
+
+.evd-main .content .table-container-hist table th {
+    color: #00BCD4;
+}
+.evd-main .content .form-wrapper {
+    color: #424242;
+    width: 400px;
+    height: max-content;
+    margin: 10px auto;
+    padding: 10px 0;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.evd-main .content .form-wrapper .form-control {
+    width: 80%;
+    padding: 10px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.evd-main .content .form-wrapper .form-control label {
+    font-weight: bold;
+}
+.evd-main .content .form-control input {
+    background: #3d3d56;
+    padding: 10px;
+    width: 100%;
+    color: #fff;
+    outline: none;
+    border: none;
+    font-family: inherit;
+}
+
+.evd-main .content .form-control select {
+    padding: 10px;
+    outline: none;
+    width: 100%;
+    background: #3d3d56;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    font-family: inherit;
+}
+.evd-main .content .form-control-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.evd-main .content .form-control-btn button {
+    padding: 5px 30px;
+    background: green;
+    color: #fff;
+    border: none;
+    outline: none;
+    font-family: inherit;
+    cursor: pointer;
+    transition: 0.5s;
+}
+
+.evd-main .content .form-control-btn button:hover{
+    box-shadow: 0 0 8px 4px #000;
+}
+
+.refreshBtnEvd {
+    position: absolute;
+    top: 5px;
+    right: 200px;
+    cursor: pointer;
+    padding: 8px;
+    display: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

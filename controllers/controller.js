@@ -18,6 +18,7 @@ const axios = require("axios");
 const User = require("../models/users");
 const Parser = require("json2csv").Parser;
 const fs = require("fs");
+const {username, password} = require("../secure");
 
 require("dotenv").config({
     path: path.join(__dirname, "../config.env")
@@ -83,6 +84,7 @@ module.exports = {
             act: "",
             tra: "",
             mgm: "",
+            evd: ""
         };
         const role = utils.getUserRole(req.user);
         let firstname = req.user.firstname;
@@ -434,6 +436,7 @@ module.exports = {
             act: "",
             tra: "",
             mgm: "",
+            evd: ""
         }
         const role = utils.getUserRole(req.user)
         res.render("topUp", {status, ...role})
@@ -452,10 +455,169 @@ module.exports = {
             act: "",
             tra: "",
             mgm: "active",
+            evd: ""
         }
         const role = utils.getUserRole(req.user)
         res.render("mgm", {status, ...role})
 
+    },
+
+
+    renderevd: async (req, res) => {
+        let distributors = ""
+        const status = {
+            sub: "",
+            maccount: "",
+            top: "",
+            load: "",
+            manage: "",
+            overscratch: "",
+            hist: "",
+            act: "",
+            tra: "",
+            mgm: "",
+            evd: "active"
+        }
+        const role = utils.getUserRole(req.user)
+        if (role.l3) {
+            distributors = await getEvdAllDist()
+            res.render("evd", {status, ...role, distributors: distributors})
+        }else {
+            res.render("evd", {status, ...role, distributors: distributors})
+        }
+
+
+    },
+
+    getEvdInfo: async (req, res) => {
+        let contactId = req.query.contactId;
+        const url = "http://localhost:8900/evdinfo"
+        try {
+            const {data} = await axios.get(url, {
+                params: {
+                    contactId,
+                    user: req.user.username,
+                    channel: "WEB"
+                },
+                auth: {username, password}
+            })
+            res.json(data)
+        } catch (ex) {
+            console.log(ex)
+            res.json({status: 1, reason: "System Error"})
+        }
+
+
+    },
+    getEvdHist: async (req, res) => {
+        let contactId = req.query.contactId;
+        const url = "http://localhost:8900/evdhist"
+        try {
+            const {data} = await axios.get(url, {
+                params: {
+                    contactId,
+                    user: req.user.username,
+                    channel: "WEB"
+                },
+                auth: {username, password}
+            })
+            res.json(data)
+        } catch (ex) {
+            console.log(ex)
+            res.json({status: 1, reason: "System Error"})
+        }
+
+    },
+    addEvdDist: async (req, res) => {
+        const url = "http://localhost:8900/evdadddist"
+
+        const {contactId, businessName, area} = req.body
+
+        const postBody = {contactId, businessName, areaZone: area, user: req.user.username, channel: "WEB"}
+
+        try {
+            const {data} = await axios.post(url, postBody, {auth: {username, password}})
+            res.json(data)
+        } catch (ex) {
+            console.log(ex)
+            res.json({status: 1, reason: "System Error"})
+        }
+
+    },
+    addEvdRetail: async (req, res) => {
+        const url = "http://localhost:8900/evdaddretail"
+
+        const {contactId, businessName, area, distributorId, firstName, lastName} = req.body
+
+        const postBody = {
+            contactId,
+            businessName,
+            areaZone: area,
+            user: req.user.username,
+            channel: "WEB",
+            firstName,
+            lastName,
+            distributorId
+        }
+
+        try {
+            const {data} = await axios.post(url, postBody, {auth: {username, password}})
+            res.json(data)
+        } catch (ex) {
+            console.log(ex)
+            res.json({status: 1, reason: "System Error"})
+        }
+
+
+    },
+    creditEvdDist: async (req, res) => {
+        const url = "http://localhost:8900/evdcreditdist"
+
+        const {contactId,amount} = req.body
+
+        const postBody = {
+            acctId:contactId,
+            amount,
+            user: req.user.username,
+            channel: "WEB",
+
+        }
+
+        try {
+            const {data} = await axios.post(url, postBody, {auth: {username, password}})
+            res.json(data)
+        } catch (ex) {
+            console.log(ex)
+            res.json({status: 1, reason: "System Error"})
+        }
+    },
+    resetEvdPIN: async (req, res) => {
+        const url = "http://localhost:8900/evdresetpin"
+
+        const {contactId,type} = req.body
+        const postBody = {contactId, type,user:req.user.username, channel:"WEB"}
+
+        try {
+            const {data} = await axios.post(url, postBody, {auth: {username, password}})
+            res.json(data)
+        } catch (ex) {
+            console.log(ex)
+            res.json({status: 1, reason: "System Error"})
+        }
+    },
+    disableEvd: async (req, res) => {
+        const url = "http://localhost:8900/evddisable"
+
+        const {contactId,type} = req.body
+        const postBody = {contactId, type,user:req.user.username, channel:"WEB"}
+
+        try {
+            const {data} = await axios.post(url, postBody, {auth: {username, password}})
+            res.json(data)
+        } catch (ex) {
+            console.log(ex)
+            res.json({status: 1, reason: "System Error"})
+        }
     },
 
     getbundles: async (req, res) => {
@@ -766,6 +928,7 @@ module.exports = {
             act: "",
             tra: "",
             mgm: "",
+            evd: ""
         }
         const role = utils.getUserRole(req.user);
         res.render("load_card", {status, ...role})
@@ -865,6 +1028,7 @@ module.exports = {
             act: "",
             tra: "",
             mgm: "",
+            evd: ""
         }
         const role = utils.getUserRole(req.user)
         res.render("checkvoucher", {status, ...role})
@@ -993,6 +1157,7 @@ module.exports = {
             act: "",
             tra: "",
             mgm: "",
+            evd: ""
         }
         const role = utils.getUserRole(req.user);
         res.render("viewHist", {status, ...role});
@@ -1012,6 +1177,7 @@ module.exports = {
             act: "active",
             tra: "",
             mgm: "",
+            evd: ""
         }
         const role = utils.getUserRole(req.user);
         res.render("activateAccount", {status, ...role});
@@ -1031,6 +1197,7 @@ module.exports = {
             act: "",
             tra: "active",
             mgm: "",
+            evd: ""
         };
 
         const balanceTypes = [
@@ -1068,6 +1235,7 @@ module.exports = {
             act: "",
             tra: "",
             mgm: "",
+            evd: ""
         }
         const role = utils.getUserRole(req.user)
         res.render("overscratchtopup", {status, ...role})
@@ -2529,6 +2697,7 @@ module.exports = {
             act: "",
             tra: "",
             mgm: "",
+            evd: ""
         };
         const topNav = {
             expiredata: "active",
@@ -2560,6 +2729,7 @@ module.exports = {
             act: "",
             tra: "",
             mgm: "",
+            evd: ""
         };
         const topNav = {
             expiredata: "",
@@ -2589,6 +2759,7 @@ module.exports = {
             act: "",
             tra: "",
             mgm: "",
+            evd: ""
         };
         const topNav = {
             expiredata: "",
@@ -2620,6 +2791,7 @@ module.exports = {
             act: "",
             tra: "",
             mgm: "",
+            evd: ""
         };
         const topNav = {
             expiredata: "",
@@ -2648,6 +2820,7 @@ module.exports = {
             act: "",
             tra: "",
             mgm: "",
+            evd: ""
         };
         const topNav = {
             expiredata: "",
@@ -2677,6 +2850,7 @@ module.exports = {
             act: "",
             tra: "",
             mgm: "",
+            evd: ""
         };
         const topNav = {
             expiredata: "",
@@ -2707,6 +2881,7 @@ module.exports = {
             act: "",
             tra: "",
             mgm: "",
+            evd: ""
         };
         const topNav = {
             expiredata: "",
@@ -2737,6 +2912,7 @@ module.exports = {
             act: "",
             tra: "",
             mgm: "",
+            evd: ""
         };
         const topNav = {
             expiredata: "",
@@ -2767,6 +2943,7 @@ module.exports = {
             act: "",
             tra: "",
             mgm: "",
+            evd: ""
         };
         const topNav = {
             expiredata: "",
@@ -2798,6 +2975,7 @@ module.exports = {
             act: "",
             tra: "",
             mgm: "",
+            evd: ""
         };
         const topNav = {
             expiredata: "",
@@ -3634,36 +3812,35 @@ module.exports = {
             let user = req.user.username;
 
             //DEBIT
-            const  {data_balanceType,status_balanceType} = appData.unlimitedBundles[balancetype]
-            if (await expireBalance(from_msisdn,status_balanceType,txn_id,user)){
-               if (await expireBalance(from_msisdn,data_balanceType,txn_id,user)){
-                   //CREDIT
-                   const url = OSD_ENDPOINT;
-                   const headers = {
-                       'User-Agent': 'NodeApp',
-                       'Content-Type': 'text/xml;charset=UTF-8',
-                       'SOAPAction': 'http://172.25.39.13/wsdls/Surfline/CustomRecharge/CustomRecharge',
-                       'Authorization': 'Basic YWlhb3NkMDE6YWlhb3NkMDE='
-                   };
-                   const creditXML = getXML(balancetype, to_msisdn, txn_id, user)
-                   const {response} = await soapRequest({
-                       url: url,
-                       headers: headers,
-                       xml: creditXML,
-                       timeout: 4000
-                   });
-                   const {body} = response;
-                   let jsonObj = parser.parse(body, options);
-                   const soapResponseBody = jsonObj.Envelope.Body;
-                   if (!soapResponseBody.DataTransferManualResult) {
-                      return  res.json({success: "success"})
-                   }
+            const {data_balanceType, status_balanceType} = appData.unlimitedBundles[balancetype]
+            if (await expireBalance(from_msisdn, status_balanceType, txn_id, user)) {
+                if (await expireBalance(from_msisdn, data_balanceType, txn_id, user)) {
+                    //CREDIT
+                    const url = OSD_ENDPOINT;
+                    const headers = {
+                        'User-Agent': 'NodeApp',
+                        'Content-Type': 'text/xml;charset=UTF-8',
+                        'SOAPAction': 'http://172.25.39.13/wsdls/Surfline/CustomRecharge/CustomRecharge',
+                        'Authorization': 'Basic YWlhb3NkMDE6YWlhb3NkMDE='
+                    };
+                    const creditXML = getXML(balancetype, to_msisdn, txn_id, user)
+                    const {response} = await soapRequest({
+                        url: url,
+                        headers: headers,
+                        xml: creditXML,
+                        timeout: 4000
+                    });
+                    const {body} = response;
+                    let jsonObj = parser.parse(body, options);
+                    const soapResponseBody = jsonObj.Envelope.Body;
+                    if (!soapResponseBody.DataTransferManualResult) {
+                        return res.json({success: "success"})
+                    }
 
-               }
+                }
             }
 
             res.json({error: "System Error.Transfer Incomplete.Make you specify correct bundle"})
-
 
 
         } catch (ex) {
@@ -4378,6 +4555,25 @@ async function expireBalance(msisdn, balanceType, txn_id, user) {
 
 
     return !!(jsonObj.Envelope.Body.CCSCD1_CHGResponse && jsonObj.Envelope.Body.CCSCD1_CHGResponse.AUTH);
+
+
+}
+
+async function getEvdAllDist() {
+
+    let result = []
+
+    const url = "http://localhost:8900/evdalldist"
+
+    try {
+        const {data} = await axios.get(url,  {params: {channel: "WEB"},auth: {username, password}})
+        if (data.status === 0) result = data.data
+        return result
+
+    } catch (ex) {
+        console.log(ex)
+        return result
+    }
 
 
 }
