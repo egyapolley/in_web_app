@@ -1216,7 +1216,10 @@ module.exports = {
             "Data",
             "Bonus Data",
             "Gift Data",
-            "Ten4Ten Data"
+            "Ten4Ten Data",
+            "BingeXtra Data",
+            "Zoom Data",
+            "WorkStreak Data",
         ]
         const role = utils.getUserRole(req.user)
         res.render("transfer", {status, balanceTypes: balanceTypes, ...role})

@@ -147,7 +147,13 @@ module.exports = {
         1202: "internalBdlId Count",
         1203: "Free Cash",
         1204: "bdlPurchaseCounter Count",
-        1242: "Pay Weekly Data"
+        1242: "Pay Weekly Data",
+        1270:"BingeXtra Data",
+        1271:"Zoom Data",
+        1272:"WorkStreak Data",
+        1273:"AfterHours Status",
+        1274:"AfterHoursTemp Status"
+
 
     },
 
@@ -171,6 +177,10 @@ module.exports = {
         '65GBSurfplus Data',
         '125GBSurfplus Data',
         '185GBSurfplus Data',
+        'BingeXtra Data',
+        'Zoom Data',
+        'WorkStreak Data',
+        'AfterHours Status',
         'Free Saturday Data',
         'Pay Weekly Data',
         'Taxify Data',

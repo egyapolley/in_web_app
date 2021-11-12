@@ -95,6 +95,11 @@ module.exports = {
         else if (bundleId === "1102" || bundleId === "Bundle ExpiryTrack Status") return "Bundle Expiry Tracker";
         else if (bundleId === "32" || bundleId === "CTAllowLastDate") return "CTAllowLastDate";
         else if (bundleId === "1242" || bundleId === "Pay Weekly Data") return "Pay Weekly Data";
+        else if (bundleId === "1270" || bundleId === "BingeXtra Data") return "BingeXtra Data";
+        else if (bundleId === "1271" || bundleId === "Zoom Data") return "Zoom Data";
+        else if (bundleId === "1272" || bundleId === "WorkStreak Data") return "WorkStreak Data";
+        else if (bundleId === "1273" || bundleId === "AfterHours Status") return "AfterHours Status";
+        else if (bundleId === "1274" || bundleId === "AfterHoursTemp Status") return "AfterHoursTemp Status";
 
 
     },
