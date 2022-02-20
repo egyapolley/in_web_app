@@ -148,11 +148,18 @@ module.exports = {
         1203: "Free Cash",
         1204: "bdlPurchaseCounter Count",
         1242: "Pay Weekly Data",
-        1270:"BingeXtra Data",
-        1271:"Zoom Data",
-        1272:"WorkStreak Data",
-        1273:"AfterHours Status",
-        1274:"AfterHoursTemp Status"
+        1270: "BingeXtra Data",
+        1271: "Zoom Data",
+        1272: "WorkStreak Data",
+        1273: "AfterHours Status",
+        1274: "AfterHoursTemp Status",
+        1282: "UL_AlwaysON_OneYear Data",
+        1283: "UL_AlwaysON_OneYear Status",
+        1284: "TaxifyUL_Lite Status",
+        1285: "TaxifyUL_Lite Data",
+        1286: "TaxifyUL_Super Data",
+        1287: "TaxifyUL_Super Status",
+        1302: "SanBraFie Data",
 
 
     },
@@ -185,6 +192,14 @@ module.exports = {
         'Pay Weekly Data',
         'Taxify Data',
         'ExtraTime Bonus Data',
+        'GracePeriod Status',
+        'UL_AlwaysON_OneYear Data',
+        'UL_AlwaysON_OneYear Status',
+        'TaxifyUL_Lite Status',
+        'TaxifyUL_Lite Data',
+        'TaxifyUL_Super Data',
+        'TaxifyUL_Super Status',
+        'SanBraFie Data',
         'ULBusiness2 Data',
         'ULBusiness2 Status',
         'ULNitePlan Status',
@@ -348,14 +363,14 @@ module.exports = {
             status_balanceType: 'Taxify Status',
             dataValue: 31457280,
             id: 51,
-            validity:30
+            validity: 30
         },
         'RideON Lite': {
             data_balanceType: 'Taxify Data',
             status_balanceType: 'Taxify Status',
             dataValue: 31457280,
             id: 50,
-            validity:7
+            validity: 7
         },
 
     }

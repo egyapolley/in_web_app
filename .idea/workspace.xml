@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="d7090296-b8ad-4fc9-9d2d-f0cc66b10d9f" name="Default Changelist" comment="Added Pay Weekly Bundles Opt-Out and Reconnect">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controllers/controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/controller.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/utils/appdata.js" beforeDir="false" afterPath="$PROJECT_DIR$/utils/appdata.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/utils/main_utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/utils/main_utils.js" afterDir="false" />
     </list>
@@ -28,6 +27,9 @@
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectId" id="1iUjspxxgBFZn9X61vmZGUxxmXM" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -182,7 +184,13 @@
       <workItem from="1634639616286" duration="670000" />
       <workItem from="1634640524388" duration="16359000" />
       <workItem from="1635537545178" duration="690000" />
-      <workItem from="1636636384262" duration="2871000" />
+      <workItem from="1636636384262" duration="3511000" />
+      <workItem from="1637006113618" duration="1965000" />
+      <workItem from="1637665165798" duration="803000" />
+      <workItem from="1640306936758" duration="923000" />
+      <workItem from="1641378134284" duration="46000" />
+      <workItem from="1643879041406" duration="2907000" />
+      <workItem from="1645365921293" duration="2248000" />
     </task>
     <task id="LOCAL-00001" summary="first release">
       <created>1604920817209</created>
@@ -352,7 +360,14 @@
       <option name="project" value="LOCAL" />
       <updated>1634773668267</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="Added Pay Weekly Bundles Opt-Out and Reconnect">
+      <created>1636706001727</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1636706001727</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

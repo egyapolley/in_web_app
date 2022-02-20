@@ -94,12 +94,13 @@ module.exports = {
         else if (bundleId === "101" || bundleId === "Autorecovery") return "Autorecovery";
         else if (bundleId === "1102" || bundleId === "Bundle ExpiryTrack Status") return "Bundle Expiry Tracker";
         else if (bundleId === "32" || bundleId === "CTAllowLastDate") return "CTAllowLastDate";
-        else if (bundleId === "1242" || bundleId === "Pay Weekly Data") return "Pay Weekly Data";
-        else if (bundleId === "1270" || bundleId === "BingeXtra Data") return "BingeXtra Data";
-        else if (bundleId === "1271" || bundleId === "Zoom Data") return "Zoom Data";
-        else if (bundleId === "1272" || bundleId === "WorkStreak Data") return "WorkStreak Data";
-        else if (bundleId === "1273" || bundleId === "AfterHours Status") return "AfterHours Status";
-        else if (bundleId === "1274" || bundleId === "AfterHoursTemp Status") return "AfterHoursTemp Status";
+        else if (bundleId === "1282" || bundleId === "UL_AlwaysON_OneYear Data") return "AlwaysON_OneYear Data";
+        else if (bundleId === "1283" || bundleId === "UL_AlwaysON_OneYear Status") return "AlwaysON_OneYear Status";
+        else if (bundleId === "1284" || bundleId === "TaxifyUL_Lite Status") return "TaxifyUL_Lite Status";
+        else if (bundleId === "1285" || bundleId === "TaxifyUL_Lite Data") return "TaxifyUL_Lite Data";
+        else if (bundleId === "1286" || bundleId === "TaxifyUL_Super Data") return "TaxifyUL_Super Data";
+        else if (bundleId === "1287" || bundleId === "TaxifyUL_Super Status") return "TaxifyUL_Super Status";
+        else if (bundleId === "1302" || bundleId === "SanBraFie Data") return "SanBraFie Data";
 
 
     },
