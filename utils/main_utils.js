@@ -101,6 +101,8 @@ module.exports = {
         else if (bundleId === "1286" || bundleId === "TaxifyUL_Super Data") return "TaxifyUL_Super Data";
         else if (bundleId === "1287" || bundleId === "TaxifyUL_Super Status") return "TaxifyUL_Super Status";
         else if (bundleId === "1302" || bundleId === "SanBraFie Data") return "SanBraFie Data";
+        else if (bundleId === "1322" || bundleId === "No_Zero_Rate Count") return "No_Zero_Rate Count";
+        else if (bundleId === "1323" || bundleId === "ExtensionUnlimited Status") return "ExtensionUnlimited Status";
 
 
     },

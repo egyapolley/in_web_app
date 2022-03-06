@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d7090296-b8ad-4fc9-9d2d-f0cc66b10d9f" name="Default Changelist" comment="Added Pay Weekly Bundles Opt-Out and Reconnect">
+    <list default="true" id="d7090296-b8ad-4fc9-9d2d-f0cc66b10d9f" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/js/main_js.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/main_js.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/utils/appdata.js" beforeDir="false" afterPath="$PROJECT_DIR$/utils/appdata.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/utils/main_utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/utils/main_utils.js" afterDir="false" />
     </list>
@@ -190,7 +191,9 @@
       <workItem from="1640306936758" duration="923000" />
       <workItem from="1641378134284" duration="46000" />
       <workItem from="1643879041406" duration="2907000" />
-      <workItem from="1645365921293" duration="2248000" />
+      <workItem from="1645365921293" duration="2966000" />
+      <workItem from="1645801427632" duration="2068000" />
+      <workItem from="1646591995513" duration="1934000" />
     </task>
     <task id="LOCAL-00001" summary="first release">
       <created>1604920817209</created>
@@ -367,7 +370,14 @@
       <option name="project" value="LOCAL" />
       <updated>1636706001727</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="Added Pay Weekly Bundles Opt-Out and Reconnect">
+      <created>1645390163728</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1645390163728</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

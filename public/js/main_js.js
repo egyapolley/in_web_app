@@ -893,7 +893,7 @@ $(function () {
                                 let dataSet = data.success;
                                 let tablebodyString = "";
                                 dataSet.forEach(function (cdrItem) {
-                                    if (cdrItem.balance_type.endsWith("Data")) {
+                                    if (cdrItem.balance_type && cdrItem.balance_type.endsWith("Data")) {
                                         cdrItem.balance_before = new Intl.NumberFormat("en-US").format((cdrItem.balance_before / 1024).toFixed(3));
                                         cdrItem.cost = new Intl.NumberFormat("en-US").format((cdrItem.cost / 1024).toFixed(3));
                                         cdrItem.balance_after = new Intl.NumberFormat("en-US").format((cdrItem.balance_after / 1024).toFixed(3));
@@ -942,7 +942,7 @@ $(function () {
                                 let dataSet = data.success;
                                 let tablebodyString = "";
                                 dataSet.forEach(function (cdrItem) {
-                                    if (cdrItem.balance_type.endsWith("Data")) {
+                                    if (cdrItem.balance_type && cdrItem.balance_type.endsWith("Data")) {
                                         cdrItem.balance_before = new Intl.NumberFormat("en-US").format((cdrItem.balance_before / 1024).toFixed(3));
                                         cdrItem.cost = new Intl.NumberFormat("en-US").format((cdrItem.cost / 1024).toFixed(3));
                                         cdrItem.balance_after = new Intl.NumberFormat("en-US").format((cdrItem.balance_after / 1024).toFixed(3));
@@ -990,7 +990,7 @@ $(function () {
                                 let dataSet = data.success;
                                 let tablebodyString = "";
                                 dataSet.forEach(function (cdrItem) {
-                                    if (cdrItem.balance_type.endsWith("Data")) {
+                                    if (cdrItem.balance_type && cdrItem.balance_type.endsWith("Data")) {
                                         cdrItem.balance_before = new Intl.NumberFormat("en-US").format((cdrItem.balance_before / 1024).toFixed(3));
                                         cdrItem.cost = new Intl.NumberFormat("en-US").format((cdrItem.cost / 1024).toFixed(3));
                                         cdrItem.balance_after = new Intl.NumberFormat("en-US").format((cdrItem.balance_after / 1024).toFixed(3));
@@ -1038,7 +1038,7 @@ $(function () {
                                 let dataSet = data.success;
                                 let tablebodyString = "";
                                 dataSet.forEach(function (cdrItem) {
-                                    if (cdrItem.balance_type.endsWith("Data")) {
+                                    if (cdrItem.balance_type && cdrItem.balance_type.endsWith("Data")) {
                                         cdrItem.balance_before = new Intl.NumberFormat("en-US").format((cdrItem.balance_before / 1024).toFixed(3));
                                         cdrItem.cost = new Intl.NumberFormat("en-US").format((cdrItem.cost / 1024).toFixed(3));
                                         cdrItem.balance_after = new Intl.NumberFormat("en-US").format((cdrItem.balance_after / 1024).toFixed(3));

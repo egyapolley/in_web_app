@@ -160,6 +160,8 @@ module.exports = {
         1286: "TaxifyUL_Super Data",
         1287: "TaxifyUL_Super Status",
         1302: "SanBraFie Data",
+        1322:"No_Zero_Rate Count",
+        1323:"ExtensionUnlimited Status"
 
 
     },
@@ -223,7 +225,9 @@ module.exports = {
         'Staff_AlwaysON_2GB Data',
         'Staff_AlwaysON_5GB Data',
         'Staff_AlwaysON_10GB Data',
-        'Staff_AlwaysON_3GB Data'
+        'Staff_AlwaysON_3GB Data',
+        'No_Zero_Rate Count',
+        'ExtensionUnlimited Status'
     ]
 
     ,
