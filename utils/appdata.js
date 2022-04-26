@@ -259,21 +259,21 @@ module.exports = {
         'AlwaysON Standard': {
             data_balanceType: 'UL_AlwaysON_Standard Data',
             status_balanceType: 'UL_AlwaysON_Standard Status',
-            dataValue: 12582912,
+            dataValue: 15728640,
             id: 30,
             validity: 30
         },
         'AlwaysON Super': {
             data_balanceType: 'UL_AlwaysON_Super Data',
             status_balanceType: 'UL_AlwaysON_Super Status',
-            dataValue: 18350080,
+            dataValue: 22722642,
             id: 32,
             validity: 30
         },
         'AlwaysON Ultra': {
             data_balanceType: 'UL_AlwaysON_Ultra Data',
             status_balanceType: 'UL_AlwaysON_Ultra Status',
-            dataValue: 24463278,
+            dataValue: 31457280,
             id: 33,
             validity: 30
         },
@@ -308,7 +308,7 @@ module.exports = {
         'SME Standard': {
             data_balanceType: 'UL_AlwaysON_Standard Data',
             status_balanceType: 'UL_AlwaysON_Standard Status',
-            dataValue: 12226396,
+            dataValue: 13107200,
             id: 41,
             validity: 30
         },
@@ -329,14 +329,14 @@ module.exports = {
         'SME Lite': {
             data_balanceType: 'UL_AlwaysON_Lite Data',
             status_balanceType: 'UL_AlwaysON_Lite Status',
-            dataValue: 5452595,
+            dataValue: 6291456,
             id: 40,
             validity: 30
         },
         'SME Starter': {
             data_balanceType: 'UL_AlwaysON_Starter Data',
             status_balanceType: 'UL_AlwaysON_Starter Status',
-            dataValue: 3355443,
+            dataValue: 4194304,
             id: 42,
             validity: 30
 
@@ -348,17 +348,17 @@ module.exports = {
             id: 45,
             validity: 30
         },
-        'Taxify': {
-            data_balanceType: 'Taxify Data',
-            status_balanceType: 'Taxify Status',
-            dataValue: 31457280,
+        'Taxify Super': {
+            data_balanceType: 'TaxifyUL_Super Data',
+            status_balanceType: 'TaxifyUL_Super Status',
+            dataValue: 5452595,
             id: 61,
             validity: 30
         },
         'Taxify Lite': {
-            data_balanceType: 'Taxify Data',
-            status_balanceType: 'Taxify Status',
-            dataValue: 31457280,
+            data_balanceType: 'TaxifyUL_Lite Data',
+            status_balanceType: 'TaxifyUL_Lite Status',
+            dataValue: 3355443,
             id: 60,
             validity: 7
         },

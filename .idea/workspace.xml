@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="d7090296-b8ad-4fc9-9d2d-f0cc66b10d9f" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/js/main_js.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/main_js.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/utils/appdata.js" beforeDir="false" afterPath="$PROJECT_DIR$/utils/appdata.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/utils/main_utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/utils/main_utils.js" afterDir="false" />
     </list>
@@ -193,7 +192,10 @@
       <workItem from="1643879041406" duration="2907000" />
       <workItem from="1645365921293" duration="2966000" />
       <workItem from="1645801427632" duration="2068000" />
-      <workItem from="1646591995513" duration="1934000" />
+      <workItem from="1646591995513" duration="1958000" />
+      <workItem from="1650296750862" duration="599000" />
+      <workItem from="1650834749699" duration="114000" />
+      <workItem from="1650964783954" duration="2515000" />
     </task>
     <task id="LOCAL-00001" summary="first release">
       <created>1604920817209</created>
@@ -377,7 +379,14 @@
       <option name="project" value="LOCAL" />
       <updated>1645390163728</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="Added Pay Weekly Bundles Opt-Out and Reconnect">
+      <created>1646608098675</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1646608098675</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
