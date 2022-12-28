@@ -60,6 +60,9 @@ module.exports = {
         else if (bundleId === "868" || bundleId === "12GBSurfplus Data") return "12GB Surfplus Data";
         else if (bundleId === "869" || bundleId === "30GBSurfplus Data") return "30GB Surfplus Data";
         else if (bundleId === "870" || bundleId === "45GBSurfplus Data") return "45GB Surfplus Data";
+        else if (bundleId === "1343" || bundleId === "50GBSurfplus Data") return "50GB Surfplus Data";
+        else if (bundleId === "1344" || bundleId === "100GBSurfplus Data") return "100GB Surfplus Data";
+        else if (bundleId === "1345" || bundleId === "150GBSurfplus Data") return "150GB Surfplus Data";
         else if (bundleId === "871" || bundleId === "65GBSurfplus Data") return "65GB Surfplus Data";
         else if (bundleId === "872" || bundleId === "125GBSurfplus Data") return "125GB Surfplus Data";
         else if (bundleId === "873" || bundleId === "185GBSurfplus Data") return "185GB Surfplus Data";

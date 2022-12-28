@@ -92,8 +92,11 @@ module.exports = {
         868: "12GBSurfplus Data",
         869: "30GBSurfplus Data",
         870: "45GBSurfplus Data",
+        1343: "50GBSurfplus Data",
         871: "65GBSurfplus Data",
+        1344: "100GBSurfplus Data",
         872: "125GBSurfplus Data",
+        1345: "150GBSurfplus Data",
         873: "185GBSurfplus Data",
         874: "Surfplus_new Count",
         875: "SaturdayVibe Count",
@@ -160,8 +163,8 @@ module.exports = {
         1286: "TaxifyUL_Super Data",
         1287: "TaxifyUL_Super Status",
         1302: "SanBraFie Data",
-        1322:"No_Zero_Rate Count",
-        1323:"ExtensionUnlimited Status"
+        1322: "No_Zero_Rate Count",
+        1323: "ExtensionUnlimited Status"
 
 
     },
@@ -183,8 +186,11 @@ module.exports = {
         '12GBSurfplus Data',
         '30GBSurfplus Data',
         '45GBSurfplus Data',
+        '50GBSurfplus Data',
         '65GBSurfplus Data',
+        '100GBSurfplus Data',
         '125GBSurfplus Data',
+        '150GBSurfplus Data',
         '185GBSurfplus Data',
         'BingeXtra Data',
         'Zoom Data',
@@ -245,6 +251,7 @@ module.exports = {
         'Business Corporate',
         'Pay Weekly',
         'Test Drive',
+        'Unlimited PT',
         'Business Individual'
     ],
 
