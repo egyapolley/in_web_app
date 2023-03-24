@@ -748,12 +748,12 @@ module.exports = {
             {
                 params: {
                     subscriberNumber: msisdn,
-                    channel: "USSD"
+                    channel: "inweb"
                 },
 
                 auth: {
-                    username: "ussd",
-                    password: "ussdPassw0rd"
+                    username: "inweb",
+                    password: "inweb!1234"
                 }
             }).then(function (response) {
             let result = response.data;
